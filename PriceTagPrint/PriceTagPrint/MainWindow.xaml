@@ -4,9 +4,101 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PriceTagPrint"
+        xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        WindowStartupLocation="CenterScreen"
+        Title="値札発行メニュー" Height="650" Width="1100">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
 
+    <Window.Resources>
+        <Style x:Key="TitleButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="20"/>
+        </Style>
+        <Style x:Key="FkeyButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Meiryo UI"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="60"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid ShowGridLines="True" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <Label Content=""/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" ShowGridLines="True" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" x:Name="Cmd01" Command="{Binding SelectCommand}" CommandParameter="1" Content="ヤスサキ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd02" Command="{Binding SelectCommand}" Content="ヤマナカ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
+            <Button Grid.Row="0" Grid.Column="2" x:Name="Cmd03" Command="{Binding SelectCommand}" Content="マルヨシ" Style="{StaticResource TitleButton}" Visibility="Visible" />
+            <Button Grid.Row="1" Grid.Column="0" x:Name="Cmd04" Command="{Binding SelectCommand}" Content="沖縄三喜マルエー" Style="{StaticResource TitleButton}" Visibility="Visible" />
+            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd05" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="1" Grid.Column="2" x:Name="Cmd06" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="2" Grid.Column="0" x:Name="Cmd07" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="2" Grid.Column="1" x:Name="Cmd08" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="2" Grid.Column="2" x:Name="Cmd09" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="3" Grid.Column="0" x:Name="Cmd10" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="3" Grid.Column="1" x:Name="Cmd11" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="3" Grid.Column="2" x:Name="Cmd12" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="4" Grid.Column="0" x:Name="Cmd13" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="4" Grid.Column="1" x:Name="Cmd14" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+            <Button Grid.Row="4" Grid.Column="2" x:Name="Cmd15" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
+        </Grid>
+
+        <Grid Grid.Row="2" ShowGridLines="True" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
+            <Button Grid.Column="1" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="2" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="3" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="4" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="5" Content="F5" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="6" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="7" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="8" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="9" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="10" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="11" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="12" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="13" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+        </Grid>
     </Grid>
 </Window>
