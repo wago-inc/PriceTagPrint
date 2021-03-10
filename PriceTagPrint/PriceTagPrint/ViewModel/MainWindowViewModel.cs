@@ -1,5 +1,6 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using PriceTagPrint.Common;
+using PriceTagPrint.View;
 using System;
 using System.Linq;
 using System.Windows;
@@ -10,6 +11,7 @@ namespace PriceTagPrint.ViewModel
 {
     class MainWindowViewModel : ViewModelsBase
     {
+        public Window window;
         public double Number { get; set; }
 
         public MainWindowViewModel()
@@ -17,50 +19,22 @@ namespace PriceTagPrint.ViewModel
             this.SelectCommand = new DelegateCommand<string>(ShowDisplay);
         }
         public ICommand SelectCommand { get; private set; }
-
+        
         private void ShowDisplay(string id)
         {
-
-            //データベース接続テスト STT
-            try
-            {
-                using (OracleConnection conn = new OracleConnection())
-                {
-                    OracleConnection con = new OracleConnection();
-                    string dataSource = "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.7)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = orcl)))";
-
-                    con.ConnectionString = "User ID=WAG_USR1; Password=P; Data Source=" + dataSource + ";";
-                    con.Open();
-
-                    string sql = "SELECT * FROM CLSMTA WHERE CLSKB = 7";
-                    OracleCommand cmd = new OracleCommand(sql, con);
-
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Console.WriteLine(string.Format("{0}:{1}", reader["CLSID"], reader["CLSNM"]));
-                    }
-
-                    reader.Close();
-                    con.Close();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
-            //データベース接続テスト END
-
-
-
-            var aaa = "";
             var torihikisaki = new TorihikisakiList().list.FirstOrDefault(x => x.Id == id);
             if(torihikisaki != null)
             {
                 switch(torihikisaki.Id)
                 {
                     case TorihikisakiId.YASUSAKI:
+                        var vm = new YasusakiViewModel();
+                        vm.CreateComboItems();
+                        var view = new YasusakiView();
+                        view.DataContext = vm;
+                        view.Owner = window;
+                        view.Show();
+                        view.Owner.Hide();
                         break;
                     case TorihikisakiId.YAMANAKA:
                         break;

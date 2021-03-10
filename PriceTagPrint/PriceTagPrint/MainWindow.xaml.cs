@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceTagPrint.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,9 @@ namespace PriceTagPrint
         public MainWindow()
         {
             InitializeComponent();
+            var vm = new MainWindowViewModel();
+            vm.window = this;
+            this.DataContext = vm;
         }
     }
 }

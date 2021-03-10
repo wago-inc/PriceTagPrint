@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Oracle.ManagedDataAccess.Client;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,12 +8,12 @@ namespace PriceTagPrint.Common
 {    
     public class BunruiCode
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public BunruiCode(int id, string name)
+        public BunruiCode(string id, string name)
         {
             this.Id = id;
-            this.Name = Name;
+            this.Name = name;
         }
     }
 
@@ -25,13 +27,65 @@ namespace PriceTagPrint.Common
 
         private void Create()
         {
-            list = new List<BunruiCode>()
+            try
             {
-                new BunruiCode(1, "ヤスサキ"),
-                new BunruiCode(2, "ヤマナカ"),
-                new BunruiCode(3, "マルヨシ"),
-                new BunruiCode(4, "沖縄三喜マルエー"),
-            };
+                using (OracleConnection con = new OracleConnection(DBConnect.connectString))
+                {
+                    con.Open();
+
+                    string sql = "SELECT * FROM CLSMTA WHERE CLSKB = 7";
+                    OracleCommand cmd = new OracleCommand(sql, con);
+
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        list = new List<BunruiCode>();
+                        list.Add(new BunruiCode(reader["CLSID"] as string, reader["CLSNM"] as string));
+                    }
+
+                    reader.Close();
+                    con.Close();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+        }
+
+        public List<BunruiCode> GetBunruiCodes()
+        {
+            var results = new List<BunruiCode>();
+            try
+            {
+                using (OracleConnection con = new OracleConnection(DBConnect.connectString))
+                {
+                    con.Open();
+
+                    string sql = "SELECT * FROM CLSMTA WHERE CLSKB = 7";
+                    OracleCommand cmd = new OracleCommand(sql, con);
+
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var id = reader["CLSID"] as string;
+                        var name = reader["CLSNM"] as string;
+                        string[] strs = new string[] { id, name };
+                        var dispName = string.Join("：", strs);
+                        results.Add(new BunruiCode(id, dispName));
+                    }
+
+                    reader.Close();
+                    con.Close();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+            return results;
         }
     }
 }
