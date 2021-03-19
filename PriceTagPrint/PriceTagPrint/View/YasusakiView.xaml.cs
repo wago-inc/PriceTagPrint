@@ -1,5 +1,6 @@
 ﻿using PriceTagPrint.Model;
 using PriceTagPrint.ViewModel;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +24,12 @@ namespace PriceTagPrint.View
     /// </summary>
     public partial class YasusakiView : Window
     {
-        private ObservableCollection<YasusakiModel> yasusakiModel = null;
+        /// <summary>
+        /// 接続文字列
+        /// </summary>
+        private static string MDB_FILE = @"\\Server00\h\database\得意先商品台帳\得意先商品台帳.mdb";
+        private ReactiveProperty<ObservableCollection<YasusakiModel>> YasusakiItems { get; set; } = 
+            new ReactiveProperty<ObservableCollection<YasusakiModel>>();
 
         public YasusakiView()
         {
@@ -32,10 +38,6 @@ namespace PriceTagPrint.View
 
         private void F5Action(object sender, RoutedEventArgs e)
         {
-            string provider = "Microsoft.Jet.OLEDB.4.0;";
-            string dataSource = @"\\Server00\h\database\得意先商品台帳\得意先商品台帳.mdb";
-            OleDbConnection connection = new OleDbConnection("Provider = " + provider + ";Data Source = " + dataSource + ";");
-
             string strSQL;
             strSQL = "SELECT " + Environment.NewLine;
             strSQL += " A.HNO, " + Environment.NewLine;
@@ -65,7 +67,7 @@ namespace PriceTagPrint.View
             strSQL += "FROM " + Environment.NewLine;
             strSQL += " 0112_EOS_HACHU " + Environment.NewLine;
             strSQL += "WHERE " + Environment.NewLine;
-            strSQL += " HNO = 228125 " + Environment.NewLine;
+            strSQL += " HNO = 228585 " + Environment.NewLine;
             strSQL += ") A " + Environment.NewLine;
             strSQL += "INNER JOIN " + Environment.NewLine;
             strSQL += "( " + Environment.NewLine;
@@ -102,34 +104,48 @@ namespace PriceTagPrint.View
             strSQL += " B.BIKOU2 " + Environment.NewLine;
             strSQL += "HAVING " + Environment.NewLine;
             strSQL += " Sum (A.NSU) > 0 " + Environment.NewLine;
-            strSQL += " AND B.NEFUDA_KBN = '2' " + Environment.NewLine;
-            strSQL += " AND A.BUNRUI = 911 " + Environment.NewLine;
+            strSQL += " AND B.NEFUDA_KBN = '1' " + Environment.NewLine;
+            strSQL += " AND A.BUNRUI = 910 " + Environment.NewLine;
             strSQL += "ORDER BY " + Environment.NewLine;
             strSQL += " A.HNO, " + Environment.NewLine;
             strSQL += " A.SYOHINCD" + Environment.NewLine;
+
+            var sql = "select * from 0112_EOS_HACHU where HNO = 228585";
+            string connectionString = string.Format("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq={0}", MDB_FILE);
+            DataTable dt = new DataTable();
             try
-            {                
-                OleDbCommand command = new OleDbCommand(strSQL, connection);
-
-                connection.Open();
-                var dataReader = command.ExecuteReader();
-
-                var table = new DataTable();
-                table.Load(dataReader);
-
-                while (dataReader.Read())
+            {
+                using (OdbcConnection connection = new OdbcConnection(connectionString))
                 {
-                    for (int i = 0; i < dataReader.FieldCount; i++)
-                    {
-                        Console.WriteLine(dataReader.GetValue(i));
-                    }
+                    connection.Open();
+
+                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, connection);
+                    adapter.Fill(dt);
+
+                    //datagrid.DataContext = dt;  // DataGridへの表示
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
+                return;
             }
-            connection.Close();
         }
-    }
+        private IEnumerable<YasusakiModel> DataReaderConvertToClass(OleDbDataReader dataReader)
+        {
+            while (dataReader.Read())
+            {
+                var model = new YasusakiModel();
+                var properties = model.GetType().GetProperties();
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    var data = dataReader.GetValue(i);
+                    if (!data.GetType().Equals(DBNull.Value.GetType())) properties[i].SetValue(model, data);
+                    //これでもOK
+                    //if (!string.IsNullOrWhiteSpace(data.ToString())) properties[i].SetValue(person, data);
+                }
+                yield return model;
+            }
+        }
+    }    
 }
