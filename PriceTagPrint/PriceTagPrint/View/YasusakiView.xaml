@@ -128,20 +128,69 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
             </Grid.ColumnDefinitions>
-            <DataGrid
-			    Grid.Row="1"
-			    HorizontalAlignment="Left"
-			    Margin="28,0,0,0"
-			    Name="dataGrid1"
-			    VerticalAlignment="Top"
-			    Background= "#C5FFFFFF"
-			
-			    ItemsSource="{Binding}"
-			    AutoGenerateColumns="True"
-			    IsReadOnly="True"
-			    CanUserAddRows="false"
-			    CanUserDeleteRows="False"
-			    CanUserSortColumns="False">
+            <DataGrid x:Name ="uxDataGrid"
+                  AutoGenerateColumns="False"
+                  AlternatingRowBackground="Aqua"
+                  SelectionMode="Single"
+                  Focusable="True"
+                  IsReadOnly="False"
+                  SelectionUnit="FullRow"
+                  ItemsSource="{Binding XPath=YasusakiItems}" 
+                  EnableColumnVirtualization="True" 
+                  EnableRowVirtualization="True" 
+                  VirtualizingPanel.IsVirtualizing="True" 
+                  VirtualizingPanel.VirtualizationMode="Recycling" Margin="10,4,10,10"                  
+                  >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=発行枚数}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="発行枚数" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=売切月}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="売切月" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=品番}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="品番" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=JAN}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="JAN" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=商品コード}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="商品コード" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=商品名}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="商品名" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=売価}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="売価" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=単価}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="単価" Width="80" />
+                    <DataGridTextColumn Binding="{Binding Path=値札番号}"
+                    CanUserReorder="True" CanUserResize="True"
+                    CanUserSort="True" Header="値札番号" Width="80" />
+                </DataGrid.Columns>
+                <!-- 右クリックによるコンテキストメニュー表示時、選択中セルの背景色/テキスト色が解除されないようにするためのコード-->
+                <!--PreviewMouseDown="uxDataGrid_PreviewMouseDown"
+                  PreviewKeyDown="uxDataGrid_PreviewKeyDown"
+                  CurrentCellChanged="uxDataGrid_CurrentCellChanged"-->
+                <DataGrid.Resources>
+                    <!-- 選択中セルの背景色（フォーカス有りの時） -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0078d7"  />
+                    <!-- 選択中セルの文字色（フォーカス有りの時） -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"  />
+                    <!-- 選択中セルの背景色（フォーカス無しの時） -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#0078d7" />
+                    <!-- 選択中セルの文字色（フォーカス無しの時） -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="White" />
+                </DataGrid.Resources>
+                <!-- 右クリックによるコンテキストメニューの表示-->
+                <DataGrid.ContextMenu>
+                    <ContextMenu x:Name="uxDataGridContextMenu">
+                        <MenuItem Header="コピー"  />
+                        <MenuItem Header="貼り付け" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
         </Grid>
 
@@ -161,20 +210,20 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
-            <Button Grid.Column="1" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="2" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="3" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="4" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="5" Content="F5&#xa;検索" Style="{StaticResource FkeyButton}" Visibility="Visible" Click="F5Action"/>
-            <Button Grid.Column="6" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="7" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="8" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="9" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="10" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="11" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="12" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="13" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="0" Command="{Binding FuncCommand}" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
+            <Button Grid.Column="1" Command="{Binding FuncCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="2" Command="{Binding FuncCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="3" Command="{Binding FuncCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="4" Command="{Binding FuncCommand}" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="5" Command="{Binding FuncCommand}" CommandParameter="5" Content="F5&#xa;検索" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
+            <Button Grid.Column="6" Command="{Binding FuncCommand}" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="7" Command="{Binding FuncCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="8" Command="{Binding FuncCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="9" Command="{Binding FuncCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="10" Command="{Binding FuncCommand}" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="11" Command="{Binding FuncCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="12" Command="{Binding FuncCommand}" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="13" Command="{Binding FuncCommand}" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Window>

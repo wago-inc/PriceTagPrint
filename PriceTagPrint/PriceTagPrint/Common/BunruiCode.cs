@@ -29,7 +29,7 @@ namespace PriceTagPrint.Common
         {
             try
             {
-                using (OracleConnection con = new OracleConnection(DBConnect.connectString))
+                using (OracleConnection con = new OracleConnection(DBConnect.OrclConnectString))
                 {
                     con.Open();
 
@@ -59,7 +59,7 @@ namespace PriceTagPrint.Common
             var results = new List<BunruiCode>();
             try
             {
-                using (OracleConnection con = new OracleConnection(DBConnect.connectString))
+                using (OracleConnection con = new OracleConnection(DBConnect.OrclConnectString))
                 {
                     con.Open();
 
