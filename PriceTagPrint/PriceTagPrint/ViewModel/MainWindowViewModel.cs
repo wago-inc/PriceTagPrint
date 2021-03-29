@@ -28,10 +28,7 @@ namespace PriceTagPrint.ViewModel
                 switch(torihikisaki.Id)
                 {
                     case TorihikisakiId.YASUSAKI:
-                        var vm = new YasusakiViewModel();
-                        vm.CreateComboItems();
                         var view = new YasusakiView();
-                        view.DataContext = vm;
                         view.Owner = window;
                         view.Show();
                         view.Owner.Hide();

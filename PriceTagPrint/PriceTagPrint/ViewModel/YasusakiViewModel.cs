@@ -14,10 +14,36 @@ using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
 using PriceTagPrint.WAGO2;
 using Reactive.Bindings;
-using static PriceTagPrint.Model.MainWindowModel;
 
 namespace PriceTagPrint.ViewModel
 {
+    public class RelayCommand : ICommand
+    {
+        //Command実行時に実行するアクション、引数を受け取りたい場合はこのActionをAction<object>などにする
+        private Action _action;
+
+        public RelayCommand(Action action)
+        {//コンストラクタでActionを登録
+            _action = action;
+        }
+
+        #region ICommandインターフェースの必須実装
+
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {//とりあえずActionがあれば実行可能
+            return _action != null;
+        }
+
+        public void Execute(object parameter)
+        {//今回は引数を使わずActionを実行
+            _action?.Invoke();
+        }
+
+        #endregion
+    }
+
     public class HakkouType
     {
         public int Id { get; set; }
@@ -58,8 +84,8 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<bool> HinEnabled { get; set; } = new ReactiveProperty<bool>(false);
 
         private List<YasusakiData> YasusakiDatas { get; set; } = new List<YasusakiData>();
-
-        private ObservableCollection<YasusakiModel> YasusakiItems { get; set; } = new ObservableCollection<YasusakiModel>();
+        public ReactiveProperty<ObservableCollection<YasusakiItem>> YasusakiItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<YasusakiItem>>();
         public void Loaded()
         {
             Task.Run(() =>
@@ -68,19 +94,27 @@ namespace PriceTagPrint.ViewModel
             });
         }
 
-        public YasusakiViewModel()
+        #region コマンドの実装
+        private RelayCommand<string> funcActionCommand;
+        public RelayCommand<string> FuncActionCommand
         {
-            this.FuncCommand = new DelegateCommand<string>(FuncAction);
+            get { return funcActionCommand = funcActionCommand ?? new RelayCommand<string>(FuncAction); }
         }
-        public ICommand FuncCommand { get; private set; }
-        private void FuncAction(string funcId)
+
+        private void FuncAction(string parameter)
         {
-            switch (funcId)
+            switch (parameter)
             {
                 case "5":
                     NefudaDataDisplay();
                     break;
             }
+        }
+        #endregion
+
+        public YasusakiViewModel()
+        {
+            CreateComboItems();
         }
 
         private void NefudaDataDisplay()
@@ -179,15 +213,15 @@ namespace PriceTagPrint.ViewModel
                          })
                      );
 
-                if (YasusakiItems == null)
+                if (YasusakiItems.Value == null)
                 {
-                    YasusakiItems = new ObservableCollection<YasusakiModel>();
+                    YasusakiItems.Value = new ObservableCollection<YasusakiItem>();
                 }
                 if (YasusakiDatas.Any())
                 {
-                    YasusakiItems.Clear();
-                    var yasusakiModelList = new YasusakiModelList();
-                    YasusakiItems = new ObservableCollection<YasusakiModel>(yasusakiModelList.ConvertYasusakiDataToModel(YasusakiDatas));
+                    YasusakiItems.Value.Clear();
+                    var yasusakiModelList = new YasusakiItemList();
+                    YasusakiItems.Value = new ObservableCollection<YasusakiItem>(yasusakiModelList.ConvertYasusakiDataToModel(YasusakiDatas));
                 }
             }
         }
@@ -243,6 +277,46 @@ namespace PriceTagPrint.ViewModel
             item2.Name = "2：タグ";
             list.Add(item2);
             return list;
+        }
+    }
+    public class YasusakiItem
+    {
+        public int 発行枚数 { get; set; }
+        public string 売切月 { get; set; }
+        public string 品番 { get; set; }
+        public string JAN { get; set; }
+        public string 商品コード { get; set; }
+        public string 商品名 { get; set; }
+        public int 売価 { get; set; }
+        public int 単価 { get; set; }
+        public string 値札番号 { get; set; }
+        public YasusakiItem(int 発行枚数, string 売切月, string 品番, string JAN, string 商品コード,
+                             string 商品名, int 売価, int 単価, string 値札番号)
+        {
+            this.発行枚数 = 発行枚数;
+            this.売切月 = 売切月;
+            this.品番 = 品番;
+            this.JAN = JAN;
+            this.商品コード = 商品コード;
+            this.商品名 = 商品名;
+            this.売価 = 売価;
+            this.単価 = 単価;
+            this.値札番号 = 値札番号;
+        }
+    }
+
+    public class YasusakiItemList
+    {
+        public IEnumerable<YasusakiItem> ConvertYasusakiDataToModel(List<YasusakiData> datas)
+        {
+            var result = new List<YasusakiItem>();
+            datas.ForEach(data =>
+            {
+                result.Add(
+                    new YasusakiItem(data.NSU, "41", data.SYOHINCD, data.JANCD, data.HINCD,
+                            data.EOS_SYOHINNM, data.BAIKA, data.GENKA, data.NEFUDA_KBN));
+            });
+            return result;
         }
     }
 }
