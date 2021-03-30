@@ -85,6 +85,14 @@ namespace PriceTagPrint.ViewModel
 
         // 商品コード表示・非表示
         public ReactiveProperty<bool> HinEnabled { get; set; } = new ReactiveProperty<bool>(false);
+        // 開始商品コード
+        public ReactiveProperty<string> SttHincd { get; set; } = new ReactiveProperty<string>("");
+        // 終了商品コード
+        public ReactiveProperty<string> EndHincd { get; set; } = new ReactiveProperty<string>("");
+        // 開始枝番
+        public ReactiveProperty<string> SttEdaban { get; set; } = new ReactiveProperty<string>("");
+        //終了枝番
+        public ReactiveProperty<string> EndEdaban { get; set; } = new ReactiveProperty<string>("");
 
         private List<YasusakiData> YasusakiDatas { get; set; } = new List<YasusakiData>();
         public ReactiveProperty<ObservableCollection<YasusakiItem>> YasusakiItems { get; set; }
@@ -112,7 +120,10 @@ namespace PriceTagPrint.ViewModel
 
                     break;
                 case "5":
-                    NefudaDataDisplay();
+                    if (InputCheck())
+                    {
+                        NefudaDataDisplay();
+                    }                    
                     break;
             }
         }
@@ -150,6 +161,11 @@ namespace PriceTagPrint.ViewModel
             {
                 SelectedBunruiCodeIndex.Value = BunruiCodeItems.Value.IndexOf(item);
             }
+            else
+            {
+                SelectedBunruiCodeIndex.Value = 0;
+                BunruiCodeText.Value = "";
+            }
         }
 
         private void NefudaBangouTextChanged(int id)
@@ -167,7 +183,11 @@ namespace PriceTagPrint.ViewModel
             if (item != null)
             {
                 HakkouTypeText.Value = item.Id;
-            }                
+            }
+            else
+            {
+                HakkouTypeText.Value = 0;
+            }
         }
 
         private void SelectedBunruiCodeIndexChanged(int idx)
@@ -176,7 +196,11 @@ namespace PriceTagPrint.ViewModel
             if (item != null)
             {
                 BunruiCodeText.Value = item.Id.TrimEnd();
-            }                
+            }
+            else
+            {
+                BunruiCodeText.Value = "";
+            }
         }
 
         private void SelectedNefudaBangouIndexChanged(int idx)
@@ -185,24 +209,68 @@ namespace PriceTagPrint.ViewModel
             if (item != null)
             {
                 NefudaBangouText.Value = item.Id;
-            }                
+            }
+            else
+            {
+                NefudaBangouText.Value = 0;
+            }
+        }
+
+        public bool InputCheck()
+        {
+            if(this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
+            {
+                MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.HachuBangou.Value))
+            {
+                MessageBox.Show("発注番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.BunruiCodeText.Value))
+            {
+                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if(this.NefudaBangouText.Value < 1 || this.NefudaBangouText.Value > 2)
+            {
+                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
         }
 
         public void NefudaDataDisplay()
         {
             var w0112_EOS_HACHU = new DB_0112_EOS_HACHU_LIST();
-            var w0112EosHchuList = w0112_EOS_HACHU.QueryWhereHno("228585");
+            var w0112EosHchuList = w0112_EOS_HACHU.QueryWhereHno(this.HachuBangou.Value);
 
             var wWEB_TORIHIKISAKI_TANKA = new WEB_TORIHIKISAKI_TANKA_LIST();
             var wWebTorihikisakiTankaList = wWEB_TORIHIKISAKI_TANKA.QueryWhereTcodeTenpo("112", "9999");
 
+            if(this.HakkouTypeText.Value == 2)
+            {
+                int sttHincd;
+                int endHincd;
+                int sttEdaban;
+                int endEdaban;
+                int scode;
+
+                w0112EosHchuList = w0112EosHchuList.Where(x => (int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.SCODE, out scode) ? scode >= sttHincd : true) &&
+                                            (int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.SCODE, out scode) ? scode <= endHincd : true) &&
+                                            (int.TryParse(this.SttEdaban.Value, out sttEdaban) ? x.SAIZUS >= sttEdaban : true) &&
+                                            (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.SAIZUS <= endEdaban : true))
+                                    .ToList();
+            }
+            
             if (w0112EosHchuList.Any() && wWebTorihikisakiTankaList.Any())
             {
                 YasusakiDatas.Clear();
                 YasusakiDatas.AddRange(
-                    w0112EosHchuList.Where(x => x.NSU > 0 && x.BUNRUI == 910)
+                    w0112EosHchuList.Where(x => x.NSU > 0 && x.BUNRUI == int.Parse(this.BunruiCodeText.Value))
                         .Join(
-                               wWebTorihikisakiTankaList.Where(x => x.NEFUDA_KBN == "2"),
+                               wWebTorihikisakiTankaList.Where(x => x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString()),
                                e => new
                                {
                                    TOKCD = short.Parse(e.TOKCD),
@@ -299,7 +367,7 @@ namespace PriceTagPrint.ViewModel
         public void CreateComboItems()
         {
             var bunruis = new BunruiCodeList().GetBunruiCodes();
-
+            bunruis.Insert(0, new BunruiCode("", ""));
             HakkouTypeItems.Value = new ObservableCollection<HakkouType>(GetHakkouTypeItems());
             BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
             NefudaBangouItems.Value = new ObservableCollection<NefudaBangou>(GetNefudaBangouItems());

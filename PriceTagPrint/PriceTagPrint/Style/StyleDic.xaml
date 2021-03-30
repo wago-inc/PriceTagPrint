@@ -62,11 +62,12 @@
         <Setter Property="RowBackground" Value="LightYellow"/>
         <Setter Property="AlternatingRowBackground" Value="LightGreen"/>
         <Setter Property="SelectionMode" Value="Single"/>
-        <Setter Property="Focusable" Value="True"/>
-        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="SelectionUnit" Value="CellOrRowHeader"/>
         <Setter Property="RowHeight" Value="25"/>
         <Setter Property="VerticalGridLinesBrush" Value="White"/>
         <Setter Property="HorizontalGridLinesBrush" Value="White"/>
+        <Setter Property="IsTabStop" Value="False"/>
     </Style>
 
     <!--データグリッドカラムヘッダ-->
@@ -86,5 +87,11 @@
     <Style x:Key="BasicDataGridRow" TargetType="DataGridRow">
         <Setter Property="FontFamily" Value="Yu Gothic Medium" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="IsTabStop" Value="False"/>
+    </Style>
+    
+    <!--データグリッドセル-->
+    <Style x:Key="UnTabStopCell" TargetType="{x:Type DataGridCell }">
+        <Setter Property="IsTabStop" Value="False"/>
     </Style>
 </ResourceDictionary>

@@ -11,6 +11,7 @@ using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -50,10 +51,47 @@ namespace PriceTagPrint.View
 
         #endregion
 
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^1-2]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
+        private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            // 貼り付けの場合
+            if (e.Command == ApplicationCommands.Paste)
+            {
+                // 処理済みにします。
+                e.Handled = true;
+            }
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var txt = sender as TextBox;
+            if (string.IsNullOrEmpty(txt.Text))
+            {
+                if(txt.Name == "HakkouTypeText")
+                {
+                    ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
+                    ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
+                }
+                else if(txt.Name == "NefudaBangouText")
+                {
+                    ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
+                    ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
+                }
+            }
+        }
 
         public YasusakiView()
         {
             InitializeComponent();
+            this.HakkouTypeText.Focus();
         }
 
         private void ExecuteCommand(object sender, RoutedEventArgs e)
@@ -69,10 +107,33 @@ namespace PriceTagPrint.View
                     view.Show();
                     break;
                 case "F5":
-                    ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
+                    if (InputCheck())
+                    {
+                        ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
+                    }                    
                     break;
             }
             
+        }
+
+        public bool InputCheck()
+        {
+            if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
+            {
+                MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.BunruiCodeText.Text))
+            {
+                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.NefudaBangouText.Text))
+            {
+                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
         }
     }
 }
