@@ -56,16 +56,18 @@ namespace PriceTagPrint.ViewModel
         public string Name { get; set; }
     }
 
-    
+
     public class YasusakiViewModel : ViewModelsBase
     {
         // 発行区分
+        public ReactiveProperty<int> HakkouTypeText { get; set; }
         public ReactiveProperty<ObservableCollection<HakkouType>> HakkouTypeItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<HakkouType>>();
         public ReactiveProperty<int> SelectedHakkouTypeIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
         // 分類コード
+        public ReactiveProperty<string> BunruiCodeText { get; set; }
         public ReactiveProperty<ObservableCollection<BunruiCode>> BunruiCodeItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<BunruiCode>>();
         public ReactiveProperty<int> SelectedBunruiCodeIndex { get; set; }
@@ -75,6 +77,7 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<string> HachuBangou { get; set; } = new ReactiveProperty<string>("");
 
         // 値札番号
+        public ReactiveProperty<int> NefudaBangouText { get; set; } 
         public ReactiveProperty<ObservableCollection<NefudaBangou>> NefudaBangouItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<NefudaBangou>>();
         public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
@@ -118,6 +121,71 @@ namespace PriceTagPrint.ViewModel
         public YasusakiViewModel()
         {
             CreateComboItems();
+
+            HakkouTypeText = new ReactiveProperty<int>(1);
+            BunruiCodeText = new ReactiveProperty<string>("910");
+            NefudaBangouText = new ReactiveProperty<int>(1);
+
+            HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
+            BunruiCodeText.Subscribe(x => BunruiCodeTextChanged(x));
+            NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
+            SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
+            SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
+            SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
+        }
+
+        private void HakkouTypeTextChanged(int id)
+        {
+            var item = HakkouTypeItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedHakkouTypeIndex.Value = HakkouTypeItems.Value.IndexOf(item);
+            }
+        }
+
+        private void BunruiCodeTextChanged(string id)
+        {
+            var item = BunruiCodeItems.Value.FirstOrDefault(x => x.Id.TrimEnd() == id.TrimEnd());
+            if (item != null)
+            {
+                SelectedBunruiCodeIndex.Value = BunruiCodeItems.Value.IndexOf(item);
+            }
+        }
+
+        private void NefudaBangouTextChanged(int id)
+        {
+            var item = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedNefudaBangouIndex.Value = NefudaBangouItems.Value.IndexOf(item);
+            }
+        }
+
+        private void SelectedHakkouTypeIndexChanged(int idx)
+        {
+            var item = HakkouTypeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                HakkouTypeText.Value = item.Id;
+            }                
+        }
+
+        private void SelectedBunruiCodeIndexChanged(int idx)
+        {
+            var item = BunruiCodeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                BunruiCodeText.Value = item.Id.TrimEnd();
+            }                
+        }
+
+        private void SelectedNefudaBangouIndexChanged(int idx)
+        {
+            var item = NefudaBangouItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                NefudaBangouText.Value = item.Id;
+            }                
         }
 
         public void NefudaDataDisplay()

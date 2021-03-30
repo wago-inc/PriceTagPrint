@@ -71,7 +71,7 @@ namespace PriceTagPrint.Common
                     {
                         var id = reader["CLSID"] as string;
                         var name = reader["CLSNM"] as string;
-                        string[] strs = new string[] { id, name };
+                        string[] strs = new string[] { id.TrimEnd(), name.TrimEnd() };
                         var dispName = string.Join("：", strs);
                         results.Add(new BunruiCode(id, dispName));
                     }

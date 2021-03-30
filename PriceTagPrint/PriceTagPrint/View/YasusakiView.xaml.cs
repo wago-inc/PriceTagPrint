@@ -49,6 +49,8 @@ namespace PriceTagPrint.View
         }
 
         #endregion
+
+
         public YasusakiView()
         {
             InitializeComponent();

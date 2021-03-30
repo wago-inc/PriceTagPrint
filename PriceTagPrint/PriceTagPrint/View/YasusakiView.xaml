@@ -6,6 +6,7 @@
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PriceTagPrint.View"
+        xmlns:extend="clr-namespace:PriceTagPrint.Extend"
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -47,36 +48,70 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="発行区分" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <ComboBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="HakkouTypeComboBox"
+            <!--発行区分-->
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="発行区分" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="1" Grid.Column="2" x:Name="HakkouTypeText"
+                     Text="{Binding HakkouTypeText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1" 
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True" 
+                     extend:TextBoxAttachment.EnterCommand="True" 
+                     TabIndex="1"/>
+            <ComboBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" x:Name="HakkouTypeComboBox"
                       ItemsSource="{Binding HakkouTypeItems.Value, Mode=OneWay}"
                       SelectedIndex="{Binding SelectedHakkouTypeIndex.Value}"
-                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"/>
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="5" Text="分類コード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <ComboBox Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" x:Name="BunruiCodeComboBox" 
+            <!--発注番号-->
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="発注番号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" x:Name="HachuNumberTextBox" 
+                     HorizontalContentAlignment="Center" MaxLength="7"                     
+                     Text="{Binding HachuBangou.Value, Mode=OneWay}" Style="{StaticResource ContentText}"                      
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True" 
+                     TabIndex="2"/>
+            
+            <!--分類コード-->
+            <TextBlock Grid.Row="1" Grid.Column="6" Text="分類コード" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="1" Grid.Column="7" x:Name="BunruiCodeText"
+                     Text="{Binding BunruiCodeText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="3"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="3"/>
+            <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value, Mode=OneWay}"
                       SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
-                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="発注番号" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="3" Grid.Column="2" x:Name="HachuNumberTextBox" 
-                     Text="{Binding HachuBangou.Value, Mode=OneWay}" Style="{StaticResource ContentText}"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="5" Text="値札番号" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <ComboBox Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" x:Name="NefudaBangouComboBox" 
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
+            
+            <!--値札番号-->
+            <TextBlock Grid.Row="3" Grid.Column="6" Text="値札番号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="3" Grid.Column="7" x:Name="NefudaBangouText" 
+                     Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="4"/>
+            <ComboBox Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="2" x:Name="NefudaBangouComboBox" 
                       ItemsSource="{Binding NefudaBangouItems.Value, Mode=OneWay}"
                       SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
-                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"/>
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
 
 
         </Grid>
@@ -100,11 +135,27 @@
                 <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" Text="商品コード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" />
-            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}" />
+            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="5"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="5"/>
+            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="2"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="6"/>
             <TextBlock Grid.Column="4" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" />
-            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}" />
+            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="5"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="7"/>
+            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="2"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="8"/>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Loaded">
                     <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
@@ -116,8 +167,7 @@
             <DataGrid ItemsSource="{Binding Path=YasusakiItems.Value}" 
                       Style="{StaticResource BasicDataGrid}"
                       ColumnHeaderStyle="{StaticResource BasicDataGridColumnHeader}"
-                      RowStyle="{StaticResource BasicDataGridRow}"
-                      >
+                      RowStyle="{StaticResource BasicDataGridRow}">
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=発行枚数}" Width="auto">
@@ -231,20 +281,20 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
-            <Button Grid.Column="1" Command="{Binding FuncActionCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="2" Command="{Binding FuncActionCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="3" Command="{Binding FuncActionCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="4" Command="{Binding FuncActionCommand}" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="5" Command="{Binding FuncActionCommand}" CommandParameter="5" Content="Ｆ５&#xa;検索" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
-            <Button Grid.Column="6" Command="{Binding FuncActionCommand}" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="7" Command="{Binding FuncActionCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="8" Command="{Binding FuncActionCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="9" Command="{Binding FuncActionCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="11" Command="{Binding FuncActionCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
-            <Button Grid.Column="13" Command="{Binding FuncActionCommand}" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="1" Command="{Binding FuncActionCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="2" Command="{Binding FuncActionCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="3" Command="{Binding FuncActionCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="4" Command="{Binding FuncActionCommand}" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="5" Command="{Binding FuncActionCommand}" CommandParameter="5" Content="Ｆ５&#xa;検索" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="6" Command="{Binding FuncActionCommand}" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="7" Command="{Binding FuncActionCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="8" Command="{Binding FuncActionCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="9" Command="{Binding FuncActionCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="11" Command="{Binding FuncActionCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="13" Command="{Binding FuncActionCommand}" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
         </Grid>
     </Grid>
 </Window>
