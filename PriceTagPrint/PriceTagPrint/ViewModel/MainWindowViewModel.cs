@@ -41,8 +41,7 @@ namespace PriceTagPrint.ViewModel
                         break;
                     default:break;
                 }
-            }               
-
+            }
         }
     }
     

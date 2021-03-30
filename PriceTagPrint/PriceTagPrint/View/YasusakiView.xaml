@@ -10,45 +10,23 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="ヤスサキ" Height="700" Width="1100">
+        
     <Window.DataContext>
         <vm:YasusakiViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
-        <Style x:Key="TitleText" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Background" Value="LightSeaGreen"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-        <Style x:Key="OtherText" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="ContentText" TargetType="TextBox">
-            <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-            <Setter Property="FontSize" Value="16"/>
-        </Style>
-        <Style x:Key="FkeyButton" TargetType="Button">
-            <Setter Property="BorderThickness" Value="0,0,1,1"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="Background" Value="LightSeaGreen" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="65"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
-            <Setter Property="FontSize" Value="16"/>
-        </Style>
+        <ResourceDictionary Source="/Style/StyleDic.xaml"/>
     </Window.Resources>
 
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="ExecuteCommand" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
+        <KeyBinding Gesture="F5" Command="Close" CommandParameter="F5" />
+    </Window.InputBindings>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -136,36 +114,10 @@
 
         <Grid Grid.Row="2" Margin="10">
             <DataGrid ItemsSource="{Binding Path=YasusakiItems.Value}" 
-                      AutoGenerateColumns="False"
-                      RowBackground="LightYellow"
-                      AlternatingRowBackground="LightGreen"
-                      SelectionMode="Single"
-                      Focusable="True"
-                      IsReadOnly="True"
-                      SelectionUnit="FullRow"
-                      RowHeight="25"
-                      VerticalGridLinesBrush="White"
-                      HorizontalGridLinesBrush="White"
+                      Style="{StaticResource BasicDataGrid}"
+                      ColumnHeaderStyle="{StaticResource BasicDataGridColumnHeader}"
+                      RowStyle="{StaticResource BasicDataGridRow}"
                       >
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
-                        <Setter Property="BorderBrush" Value="White"/>
-                        <Setter Property="Background" Value="LightSeaGreen" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                        <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-                        <Setter Property="FontSize" Value="14" />
-                        <Setter Property="FontWeight" Value="UltraBold"/>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Setter Property="FontFamily" Value="Yu Gothic Medium" />
-                        <Setter Property="FontSize" Value="14" />
-                    </Style>
-                </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=発行枚数}" Width="auto">
@@ -263,7 +215,7 @@
             </DataGrid>
         </Grid>
 
-        <Grid Grid.Row="3" ShowGridLines="True" >
+        <Grid Grid.Row="3" ShowGridLines="False" Margin="1,0,1,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -279,7 +231,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Command="{Binding FuncActionCommand}" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
             <Button Grid.Column="1" Command="{Binding FuncActionCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="2" Command="{Binding FuncActionCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="3" Command="{Binding FuncActionCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>

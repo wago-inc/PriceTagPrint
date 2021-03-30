@@ -3,40 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:PriceTagPrint"
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="値札発行メニュー" Height="600" Width="950">
+    
     <Window.DataContext>
         <vm:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext> 
 
     <Window.Resources>
-        <Style x:Key="TitleButton" TargetType="Button">
-            <Setter Property="BorderThickness" Value="0,0,1,1"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="Background" Value="LightSeaGreen" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="20"/>
-        </Style>
-        <Style x:Key="FkeyButton" TargetType="Button">
-            <Setter Property="BorderThickness" Value="0,0,1,1"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="Background" Value="LightSeaGreen" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="65"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
+        <ResourceDictionary Source="/Style/StyleDic.xaml"/>
     </Window.Resources>
 
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="ExecuteCommand" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
+    </Window.InputBindings>
+    
     <Grid ShowGridLines="True" >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -79,7 +67,7 @@
             <Button Grid.Row="4" Grid.Column="2" x:Name="Cmd15" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
         </Grid>
 
-        <Grid Grid.Row="2" ShowGridLines="True" >
+        <Grid Grid.Row="2" ShowGridLines="False" Margin="1,0,1,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -95,7 +83,9 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible">
+
+            </Button>
             <Button Grid.Column="1" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="2" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="3" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>

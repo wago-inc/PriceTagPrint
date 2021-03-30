@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\App.xaml
-2-316343601
+3-1715597467
 
 18608148561
 2121244143872
-MainWindow.xaml;View\YasusakiView.xaml;
+MainWindow.xaml;Style\StyleDic.xaml;View\YasusakiView.xaml;
 
 True
 

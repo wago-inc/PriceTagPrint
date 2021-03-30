@@ -15,6 +15,9 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Style\StyleDic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\YasusakiView.xaml">
       <SubType>Designer</SubType>
     </Page>

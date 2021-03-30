@@ -105,6 +105,9 @@ namespace PriceTagPrint.ViewModel
         {
             switch (parameter)
             {
+                case "ESC":
+
+                    break;
                 case "5":
                     NefudaDataDisplay();
                     break;
@@ -117,7 +120,7 @@ namespace PriceTagPrint.ViewModel
             CreateComboItems();
         }
 
-        private void NefudaDataDisplay()
+        public void NefudaDataDisplay()
         {
             var w0112_EOS_HACHU = new DB_0112_EOS_HACHU_LIST();
             var w0112EosHchuList = w0112_EOS_HACHU.QueryWhereHno("228585");
