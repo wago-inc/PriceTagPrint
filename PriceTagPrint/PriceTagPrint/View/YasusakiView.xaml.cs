@@ -75,12 +75,12 @@ namespace PriceTagPrint.View
             var txt = sender as TextBox;
             if (string.IsNullOrEmpty(txt.Text))
             {
-                if(txt.Name == "HakkouTypeText")
+                if (txt.Name == "HakkouTypeText")
                 {
                     ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
                     ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
                 }
-                else if(txt.Name == "NefudaBangouText")
+                else if (txt.Name == "NefudaBangouText")
                 {
                     ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
                     ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
@@ -92,6 +92,7 @@ namespace PriceTagPrint.View
         {
             InitializeComponent();
             this.HakkouTypeText.Focus();
+            ((YasusakiViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
         }
 
         private void ExecuteCommand(object sender, RoutedEventArgs e)
@@ -106,14 +107,29 @@ namespace PriceTagPrint.View
                     var view = new MainWindow();
                     view.Show();
                     break;
+                case "F4":
+                    ((YasusakiViewModel)this.DataContext).Clear();
+                    break;
                 case "F5":
                     if (InputCheck())
                     {
                         ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
-                    }                    
+                    }
+                    break;
+                case "F10":
+                    if (((YasusakiViewModel)this.DataContext).PrintCheck())
+                    {
+                        ((YasusakiViewModel)this.DataContext).ExecPrint(true);
+                    }
+                    break;
+                case "F12":
+                    if (((YasusakiViewModel)this.DataContext).PrintCheck())
+                    {
+                        ((YasusakiViewModel)this.DataContext).ExecPrint(false);
+                    }                        
                     break;
             }
-            
+
         }
 
         public bool InputCheck()
@@ -121,6 +137,16 @@ namespace PriceTagPrint.View
             if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
             {
                 MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.HachuNumberTextBox.Text))
+            {
+                MessageBox.Show("発注番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!string.IsNullOrEmpty(HnoResultTextBox.Text) && HnoResultTextBox.Text.Contains("未登録"))
+            {
+                MessageBox.Show("未登録の発注番号が選択されています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(this.BunruiCodeText.Text))
@@ -134,6 +160,20 @@ namespace PriceTagPrint.View
                 return false;
             }
             return true;
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
+                {
+                    if (InputCheck())
+                    {
+                        ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
+                    }
+                }
+            }
         }
     }
 }

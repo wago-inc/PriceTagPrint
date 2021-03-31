@@ -65,3 +65,6 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Debug\netcoreapp3.1\Style\StyleDic.baml
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.Text.Encoding.CodePages.dll
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Text.Encoding.CodePages.dll

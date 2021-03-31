@@ -22,6 +22,12 @@ namespace PriceTagPrint.ViewModel
         
         private void ShowDisplay(string id)
         {
+            if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
+            {
+                MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             var torihikisaki = new TorihikisakiList().list.FirstOrDefault(x => x.Id == id);
             if(torihikisaki != null)
             {

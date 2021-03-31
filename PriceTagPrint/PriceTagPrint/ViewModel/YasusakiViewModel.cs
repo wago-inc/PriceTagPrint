@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Odbc;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Oracle.ManagedDataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
@@ -75,9 +78,13 @@ namespace PriceTagPrint.ViewModel
 
         // 発注番号
         public ReactiveProperty<string> HachuBangou { get; set; } = new ReactiveProperty<string>("");
+        // 発注番号（存在結果情報）
+        public ReactiveProperty<string> HnoResultString { get; set; } = new ReactiveProperty<string>("");
+        // 発注番号（存在結果情報表示色） 
+        public ReactiveProperty<Brush> HnoResultColor { get; set; } = new ReactiveProperty<Brush>(Brushes.Black);
 
         // 値札番号
-        public ReactiveProperty<int> NefudaBangouText { get; set; } 
+        public ReactiveProperty<int> NefudaBangouText { get; set; }
         public ReactiveProperty<ObservableCollection<NefudaBangou>> NefudaBangouItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<NefudaBangou>>();
         public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
@@ -94,9 +101,16 @@ namespace PriceTagPrint.ViewModel
         //終了枝番
         public ReactiveProperty<string> EndEdaban { get; set; } = new ReactiveProperty<string>("");
 
+        //発行枚数計
+        public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
+
+        public TextBox HakkouTypeTextBox = null;
         private List<YasusakiData> YasusakiDatas { get; set; } = new List<YasusakiData>();
         public ReactiveProperty<ObservableCollection<YasusakiItem>> YasusakiItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<YasusakiItem>>();
+
+        private DB_0112_EOS_HACHU_LIST dB_0112_EOS_HACHU_LIST;
+
         public void Loaded()
         {
             Task.Run(() =>
@@ -119,11 +133,38 @@ namespace PriceTagPrint.ViewModel
                 case "ESC":
 
                     break;
-                case "5":
+                case "F4":
+                    Clear();
+                    break;
+                case "F5":
                     if (InputCheck())
                     {
                         NefudaDataDisplay();
-                    }                    
+                    }
+                    break;
+                case "F10":
+                    if (!PrintCheck())
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                    {
+                        ExecPrint(true);
+                    }
+                    break;
+                case "F12":
+                    if (!PrintCheck())
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                    {
+                        ExecPrint(false);
+                    }
                     break;
             }
         }
@@ -131,6 +172,7 @@ namespace PriceTagPrint.ViewModel
 
         public YasusakiViewModel()
         {
+            dB_0112_EOS_HACHU_LIST = new DB_0112_EOS_HACHU_LIST();
             CreateComboItems();
 
             HakkouTypeText = new ReactiveProperty<int>(1);
@@ -143,6 +185,30 @@ namespace PriceTagPrint.ViewModel
             SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
             SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
+
+            HachuBangou.Subscribe(x => HachuBangouTextChanged(x));
+        }
+
+        private void HachuBangouTextChanged(string hno)
+        {
+            if (!string.IsNullOrEmpty(hno))
+            {
+                if (dB_0112_EOS_HACHU_LIST.QueryWhereHnoExists(hno))
+                {
+                    HnoResultString.Value = "登録済";
+                    HnoResultColor.Value = Brushes.Blue;
+                }
+                else
+                {
+                    HnoResultString.Value = "※未登録";
+                    HnoResultColor.Value = Brushes.Red;
+                }
+            }
+            else
+            {
+                HnoResultString.Value = "";
+                HnoResultColor.Value = Brushes.Black;
+            }
         }
 
         private void HakkouTypeTextChanged(int id)
@@ -216,9 +282,29 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        public void Clear()
+        {
+            SelectedHakkouTypeIndex.Value = 0;
+            BunruiCodeText.Value = "910";
+            HachuBangou.Value = "";
+            HnoResultString.Value = "";
+            HnoResultColor.Value = Brushes.Black;
+            SelectedNefudaBangouIndex.Value = 0;
+            HinEnabled.Value = false;
+            SttHincd.Value = "";
+            EndHincd.Value = "";
+            SttEdaban.Value = "";
+            EndEdaban.Value = "";
+            TotalMaisu.Value = "";
+            YasusakiDatas.Clear();
+            YasusakiItems.Value.Clear();
+
+            HakkouTypeTextBox.Focus();
+        }
+
         public bool InputCheck()
         {
-            if(this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
+            if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
             {
                 MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -228,12 +314,17 @@ namespace PriceTagPrint.ViewModel
                 MessageBox.Show("発注番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            if (!string.IsNullOrEmpty(HnoResultString.Value) && HnoResultString.Value.Contains("未登録"))
+            {
+                MessageBox.Show("未登録の発注番号が選択されています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
             if (string.IsNullOrEmpty(this.BunruiCodeText.Value))
             {
                 MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            if(this.NefudaBangouText.Value < 1 || this.NefudaBangouText.Value > 2)
+            if (this.NefudaBangouText.Value < 1 || this.NefudaBangouText.Value > 2)
             {
                 MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -243,13 +334,12 @@ namespace PriceTagPrint.ViewModel
 
         public void NefudaDataDisplay()
         {
-            var w0112_EOS_HACHU = new DB_0112_EOS_HACHU_LIST();
-            var w0112EosHchuList = w0112_EOS_HACHU.QueryWhereHno(this.HachuBangou.Value);
+            var w0112EosHchuList = dB_0112_EOS_HACHU_LIST.QueryWhereHno(this.HachuBangou.Value);
 
             var wWEB_TORIHIKISAKI_TANKA = new WEB_TORIHIKISAKI_TANKA_LIST();
             var wWebTorihikisakiTankaList = wWEB_TORIHIKISAKI_TANKA.QueryWhereTcodeTenpo("112", "9999");
 
-            if(this.HakkouTypeText.Value == 2)
+            if (w0112EosHchuList.Any() && this.HakkouTypeText.Value == 2)
             {
                 int sttHincd;
                 int endHincd;
@@ -263,7 +353,7 @@ namespace PriceTagPrint.ViewModel
                                             (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.SAIZUS <= endEdaban : true))
                                     .ToList();
             }
-            
+
             if (w0112EosHchuList.Any() && wWebTorihikisakiTankaList.Any())
             {
                 YasusakiDatas.Clear();
@@ -350,6 +440,8 @@ namespace PriceTagPrint.ViewModel
                              BIKOU1 = g.Key.BIKOU1,
                              BIKOU2 = g.Key.BIKOU2
                          })
+                         .OrderBy(g => g.HNO)
+                         .OrderBy(g => g.SYOHINCD)
                      );
 
                 if (YasusakiItems.Value == null)
@@ -361,7 +453,12 @@ namespace PriceTagPrint.ViewModel
                     YasusakiItems.Value.Clear();
                     var yasusakiModelList = new YasusakiItemList();
                     YasusakiItems.Value = new ObservableCollection<YasusakiItem>(yasusakiModelList.ConvertYasusakiDataToModel(YasusakiDatas));
+                    TotalMaisu.Value = YasusakiItems.Value.Sum(x => x.発行枚数).ToString();
                 }
+            }
+            else
+            {
+                MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         public void CreateComboItems()
@@ -417,30 +514,101 @@ namespace PriceTagPrint.ViewModel
             list.Add(item2);
             return list;
         }
+
+        public bool PrintCheck()
+        {
+            return YasusakiItems.Value != null &&
+                   YasusakiItems.Value.Any() &&
+                   YasusakiItems.Value.Sum(x => x.発行枚数) > 0;
+        }
+        public void ExecPrint(bool isPreview)
+        {
+            var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
+            var fname = "0112" + "_" + this.HachuBangou.Value + ".csv";
+            var fullName = path + fname;
+            CsvExport(fullName);
+            if (!File.Exists(fullName))
+            {
+                MessageBox.Show("CSVファイルのエクスポートに失敗しました。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            NefudaOutput(fullName, isPreview);
+        }
+        private void CsvExport(string fullName)
+        {            
+            var list = YasusakiItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var datas = DataUtility.ToDataTable(list);
+            datas.Columns.Remove("商品名");
+            datas.Columns.Remove("単価");
+            new CsvUtility().Write(datas, fullName, true);
+        }
+
+        private void NefudaOutput(string fname, bool isPreview)
+        {
+            // ※振分発行用ＰＧ
+            var appPath = @"C:\Program Files (x86)\SATO\MLV5\MLPrint.exe";
+            var layPath = @"Y:\WAGOAPL\SATO\MLV5_Layout";
+            var grpName = @"\0112_ヤスサキ\【総額対応】ヤスサキ_V5_RT308R_振分発行";
+            var layName = @"41300-ﾔｽｻｷ_JAN1段＋税_ST308R_振分発行.mldenx";
+            var layNo = layPath + @"\" + grpName + @"\" + layName;
+            var dq = "\"";
+            var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
+
+            //Processオブジェクトを作成する
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            //起動する実行ファイルのパスを設定する
+            p.StartInfo.FileName = appPath;
+            //コマンドライン引数を指定する
+            p.StartInfo.Arguments = args;
+            //起動する。プロセスが起動した時はTrueを返す。
+            bool result = p.Start();
+        }
     }
     public class YasusakiItem
     {
-        public int 発行枚数 { get; set; }
-        public string 売切月 { get; set; }
+        public int 発注No { get; set; }
+        public string 取引先CD { get; set; }
+        public string 値札No { get; set; }
+        public string 発注日 { get; set; }
+        public string 納品日 { get; set; }
+        public string ｸﾗｽｺｰﾄﾞ { get; set; }
         public string 品番 { get; set; }
+        public string 枝番 { get; set; }
+        public string ｻｲｽﾞｺｰﾄﾞ { get; set; }
+        public string 規格表現文字 { get; set; }
+        public string 売切月 { get; set; }
         public string JAN { get; set; }
+        public int 本体価格 { get; set; }
         public string 商品コード { get; set; }
+        public int 発行枚数 { get; set; }
         public string 商品名 { get; set; }
-        public int 売価 { get; set; }
         public int 単価 { get; set; }
-        public string 値札番号 { get; set; }
-        public YasusakiItem(int 発行枚数, string 売切月, string 品番, string JAN, string 商品コード,
-                             string 商品名, int 売価, int 単価, string 値札番号)
+        
+        public YasusakiItem(int 発注No, string 取引先CD, string 値札No, string 発注日, string 納品日,
+                            string ｸﾗｽｺｰﾄﾞ, string 品番, string 枝番, string ｻｲｽﾞｺｰﾄﾞ, string 規格表現文字,
+                            string 売切月, string JAN, int 本体価格, string 商品コード, int 発行枚数,
+                             string 商品名, int 単価)
         {
-            this.発行枚数 = 発行枚数;
+            this.発注No = 発注No;
+            this.取引先CD = 取引先CD;
+            this.値札No = 値札No;
+            this.発注日 = 発注日;
+            this.納品日 = 納品日;
+            this.ｸﾗｽｺｰﾄﾞ = ｸﾗｽｺｰﾄﾞ;
+            this.品番 = 品番;
+            this.枝番 = 枝番;
+            this.ｻｲｽﾞｺｰﾄﾞ = ｻｲｽﾞｺｰﾄﾞ;
+            this.規格表現文字 = 規格表現文字;
+            this.売切月 = 売切月;
+            this.JAN = JAN;            
             this.売切月 = 売切月;
             this.品番 = 品番;
             this.JAN = JAN;
+            this.本体価格 = 本体価格;
             this.商品コード = 商品コード;
-            this.商品名 = 商品名;
-            this.売価 = 売価;
-            this.単価 = 単価;
-            this.値札番号 = 値札番号;
+            this.発行枚数 = 発行枚数;
+            this.商品名 = 商品名;            
+            this.単価 = 単価;            
         }
     }
 
@@ -449,11 +617,22 @@ namespace PriceTagPrint.ViewModel
         public IEnumerable<YasusakiItem> ConvertYasusakiDataToModel(List<YasusakiData> datas)
         {
             var result = new List<YasusakiItem>();
+            var uritukiList = new DB_0112_URITUKI_LIST();
+            var urituki = "";
+            var beforeNouhinbi = DateTime.MinValue;
+            var beforeSkbn = "";
             datas.ForEach(data =>
             {
+                if (beforeNouhinbi != data.NOUHINBI || beforeSkbn != data.SKBN)
+                {
+                    urituki = uritukiList.GetURITUKI(data.NOUHINBI, data.SKBN);
+                }
                 result.Add(
-                    new YasusakiItem(data.NSU, "41", data.SYOHINCD, data.JANCD, data.HINCD,
-                            data.EOS_SYOHINNM, data.BAIKA, data.GENKA, data.NEFUDA_KBN));
+                    new YasusakiItem(data.HNO, data.TOKCD, data.NEFUDA_KBN, data.HATYUBI.ToString("yyyyMMdd"), data.NOUHINBI.ToString("yyyyMMdd"), data.NETUKE_BUNRUI, data.SCODE,
+                                     data.SAIZUS.ToString("00"), data.BIKOU1, data.BIKOU2, urituki, data.JANCD, data.BAIKA, data.SYOHINCD, data.NSU,
+                                     data.EOS_SYOHINNM, data.GENKA));
+                beforeNouhinbi = data.NOUHINBI; 
+                beforeSkbn = data.SKBN;
             });
             return result;
         }

@@ -117,5 +117,35 @@ namespace PriceTagPrint.MDB
                 return null;
             }
         }
+
+        public bool QueryWhereHnoExists(string hno)
+        {
+            var sql = "SELECT * " + Environment.NewLine;
+            sql += "FROM " + Environment.NewLine;
+            sql += " 0112_EOS_HACHU " + Environment.NewLine;
+            sql += "WHERE " + Environment.NewLine;
+            sql += " HNO = " + hno;
+
+            DataTable mdbDt = new DataTable();
+            var results = new List<DB_0112_EOS_HACHU>();
+            // 読み込み
+            try
+            {
+                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
+                {
+                    mdbConn.Open();
+
+                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
+                    adapter.Fill(mdbDt);
+                    
+
+                    return mdbDt.Rows.Count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

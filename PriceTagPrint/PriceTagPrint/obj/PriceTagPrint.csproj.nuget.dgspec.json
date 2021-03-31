@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[3.2.3.2, )"
             },
+            "Microsoft.VisualBasic": {
+              "target": "Package",
+              "version": "[10.3.0, )"
+            },
             "MicrosoftExpressionInteractions": {
               "target": "Package",
               "version": "[3.0.40218, )"
@@ -69,6 +73,10 @@
               "version": "[5.0.0, )"
             },
             "System.Data.OleDb": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Text.Encoding.CodePages": {
               "target": "Package",
               "version": "[5.0.0, )"
             },

@@ -25,7 +25,10 @@
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
+        <KeyBinding Gesture="F4" Command="Close" CommandParameter="F4" />
         <KeyBinding Gesture="F5" Command="Close" CommandParameter="F5" />
+        <KeyBinding Gesture="F10" Command="Close" CommandParameter="F10" />
+        <KeyBinding Gesture="F12" Command="Close" CommandParameter="F12" />
     </Window.InputBindings>
     
     <Grid>
@@ -38,11 +41,11 @@
 
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="5" />
+                <RowDefinition Height="3" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="5" />
+                <RowDefinition Height="3" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -84,6 +87,9 @@
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True" 
                      TabIndex="2"/>
+            <TextBlock Grid.Row="3" Grid.Column="4" x:Name="HnoResultTextBox"
+                       Text="{Binding HnoResultString.Value}" Style="{StaticResource OtherText}" 
+                       HorizontalAlignment="Stretch" Foreground="{Binding HnoResultColor.Value}" Margin="5,0,0,0"/>
             
             <!--分類コード-->
             <TextBlock Grid.Row="1" Grid.Column="6" Text="分類コード" Style="{StaticResource TitleText}" 
@@ -106,11 +112,13 @@
             <TextBox Grid.Row="3" Grid.Column="7" x:Name="NefudaBangouText" 
                      Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
                      HorizontalContentAlignment="Center" MaxLength="1"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     PreviewTextInput="TextBox_PreviewTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"                     
                      LostFocus="TextBox_LostFocus"
-                     TabIndex="4"/>
+                     KeyDown="TextBox_KeyDown"
+                     TabIndex="8">
+            </TextBox>
+            <!--extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"-->
             <ComboBox Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="2" x:Name="NefudaBangouComboBox" 
                       ItemsSource="{Binding NefudaBangouItems.Value}"
                       SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
@@ -122,7 +130,6 @@
         <Grid Grid.Row="1" x:Name="HinGrid" IsEnabled="{Binding HinEnabled.Value}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="5" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
@@ -139,27 +146,27 @@
                 <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" Text="商品コード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" 
+            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" x:Name="SttHincdText"
                      HorizontalContentAlignment="Center" MaxLength="5"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="4"/>
+            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}" x:Name="SttEdabanText"
+                     HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      TabIndex="5"/>
-            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}"
-                     HorizontalContentAlignment="Center" MaxLength="2"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="6"/>
             <TextBlock Grid.Column="4" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
+            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
                      HorizontalContentAlignment="Center" MaxLength="5"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="7"/>
-            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}"
+                     TabIndex="6"/>
+            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}" x:Name="EndEdabanText"
                      HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="8"/>
+                     TabIndex="7"/>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Loaded">
                     <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
@@ -168,7 +175,12 @@
         </Grid>
 
         <Grid Grid.Row="2" Margin="10">
-            <DataGrid ItemsSource="{Binding Path=YasusakiItems.Value}" 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                      ItemsSource="{Binding Path=YasusakiItems.Value}" 
                       Style="{StaticResource BasicDataGrid}"
                       ColumnHeaderStyle="{StaticResource BasicDataGridColumnHeader}"
                       RowStyle="{StaticResource BasicDataGridRow}">
@@ -234,7 +246,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="売価" Binding="{Binding Path=売価}" Width="1*"
+                    <DataGridTextColumn Header="売価" Binding="{Binding Path=本体価格}" Width="1*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -254,7 +266,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="値札番号" Binding="{Binding Path=値札番号}" Width="auto"
+                    <DataGridTextColumn Header="値札番号" Binding="{Binding Path=値札No}" Width="auto"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -276,6 +288,17 @@
                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="White" />
                 </DataGrid.Resources>
             </DataGrid>
+            <Grid Grid.Row="1" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="8*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="発行枚数計" Style="{StaticResource TitleText}" 
+                           HorizontalAlignment="Stretch" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TotalMaisu.Value}" Style="{StaticResource ContentText}" 
+                         HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="Red" FontWeight="UltraBold"/>
+            </Grid>            
         </Grid>
 
         <Grid Grid.Row="3" ShowGridLines="False" Margin="1,0,1,0">
@@ -294,20 +317,19 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content=" ESC&#xa;終 了" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
             <Button Grid.Column="1" Command="{Binding FuncActionCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="2" Command="{Binding FuncActionCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="3" Command="{Binding FuncActionCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="4" Command="{Binding FuncActionCommand}" Content="F4" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="5" Command="{Binding FuncActionCommand}" CommandParameter="5" Content="Ｆ５&#xa;検索" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="4" Command="{Binding FuncActionCommand}" CommandParameter="F4" Content=" Ｆ４&#xa;クリア" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="5" Command="{Binding FuncActionCommand}" CommandParameter="F5" Content=" Ｆ５&#xa;検  索" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
             <Button Grid.Column="6" Command="{Binding FuncActionCommand}" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="7" Command="{Binding FuncActionCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="8" Command="{Binding FuncActionCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="9" Command="{Binding FuncActionCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" Content="F10" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" CommandParameter="F10" Content=" Ｆ１０&#xa;プレビュー" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False"/>
             <Button Grid.Column="11" Command="{Binding FuncActionCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" Content="F12" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="13" Command="{Binding FuncActionCommand}" Content="F13" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" CommandParameter="F12" Content=" Ｆ１２&#xa;値札発行" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False"/>
         </Grid>
     </Grid>
 </Window>
