@@ -10,6 +10,7 @@ namespace PriceTagPrint.Common
         public const string YAMANAKA = "2";
         public const string MARUYOSI = "3";
         public const string OKINAWA_SANKI = "4";
+        public const string WATASEI = "5";
     }
     public class Torihikisaki
     {
@@ -38,6 +39,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(TorihikisakiId.YAMANAKA, "ヤマナカ"),
                 new Torihikisaki(TorihikisakiId.MARUYOSI, "マルヨシ"),
                 new Torihikisaki(TorihikisakiId.OKINAWA_SANKI, "沖縄三喜マルエー"),
+                new Torihikisaki(TorihikisakiId.WATASEI, "わたせい"),
             };
         }
     }

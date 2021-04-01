@@ -34,16 +34,26 @@ namespace PriceTagPrint.ViewModel
                 switch(torihikisaki.Id)
                 {
                     case TorihikisakiId.YASUSAKI:
-                        var view = new YasusakiView();
-                        view.Owner = window;
-                        view.Show();
-                        view.Owner.Hide();
+                        {
+                            var view = new YasusakiView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
                         break;
                     case TorihikisakiId.YAMANAKA:
+                        {
+                            var view = new YamanakaView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }                        
                         break;
                     case TorihikisakiId.MARUYOSI:
                         break;
                     case TorihikisakiId.OKINAWA_SANKI:
+                        break;
+                    case TorihikisakiId.WATASEI:
                         break;
                     default:break;
                 }

@@ -20,32 +20,13 @@ using Reactive.Bindings;
 
 namespace PriceTagPrint.ViewModel
 {
-    /// <summary>
-    /// 発行区分
-    /// </summary>
-    public class HakkouType
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    /// <summary>
-    /// 値札番号
-    /// </summary>
-    public class NefudaBangou
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-
     public class YasusakiViewModel : ViewModelsBase
     {
         #region プロパティ
         // 発行区分
         public ReactiveProperty<int> HakkouTypeText { get; set; }
-        public ReactiveProperty<ObservableCollection<HakkouType>> HakkouTypeItems { get; set; }
-                = new ReactiveProperty<ObservableCollection<HakkouType>>();
+        public ReactiveProperty<ObservableCollection<CommonIdName>> HakkouTypeItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
         public ReactiveProperty<int> SelectedHakkouTypeIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
@@ -65,8 +46,8 @@ namespace PriceTagPrint.ViewModel
 
         // 値札番号
         public ReactiveProperty<int> NefudaBangouText { get; set; }
-        public ReactiveProperty<ObservableCollection<NefudaBangou>> NefudaBangouItems { get; set; }
-                = new ReactiveProperty<ObservableCollection<NefudaBangou>>();
+        public ReactiveProperty<ObservableCollection<CommonIdName>> NefudaBangouItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
         public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
@@ -189,9 +170,9 @@ namespace PriceTagPrint.ViewModel
         {
             var bunruis = new BunruiCodeList().GetBunruiCodes();
             bunruis.Insert(0, new BunruiCode("", ""));
-            HakkouTypeItems.Value = new ObservableCollection<HakkouType>(CreateHakkouTypeItems());
+            HakkouTypeItems.Value = new ObservableCollection<CommonIdName>(CreateHakkouTypeItems());
             BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
-            NefudaBangouItems.Value = new ObservableCollection<NefudaBangou>(CreateNefudaBangouItems());
+            NefudaBangouItems.Value = new ObservableCollection<CommonIdName>(CreateNefudaBangouItems());
 
             SelectedHakkouTypeIndex.Subscribe(x => HakkouTypeChanged(x));
         }
@@ -200,14 +181,14 @@ namespace PriceTagPrint.ViewModel
         /// 発行区分Items生成
         /// </summary>
         /// <returns></returns>
-        public List<HakkouType> CreateHakkouTypeItems()
+        public List<CommonIdName> CreateHakkouTypeItems()
         {
-            var list = new List<HakkouType>();
-            var item = new HakkouType();
+            var list = new List<CommonIdName>();
+            var item = new CommonIdName();
             item.Id = 1;
             item.Name = "1：新規発行";
             list.Add(item);
-            var item2 = new HakkouType();
+            var item2 = new CommonIdName();
             item2.Id = 2;
             item2.Name = "2：再発行";
             list.Add(item2);
@@ -218,14 +199,14 @@ namespace PriceTagPrint.ViewModel
         /// 値札番号Items生成
         /// </summary>
         /// <returns></returns>
-        public List<NefudaBangou> CreateNefudaBangouItems()
+        public List<CommonIdName> CreateNefudaBangouItems()
         {
-            var list = new List<NefudaBangou>();
-            var item = new NefudaBangou();
+            var list = new List<CommonIdName>();
+            var item = new CommonIdName();
             item.Id = 1;
             item.Name = "1：ラベル";
             list.Add(item);
-            var item2 = new NefudaBangou();
+            var item2 = new CommonIdName();
             item2.Id = 2;
             item2.Name = "2：タグ";
             list.Add(item2);
