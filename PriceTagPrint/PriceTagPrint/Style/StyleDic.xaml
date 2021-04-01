@@ -4,8 +4,9 @@
     
     <!--タイトル用テキストブロック-->
     <Style x:Key="TitleText" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="LightSeaGreen"/>
@@ -14,8 +15,8 @@
     
     <!--背景色なしテキストブロック-->
     <Style x:Key="OtherText" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
@@ -23,7 +24,7 @@
     <!--テキストボックス-->
     <Style x:Key="ContentText" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
@@ -55,7 +56,7 @@
     
     <!--コンボボックス-->
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-        <Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
+        <Setter Property="FontFamily" Value="Yu Gothic UI "/>
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
@@ -84,7 +85,7 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="UltraBold"/>
     </Style>

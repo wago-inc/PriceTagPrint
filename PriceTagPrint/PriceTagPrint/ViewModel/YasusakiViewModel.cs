@@ -20,39 +20,18 @@ using Reactive.Bindings;
 
 namespace PriceTagPrint.ViewModel
 {
-    public class RelayCommand : ICommand
-    {
-        //Command実行時に実行するアクション、引数を受け取りたい場合はこのActionをAction<object>などにする
-        private Action _action;
-
-        public RelayCommand(Action action)
-        {//コンストラクタでActionを登録
-            _action = action;
-        }
-
-        #region ICommandインターフェースの必須実装
-
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
-        {//とりあえずActionがあれば実行可能
-            return _action != null;
-        }
-
-        public void Execute(object parameter)
-        {//今回は引数を使わずActionを実行
-            _action?.Invoke();
-        }
-
-        #endregion
-    }
-
+    /// <summary>
+    /// 発行区分
+    /// </summary>
     public class HakkouType
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
+    /// <summary>
+    /// 値札番号
+    /// </summary>
     public class NefudaBangou
     {
         public int Id { get; set; }
@@ -62,6 +41,7 @@ namespace PriceTagPrint.ViewModel
 
     public class YasusakiViewModel : ViewModelsBase
     {
+        #region プロパティ
         // 発行区分
         public ReactiveProperty<int> HakkouTypeText { get; set; }
         public ReactiveProperty<ObservableCollection<HakkouType>> HakkouTypeItems { get; set; }
@@ -104,20 +84,18 @@ namespace PriceTagPrint.ViewModel
         //発行枚数計
         public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
 
-        public TextBox HakkouTypeTextBox = null;
         private List<YasusakiData> YasusakiDatas { get; set; } = new List<YasusakiData>();
+        // DataGrid Items
         public ReactiveProperty<ObservableCollection<YasusakiItem>> YasusakiItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<YasusakiItem>>();
 
+        #endregion
+
+        // 発行区分テキストボックス
+        public TextBox HakkouTypeTextBox = null;        
+
         private DB_0112_EOS_HACHU_LIST dB_0112_EOS_HACHU_LIST;
-
-        public void Loaded()
-        {
-            Task.Run(() =>
-            {
-
-            });
-        }
+        private WEB_TORIHIKISAKI_TANKA_LIST wEB_TORIHIKISAKI_TANKA_LIST;
 
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
@@ -126,6 +104,10 @@ namespace PriceTagPrint.ViewModel
             get { return funcActionCommand = funcActionCommand ?? new RelayCommand<string>(FuncAction); }
         }
 
+        /// <summary>
+        /// ファンクションキー処理
+        /// </summary>
+        /// <param name="parameter"></param>
         private void FuncAction(string parameter)
         {
             switch (parameter)
@@ -170,15 +152,22 @@ namespace PriceTagPrint.ViewModel
         }
         #endregion
 
+        #region コンストラクタ
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public YasusakiViewModel()
         {
             dB_0112_EOS_HACHU_LIST = new DB_0112_EOS_HACHU_LIST();
+            wEB_TORIHIKISAKI_TANKA_LIST = new WEB_TORIHIKISAKI_TANKA_LIST();
             CreateComboItems();
 
+            // コンボボックス初期値セット
             HakkouTypeText = new ReactiveProperty<int>(1);
             BunruiCodeText = new ReactiveProperty<string>("910");
             NefudaBangouText = new ReactiveProperty<int>(1);
 
+            // SubScribe定義
             HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
             BunruiCodeText.Subscribe(x => BunruiCodeTextChanged(x));
             NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
@@ -189,6 +178,83 @@ namespace PriceTagPrint.ViewModel
             HachuBangou.Subscribe(x => HachuBangouTextChanged(x));
         }
 
+        #endregion
+
+        #region コントロール生成・変更
+
+        /// <summary>
+        /// コンボボックスItem生成
+        /// </summary>
+        public void CreateComboItems()
+        {
+            var bunruis = new BunruiCodeList().GetBunruiCodes();
+            bunruis.Insert(0, new BunruiCode("", ""));
+            HakkouTypeItems.Value = new ObservableCollection<HakkouType>(CreateHakkouTypeItems());
+            BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
+            NefudaBangouItems.Value = new ObservableCollection<NefudaBangou>(CreateNefudaBangouItems());
+
+            SelectedHakkouTypeIndex.Subscribe(x => HakkouTypeChanged(x));
+        }
+
+        /// <summary>
+        /// 発行区分Items生成
+        /// </summary>
+        /// <returns></returns>
+        public List<HakkouType> CreateHakkouTypeItems()
+        {
+            var list = new List<HakkouType>();
+            var item = new HakkouType();
+            item.Id = 1;
+            item.Name = "1：新規発行";
+            list.Add(item);
+            var item2 = new HakkouType();
+            item2.Id = 2;
+            item2.Name = "2：再発行";
+            list.Add(item2);
+            return list;
+        }
+
+        /// <summary>
+        /// 値札番号Items生成
+        /// </summary>
+        /// <returns></returns>
+        public List<NefudaBangou> CreateNefudaBangouItems()
+        {
+            var list = new List<NefudaBangou>();
+            var item = new NefudaBangou();
+            item.Id = 1;
+            item.Name = "1：ラベル";
+            list.Add(item);
+            var item2 = new NefudaBangou();
+            item2.Id = 2;
+            item2.Name = "2：タグ";
+            list.Add(item2);
+            return list;
+        }
+
+        /// <summary>
+        /// 発行区分変更処理
+        /// </summary>
+        /// <param name="index"></param>
+        public void HakkouTypeChanged(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    HinEnabled.Value = false;
+                    break;
+                case 1:
+                    HinEnabled.Value = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 発注番号テキスト変更処理
+        /// </summary>
+        /// <param name="hno"></param>
         private void HachuBangouTextChanged(string hno)
         {
             if (!string.IsNullOrEmpty(hno))
@@ -211,6 +277,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 発行区分テキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
         private void HakkouTypeTextChanged(int id)
         {
             var item = HakkouTypeItems.Value.FirstOrDefault(x => x.Id == id);
@@ -220,6 +290,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 分類コードテキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
         private void BunruiCodeTextChanged(string id)
         {
             var item = BunruiCodeItems.Value.FirstOrDefault(x => x.Id.TrimEnd() == id.TrimEnd());
@@ -234,6 +308,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 値札番号テキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
         private void NefudaBangouTextChanged(int id)
         {
             var item = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == id);
@@ -243,6 +321,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 発行区分コンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
         private void SelectedHakkouTypeIndexChanged(int idx)
         {
             var item = HakkouTypeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
@@ -256,6 +338,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 分類コードコンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
         private void SelectedBunruiCodeIndexChanged(int idx)
         {
             var item = BunruiCodeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
@@ -269,6 +355,10 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        /// <summary>
+        /// 値札番号コンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
         private void SelectedNefudaBangouIndexChanged(int idx)
         {
             var item = NefudaBangouItems.Value.Where((item, index) => index == idx).FirstOrDefault();
@@ -282,6 +372,12 @@ namespace PriceTagPrint.ViewModel
             }
         }
 
+        #endregion
+
+        #region ファンクション
+        /// <summary>
+        /// F4 初期化処理
+        /// </summary>
         public void Clear()
         {
             SelectedHakkouTypeIndex.Value = 0;
@@ -302,6 +398,10 @@ namespace PriceTagPrint.ViewModel
             HakkouTypeTextBox.Focus();
         }
 
+        /// <summary>
+        /// F5検索入力チェック
+        /// </summary>
+        /// <returns></returns>
         public bool InputCheck()
         {
             if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
@@ -332,12 +432,14 @@ namespace PriceTagPrint.ViewModel
             return true;
         }
 
+        /// <summary>
+        /// F5検索処理
+        /// </summary>
         public void NefudaDataDisplay()
         {
             var w0112EosHchuList = dB_0112_EOS_HACHU_LIST.QueryWhereHno(this.HachuBangou.Value);
 
-            var wWEB_TORIHIKISAKI_TANKA = new WEB_TORIHIKISAKI_TANKA_LIST();
-            var wWebTorihikisakiTankaList = wWEB_TORIHIKISAKI_TANKA.QueryWhereTcodeTenpo("112", "9999");
+            var wWebTorihikisakiTankaList = wEB_TORIHIKISAKI_TANKA_LIST.QueryWhereTcodeTenpo("112", "9999");
 
             if (w0112EosHchuList.Any() && this.HakkouTypeText.Value == 2)
             {
@@ -441,7 +543,7 @@ namespace PriceTagPrint.ViewModel
                              BIKOU2 = g.Key.BIKOU2
                          })
                          .OrderBy(g => g.HNO)
-                         .OrderBy(g => g.SYOHINCD)
+                         .ThenBy(g => g.SYOHINCD.Replace("-", ""))
                      );
 
                 if (YasusakiItems.Value == null)
@@ -460,67 +562,23 @@ namespace PriceTagPrint.ViewModel
             {
                 MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-        public void CreateComboItems()
-        {
-            var bunruis = new BunruiCodeList().GetBunruiCodes();
-            bunruis.Insert(0, new BunruiCode("", ""));
-            HakkouTypeItems.Value = new ObservableCollection<HakkouType>(GetHakkouTypeItems());
-            BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
-            NefudaBangouItems.Value = new ObservableCollection<NefudaBangou>(GetNefudaBangouItems());
+        }        
 
-            SelectedHakkouTypeIndex.Subscribe(x => BunruiChanged(x));
-        }
-
-        public void BunruiChanged(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    HinEnabled.Value = false;
-                    break;
-                case 1:
-                    HinEnabled.Value = true;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public List<HakkouType> GetHakkouTypeItems()
-        {
-            var list = new List<HakkouType>();
-            var item = new HakkouType();
-            item.Id = 1;
-            item.Name = "1：新規発行";
-            list.Add(item);
-            var item2 = new HakkouType();
-            item2.Id = 2;
-            item2.Name = "2：再発行";
-            list.Add(item2);
-            return list;
-        }
-
-        public List<NefudaBangou> GetNefudaBangouItems()
-        {
-            var list = new List<NefudaBangou>();
-            var item = new NefudaBangou();
-            item.Id = 1;
-            item.Name = "1：ラベル";
-            list.Add(item);
-            var item2 = new NefudaBangou();
-            item2.Id = 2;
-            item2.Name = "2：タグ";
-            list.Add(item2);
-            return list;
-        }
-
+        /// <summary>
+        /// F10プレビュー・F12印刷前データ確認
+        /// </summary>
+        /// <returns></returns>
         public bool PrintCheck()
         {
             return YasusakiItems.Value != null &&
                    YasusakiItems.Value.Any() &&
                    YasusakiItems.Value.Sum(x => x.発行枚数) > 0;
         }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 実処理
+        /// </summary>
+        /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
             var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
@@ -534,15 +592,28 @@ namespace PriceTagPrint.ViewModel
             }
             NefudaOutput(fullName, isPreview);
         }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 CSV発行処理
+        /// </summary>
+        /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {            
             var list = YasusakiItems.Value.Where(x => x.発行枚数 > 0).ToList();
             var datas = DataUtility.ToDataTable(list);
+            // 不要なカラムの削除
             datas.Columns.Remove("商品名");
             datas.Columns.Remove("単価");
+            datas.Columns.Remove("和合商品コード");
+            datas.Columns.Remove("相手先品番");
             new CsvUtility().Write(datas, fullName, true);
         }
 
+        /// <summary>
+        /// F10プレビュー・F12印刷 外部アプリ（MLV5）起動
+        /// </summary>
+        /// <param name="fname"></param>
+        /// <param name="isPreview"></param>
         private void NefudaOutput(string fname, bool isPreview)
         {
             // ※振分発行用ＰＧ
@@ -563,7 +634,13 @@ namespace PriceTagPrint.ViewModel
             //起動する。プロセスが起動した時はTrueを返す。
             bool result = p.Start();
         }
+        #endregion
     }
+
+    /// <summary>
+    /// データグリッド表示プロパティ
+    /// CSVの出力にも流用
+    /// </summary>
     public class YasusakiItem
     {
         public int 発注No { get; set; }
@@ -583,11 +660,13 @@ namespace PriceTagPrint.ViewModel
         public int 発行枚数 { get; set; }
         public string 商品名 { get; set; }
         public int 単価 { get; set; }
+        public string 和合商品コード { get; set; }
+        public string 相手先品番 { get; set; }
         
         public YasusakiItem(int 発注No, string 取引先CD, string 値札No, string 発注日, string 納品日,
                             string ｸﾗｽｺｰﾄﾞ, string 品番, string 枝番, string ｻｲｽﾞｺｰﾄﾞ, string 規格表現文字,
                             string 売切月, string JAN, int 本体価格, string 商品コード, int 発行枚数,
-                             string 商品名, int 単価)
+                             string 商品名, int 単価, string 和合商品コード, string 相手先品番)
         {
             this.発注No = 発注No;
             this.取引先CD = 取引先CD;
@@ -608,7 +687,9 @@ namespace PriceTagPrint.ViewModel
             this.商品コード = 商品コード;
             this.発行枚数 = 発行枚数;
             this.商品名 = 商品名;            
-            this.単価 = 単価;            
+            this.単価 = 単価;
+            this.和合商品コード = 和合商品コード;
+            this.相手先品番 = 相手先品番;
         }
     }
 
@@ -630,7 +711,7 @@ namespace PriceTagPrint.ViewModel
                 result.Add(
                     new YasusakiItem(data.HNO, data.TOKCD, data.NEFUDA_KBN, data.HATYUBI.ToString("yyyyMMdd"), data.NOUHINBI.ToString("yyyyMMdd"), data.NETUKE_BUNRUI, data.SCODE,
                                      data.SAIZUS.ToString("00"), data.BIKOU1, data.BIKOU2, urituki, data.JANCD, data.BAIKA, data.SYOHINCD, data.NSU,
-                                     data.EOS_SYOHINNM, data.GENKA));
+                                     data.EOS_SYOHINNM, data.GENKA, data.HINCD, data.SYOHINCD));
                 beforeNouhinbi = data.NOUHINBI; 
                 beforeSkbn = data.SKBN;
             });

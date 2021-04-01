@@ -51,6 +51,11 @@ namespace PriceTagPrint.View
 
         #endregion
 
+        /// <summary>
+        /// 発行区分・値札区分テキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
@@ -70,6 +75,11 @@ namespace PriceTagPrint.View
             }
         }
 
+        /// <summary>
+        /// 発行区分・値札区分テキストの空白LostFocus処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var txt = sender as TextBox;
@@ -77,24 +87,35 @@ namespace PriceTagPrint.View
             {
                 if (txt.Name == "HakkouTypeText")
                 {
+                    // 変更通知が飛ばないため一旦-1をセット
                     ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
                     ((YasusakiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
                 }
                 else if (txt.Name == "NefudaBangouText")
                 {
+                    // 変更通知が飛ばないため一旦-1をセット
                     ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
                     ((YasusakiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
                 }
             }
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public YasusakiView()
         {
             InitializeComponent();
             this.HakkouTypeText.Focus();
+            // ViewModelからも初期フォーカスをセットできるように発行区分テキストを渡す。
             ((YasusakiViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
         }
 
+        /// <summary>
+        /// ファンクションキークリック処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExecuteCommand(object sender, RoutedEventArgs e)
         {
             var parameter = e.RoutedEvent.Name == "Executed" ?
@@ -129,9 +150,12 @@ namespace PriceTagPrint.View
                     }                        
                     break;
             }
-
         }
 
+        /// <summary>
+        /// F5検索クリック時の入力チェック
+        /// </summary>
+        /// <returns></returns>
         public bool InputCheck()
         {
             if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
@@ -162,6 +186,11 @@ namespace PriceTagPrint.View
             return true;
         }
 
+        /// <summary>
+        /// 値札番号エンターで検索処理実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)

@@ -206,7 +206,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="品番" Binding="{Binding Path=品番}" Width="2*"
+                    <DataGridTextColumn Header="品番" Binding="{Binding Path=相手先品番}" Width="2*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -226,7 +226,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="商品コード" Binding="{Binding Path=商品コード}" Width="3*"
+                    <DataGridTextColumn Header="商品コード" Binding="{Binding Path=和合商品コード}" Width="3*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -297,7 +297,8 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="発行枚数計" Style="{StaticResource TitleText}" 
                            HorizontalAlignment="Stretch" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TotalMaisu.Value}" Style="{StaticResource ContentText}" 
-                         HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="Red" FontWeight="UltraBold"/>
+                         HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="Red" 
+                         IsReadOnly="True" IsTabStop="False" FontFamily="Yu Gothic Medium" />
             </Grid>            
         </Grid>
 
