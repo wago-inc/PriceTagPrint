@@ -23,6 +23,21 @@ namespace PriceTagPrint.WAGO2
         public string NEFUDA_KBN { get; set; }
         public string NETUKE_BUNRUI { get; set; }
 
+        /// <summary>
+        /// ヤスサキ用
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <param name="tcode"></param>
+        /// <param name="tenpo"></param>
+        /// <param name="hcode"></param>
+        /// <param name="saizu"></param>
+        /// <param name="bunrui"></param>
+        /// <param name="scode"></param>
+        /// <param name="skbn"></param>
+        /// <param name="bikou1"></param>
+        /// <param name="bikou2"></param>
+        /// <param name="nefuda_kbn"></param>
+        /// <param name="netuke_bunrui"></param>
         public WEB_TORIHIKISAKI_TANKA(string tid, short tcode, short tenpo, int hcode, short saizu, short bunrui,
                                       string scode, string skbn, string bikou1, string bikou2, string nefuda_kbn,
                                       string netuke_bunrui)
@@ -50,8 +65,8 @@ namespace PriceTagPrint.WAGO2
             sql += "FROM " + Environment.NewLine;
             sql += " WAGO2.WEB_TORIHIKISAKI_TANKA " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
-            sql += " TCODE = 112 " + Environment.NewLine;
-            sql += " AND TENPO = 9999 ";
+            sql += " TCODE = " + tcode + Environment.NewLine;
+            sql += " AND TENPO = " + tenpo;
 
             DataTable orcDt = new DataTable();
             var results = new List<WEB_TORIHIKISAKI_TANKA>();

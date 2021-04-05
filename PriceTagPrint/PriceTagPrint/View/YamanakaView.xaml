@@ -72,8 +72,9 @@
                      HorizontalContentAlignment="Center" MaxLength="1" 
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True" 
                      extend:TextBoxAttachment.EnterCommand="True" 
-                     PreviewTextInput="TextBox_PreviewTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
-                     LostFocus="TextBox_LostFocus"
+                     PreviewTextInput="TextBox_PreviewTextInput" 
+                     CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
+                     LostFocus="TextBox_LostFocus"                     
                      TabIndex="1"/>
             <ComboBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" x:Name="HakkouTypeComboBox"
                       ItemsSource="{Binding HakkouTypeItems.Value}"
@@ -84,21 +85,41 @@
             <!--受信日-->
             <TextBlock Grid.Row="3" Grid.Column="1" Text="受信日" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" x:Name="JusinbiText" Text="{Binding Mode=TwoWay, ElementName=JusinbiCalender, 
-                Path=SelectedDate,StringFormat='yyyy年MM月dd日'}" LostFocus="JusinbiText_LostFocus" Style="{StaticResource ContentText}"/>
-            <Button Grid.Row="3" Grid.Column="4" Content=" … " Name="JusinbiButton" HorizontalAlignment="Left" 
-                    Style="{StaticResource NormalButton}" PreviewMouseDown="JusinbiButton_PreviewMouseDown" />
-            <DatePicker Grid.Row="3" Grid.Column="4" Name="JusinbiDatePicker" Width="0" Height="0" />
+            <DatePicker Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="JusinbiDatePicker"
+                        SelectedDate="{Binding JusinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewKeyDown="DatePicker_PreviewKeyDown"
+                        DateValidationError="DatePicker_DateValidationError"
+                        TabIndex="2">
+                <DatePicker.CalendarStyle>
+                    <Style TargetType="Calendar">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.CalendarStyle>
+            </DatePicker>
 
             <!--納品日-->
             <TextBlock Grid.Row="5" Grid.Column="1" Text="納品日" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="NouhinbiText" Text="{Binding Mode=TwoWay, ElementName=NouhinbiCalender, 
-                Path=SelectedDate,StringFormat='yyyy年MM月dd日'}" LostFocus="NouhinbiText_LostFocus" Style="{StaticResource ContentText}"/>
-            <Button Grid.Row="5" Grid.Column="4" Content=" … " Name="NouhinbiButton" HorizontalAlignment="Left" 
-                    Style="{StaticResource NormalButton}" PreviewMouseDown="NouhinbiButton_PreviewMouseDown" />
-            <DatePicker Grid.Row="5" Grid.Column="4" Name="NouhinbiDatePicker" Width="0" Height="0" />
-            
+            <DatePicker Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="NouhinbiDatePicker" 
+                        SelectedDate="{Binding NouhinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewKeyDown="DatePicker_PreviewKeyDown"
+                        DateValidationError="DatePicker_DateValidationError"
+                        TabIndex="3">
+                <DatePicker.CalendarStyle>
+                    <Style TargetType="Calendar">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.CalendarStyle>
+            </DatePicker>
+
             <!--分類コード-->
             <TextBlock Grid.Row="1" Grid.Column="6" Text="分類コード" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
@@ -107,7 +128,7 @@
                      HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="3"/>
+                     TabIndex="4"/>
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value}"
                       SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
@@ -122,9 +143,8 @@
                      HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     LostFocus="TextBox_LostFocus"
-                     KeyDown="TextBox_KeyDown"
-                     TabIndex="8">
+                     LostFocus="TextBox_LostFocus"                     
+                     TabIndex="5">
             </TextBox>
             <ComboBox Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="2" x:Name="NefudaBangouComboBox" 
                       ItemsSource="{Binding NefudaBangouItems.Value}"
@@ -140,7 +160,8 @@
                      HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="3"/>
+                     LostFocus="TextBox_LostFocus"
+                     TabIndex="6"/>
             <ComboBox Grid.Row="5" Grid.Column="8" Grid.ColumnSpan="2" x:Name="McCodeComboBox" 
                       ItemsSource="{Binding McCodeItems.Value}"
                       SelectedIndex="{Binding SelectedMcCodeIndex.Value}"
@@ -149,14 +170,14 @@
             
         </Grid>
 
-        <StackPanel Grid.Row="0" Grid.RowSpan="3" x:Name="JusinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
+        <!--<StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="JusinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
             <Calendar Name="JusinbiCalender" SelectedDatesChanged="JusinbiCalender_SelectedDatesChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Margin="0,64,250,0" Width="898" FontSize="14"/>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.RowSpan="3" x:Name="NouhinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
+        <StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="NouhinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
             <Calendar Name="NouhinbiCalender" SelectedDatesChanged="NouhinbiCalender_SelectedDatesChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Margin="0,92,250,0" Width="898" FontSize="14"/>
-        </StackPanel>
+        </StackPanel>-->
         
         <Grid Grid.Row="1" x:Name="HinGrid">
             <Grid.RowDefinitions>
@@ -179,13 +200,14 @@
                      HorizontalContentAlignment="Center" MaxLength="5"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="4"/>            
+                     TabIndex="7"/>            
             <TextBlock Grid.Column="3" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="4" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
                      HorizontalContentAlignment="Center" MaxLength="5"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="6"/>            
+                     KeyDown="TextBox_KeyDown"
+                     TabIndex="8"/>            
 
             <TextBlock Grid.Column="7" Grid.ColumnSpan="3" Text="※値札番号：１３，１４，１５，１６（※１３、１４は下札）を指定。" 
                        Style="{StaticResource CautionText}"/>
@@ -202,7 +224,7 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <DataGrid Grid.Row="0"
-                      ItemsSource="{Binding Path=YasusakiItems.Value}" 
+                      ItemsSource="{Binding Path=YamanakaItems.Value}" 
                       Style="{StaticResource BasicDataGrid}"
                       ColumnHeaderStyle="{StaticResource BasicDataGridColumnHeader}"
                       RowStyle="{StaticResource BasicDataGridRow}">
@@ -218,7 +240,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="売切月" Binding="{Binding Path=売切月}" Width="1*"
+                    <DataGridTextColumn Header="MCｺｰﾄﾞ" Binding="{Binding Path=ＭＣコード}" Width="auto"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -228,7 +250,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="品番" Binding="{Binding Path=相手先品番}" Width="2*"
+                    <DataGridTextColumn Header="ﾃﾞﾌﾟﾄｸﾗｽｺｰﾄﾞ" Binding="{Binding Path=デプトクラスコード}" Width="auto"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -238,7 +260,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="JAN" Binding="{Binding Path=JAN}" Width="3*"
+                    <DataGridTextColumn Header="品番" Binding="{Binding Path=品番}" Width="1*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -248,7 +270,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="商品コード" Binding="{Binding Path=和合商品コード}" Width="3*"
+                    <DataGridTextColumn Header="商品コード" Binding="{Binding Path=商品コード}" Width="2*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -258,7 +280,17 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="商品名" Binding="{Binding Path=商品名}" Width="8*"
+                    <DataGridTextColumn Header="ＪＡＮコード" Binding="{Binding Path=JAN13桁}" Width="2*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="商品名" Binding="{Binding Path=商品名}" Width="4*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -268,32 +300,32 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="売価" Binding="{Binding Path=本体価格}" Width="1*"
-                                        CellStyle="{StaticResource UnTabStopCell}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="単価" Binding="{Binding Path=単価}" Width="1*"
-                                        CellStyle="{StaticResource UnTabStopCell}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="値札番号" Binding="{Binding Path=値札No}" Width="auto"
+                    <DataGridTextColumn Header="ﾌｪｲｽ番号" Binding="{Binding Path=フェイス番号}" Width="auto"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="販促文字表示名" Binding="{Binding Path=販促文字表示名}" Width="auto"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="本体売価" Binding="{Binding Path=本体売価}" Width="auto"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
