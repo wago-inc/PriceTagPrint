@@ -132,7 +132,7 @@ namespace PriceTagPrint.View
                     ((YasusakiViewModel)this.DataContext).Clear();
                     break;
                 case "F5":
-                    if (InputCheck())
+                    if (((YasusakiViewModel)this.DataContext).InputCheck())
                     {
                         ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
                     }
@@ -156,35 +156,35 @@ namespace PriceTagPrint.View
         /// F5検索クリック時の入力チェック
         /// </summary>
         /// <returns></returns>
-        public bool InputCheck()
-        {
-            if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
-            {
-                MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.HachuNumberTextBox.Text))
-            {
-                MessageBox.Show("発注番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!string.IsNullOrEmpty(HnoResultTextBox.Text) && HnoResultTextBox.Text.Contains("未登録"))
-            {
-                MessageBox.Show("未登録の発注番号が選択されています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.BunruiCodeText.Text))
-            {
-                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.NefudaBangouText.Text))
-            {
-                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
-        }
+        //public bool InputCheck()
+        //{
+        //    if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
+        //    {
+        //        MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.HachuNumberTextBox.Text))
+        //    {
+        //        MessageBox.Show("発注番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    if (!string.IsNullOrEmpty(HnoResultTextBox.Text) && HnoResultTextBox.Text.Contains("未登録"))
+        //    {
+        //        MessageBox.Show("未登録の発注番号が選択されています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.BunruiCodeText.Text))
+        //    {
+        //        MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.NefudaBangouText.Text))
+        //    {
+        //        MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// 値札番号エンターで検索処理実行
@@ -197,7 +197,7 @@ namespace PriceTagPrint.View
             {
                 if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
                 {
-                    if (InputCheck())
+                    if (((YasusakiViewModel)this.DataContext).InputCheck())
                     {
                         ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
                     }

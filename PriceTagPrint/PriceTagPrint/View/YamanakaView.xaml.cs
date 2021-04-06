@@ -112,6 +112,8 @@ namespace PriceTagPrint.View
             this.HakkouTypeText.Focus();
             // ViewModelからも初期フォーカスをセットできるように発行区分テキストを渡す。
             ((YamanakaViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
+            ((YamanakaViewModel)this.DataContext).JusinDatePicker = this.JusinbiDatePicker;
+            ((YamanakaViewModel)this.DataContext).NouhinDatePicker = this.NouhinbiDatePicker;
         }
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace PriceTagPrint.View
                     ((YamanakaViewModel)this.DataContext).Clear();
                     break;
                 case "F5":
-                    if (InputCheck())
+                    if (((YamanakaViewModel)this.DataContext).InputCheck())
                     {
                         ((YamanakaViewModel)this.DataContext).NefudaDataDisplay();
                     }
@@ -159,41 +161,39 @@ namespace PriceTagPrint.View
         /// F5検索クリック時の入力チェック
         /// </summary>
         /// <returns></returns>
-        public bool InputCheck()
-        {
-            DateTime convDate;
-            if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
-            {
-                MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            //if (string.IsNullOrEmpty(this.JusinbiText.Text) || !DateTime.TryParse(this.JusinbiText.Text, out convDate))
-            //{
-            //    MessageBox.Show("受信日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //    return false;
-            //}
-            //if (!string.IsNullOrEmpty(this.NouhinbiText.Text) || !DateTime.TryParse(this.NouhinbiText.Text, out convDate))
-            //{
-            //    MessageBox.Show("納品日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //    return false;
-            //}
-            if (string.IsNullOrEmpty(this.BunruiCodeText.Text))
-            {
-                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.NefudaBangouText.Text))
-            {
-                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.McCodeText.Text))
-            {
-                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
-        }
+        //public bool InputCheck()
+        //{
+        //    DateTime convDate;
+        //    if (string.IsNullOrEmpty(this.HakkouTypeText.Text))
+        //    {
+        //        MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        this.HakkouTypeText.Focus();
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.JusinbiDatePicker.Text) || !DateTime.TryParse(this.JusinbiDatePicker.Text, out convDate))
+        //    {
+        //        MessageBox.Show("受信日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        this.JusinbiDatePicker.Focus();
+        //        return false;
+        //    }
+        //    if (!string.IsNullOrEmpty(this.NouhinbiDatePicker.Text) || !DateTime.TryParse(this.NouhinbiDatePicker.Text, out convDate))
+        //    {
+        //        MessageBox.Show("納品日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        this.NouhinbiDatePicker.Focus();
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.NefudaBangouText.Text))
+        //    {
+        //        MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    if (string.IsNullOrEmpty(this.McCodeText.Text))
+        //    {
+        //        MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// 値札番号エンターで検索処理実行
@@ -206,7 +206,7 @@ namespace PriceTagPrint.View
             {
                 if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
                 {
-                    if (InputCheck())
+                    if (((YamanakaViewModel)this.DataContext).InputCheck())
                     {
                         ((YamanakaViewModel)this.DataContext).NefudaDataDisplay();
                     }
@@ -259,65 +259,5 @@ namespace PriceTagPrint.View
                 picker.SelectedDate = convDt;
             }
         }
-
-        //private void NouhinbiButton_PreviewMouseDown(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-        //    DateTime convDt;
-        //    if (DateTime.TryParse(this.NouhinbiText.Text, out convDt))
-        //    {
-        //        NouhinbiCalender.SelectedDate = convDt;
-        //    }
-        //    NouhinbiCalenderPanel.Visibility = NouhinbiCalenderPanel.Visibility == Visibility.Hidden && JusinbiCalenderPanel.Visibility == Visibility.Hidden ?
-        //                                        Visibility.Visible :
-        //                                        Visibility.Hidden;
-        //}
-
-        //private void NouhinbiCalender_SelectedDatesChanged(System.Object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        //{
-        //    Debug.Print(NouhinbiCalender.SelectedDate.ToString());
-        //    {
-        //        var withBlock = this.NouhinbiCalenderPanel;
-        //        withBlock.Visibility = Visibility.Hidden;
-        //    }
-        //}
-        //private void NouhinbiText_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    DateTime convDt;
-        //    if (!string.IsNullOrEmpty(this.NouhinbiText.Text) && !DateTime.TryParse(this.NouhinbiText.Text, out convDt))
-        //    {
-        //        MessageBox.Show("正しい日付を入力してください。", "注意", MessageBoxButton.OK, MessageBoxImage.Information);
-        //        //e.Handled = true;
-        //    }
-        //}
-
-        //private void JusinbiButton_PreviewMouseDown(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-        //    DateTime convDt;
-        //    if (DateTime.TryParse(this.JusinbiText.Text, out convDt))
-        //    {
-        //        JusinbiCalender.SelectedDate = convDt;
-        //    }
-        //    JusinbiCalenderPanel.Visibility = JusinbiCalenderPanel.Visibility == Visibility.Hidden && NouhinbiCalenderPanel.Visibility == Visibility.Hidden ?
-        //                                        Visibility.Visible :
-        //                                        Visibility.Hidden;
-        //}
-
-        //private void JusinbiCalender_SelectedDatesChanged(System.Object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        //{
-        //    Debug.Print(JusinbiCalender.SelectedDate.ToString());
-        //    {
-        //        var withBlock = this.JusinbiCalenderPanel;
-        //        withBlock.Visibility = Visibility.Hidden;
-        //    }
-        //}
-        //private void JusinbiText_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    DateTime convDt;            
-        //    if (!string.IsNullOrEmpty(this.JusinbiText.Text) && !DateTime.TryParse(this.JusinbiText.Text, out convDt))
-        //    {
-        //        MessageBox.Show("正しい日付を入力してください。", "注意", MessageBoxButton.OK, MessageBoxImage.Information);
-        //        //e.Handled = true;
-        //    } 
-        //}
     }
 }

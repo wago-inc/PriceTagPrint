@@ -29,7 +29,7 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<DateTime> JusinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today);
 
         // 納品日
-        public ReactiveProperty<DateTime> NouhinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today);
+        public ReactiveProperty<DateTime> NouhinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today.AddDays(1));
 
         // 分類コード
         public ReactiveProperty<string> BunruiCodeText { get; set; }
@@ -52,14 +52,10 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<int> SelectedMcCodeIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
-        // 開始商品コード
+        // 開始相手品番
         public ReactiveProperty<string> SttHincd { get; set; } = new ReactiveProperty<string>("");
-        // 終了商品コード
+        // 終了相手品番
         public ReactiveProperty<string> EndHincd { get; set; } = new ReactiveProperty<string>("");
-        // 開始枝番
-        public ReactiveProperty<string> SttEdaban { get; set; } = new ReactiveProperty<string>("");
-        //終了枝番
-        public ReactiveProperty<string> EndEdaban { get; set; } = new ReactiveProperty<string>("");
 
         //発行枚数計
         public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
@@ -73,6 +69,8 @@ namespace PriceTagPrint.ViewModel
 
         // 発行区分テキストボックス
         public TextBox HakkouTypeTextBox = null;
+        public DatePicker JusinDatePicker = null;
+        public DatePicker NouhinDatePicker = null;
 
         private EOSJUTRA_LIST eOSJUTRA_LIST;
         private TOKMTE_LIST tOKMTE_LIST;
@@ -390,17 +388,17 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void Clear()
         {
+            JusinDate.Value = DateTime.Today;
+            NouhinDate.Value = DateTime.Today.AddDays(1);
             SelectedHakkouTypeIndex.Value = 0;
             BunruiCodeText.Value = "0025";
             SelectedNefudaBangouIndex.Value = 0;
             SelectedMcCodeIndex.Value = 0;
             SttHincd.Value = "";
             EndHincd.Value = "";
-            SttEdaban.Value = "";
-            EndEdaban.Value = "";
             TotalMaisu.Value = "";
-            //YasusakiDatas.Clear();
-            //YasusakiItems.Value.Clear();
+            YamanakaDatas.Clear();
+            YamanakaItems.Value.Clear();
 
             HakkouTypeTextBox.Focus();
         }
@@ -411,14 +409,23 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool InputCheck()
         {
+            DateTime convDate;
+            if (string.IsNullOrEmpty(this.JusinDatePicker.Text) || !DateTime.TryParse(this.JusinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("受信日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.JusinDatePicker.Focus();
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.NouhinDatePicker.Text) || !DateTime.TryParse(this.NouhinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("納品日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.NouhinDatePicker.Focus();
+                return false;
+            }
             if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
             {
                 MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrEmpty(this.BunruiCodeText.Value))
-            {
-                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.HakkouTypeTextBox.Focus();
                 return false;
             }
             if (this.NefudaBangouText.Value < 13 || this.NefudaBangouText.Value > 16)
@@ -444,6 +451,10 @@ namespace PriceTagPrint.ViewModel
 
             if(eosJutraList.Any() && tokmteList.Any())
             {
+                int sttHincd;
+                int endHincd;
+                int vhincd;
+
                 YamanakaDatas.Clear();
                 YamanakaDatas.AddRange(
                     eosJutraList
@@ -521,7 +532,13 @@ namespace PriceTagPrint.ViewModel
                              VHINNMA = g.Key.VHINNMA.TrimEnd(),
                              VSURYO = g.Sum(y => y.VSURYO),
                          })
-                         .Where(x => x.NEFUDANO == NefudaBangouText.Value.ToString() && !string.IsNullOrEmpty(x.COLCD) && x.COLCD != "0")
+                         .Where(x => x.NEFUDANO == NefudaBangouText.Value.ToString() && !string.IsNullOrEmpty(x.COLCD) && x.COLCD != "0" &&
+                                     (!string.IsNullOrEmpty(this.SttHincd.Value) && 
+                                      int.TryParse(this.SttHincd.Value, out sttHincd) && 
+                                      int.TryParse(x.VHINCD, out vhincd) ? vhincd >= sttHincd : true) &&
+                                     (!string.IsNullOrEmpty(this.EndHincd.Value) &&
+                                      int.TryParse(this.EndHincd.Value, out endHincd) &&
+                                      int.TryParse(x.VHINCD, out vhincd) ? vhincd <= endHincd : true))
                          .OrderBy(x => x.COLCD)
                          .ThenBy(x => x.VHINCD)
                      );
@@ -607,9 +624,9 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool PrintCheck()
         {
-            //return YasusakiItems.Value != null &&
-            //       YasusakiItems.Value.Any() &&
-            //       YasusakiItems.Value.Sum(x => x.発行枚数) > 0;
+            return YamanakaItems.Value != null &&
+                   YamanakaItems.Value.Any() &&
+                   YamanakaItems.Value.Sum(x => x.発行枚数) > 0;
             return false;
         }
 
@@ -620,8 +637,11 @@ namespace PriceTagPrint.ViewModel
         public void ExecPrint(bool isPreview)
         {
             var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0112" + "_" + ".csv";
-            var fullName = path + fname;
+            var fname = "0127" + "_" + 
+                        this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
+                        this.NouhinDate.Value.ToString("yyyyMMdd") + "_" +
+                        this.BunruiCodeText.Value + ".csv";
+            var fullName = Path.Combine(path, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {
@@ -637,14 +657,12 @@ namespace PriceTagPrint.ViewModel
         /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {
-            //var list = YasusakiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            //var datas = DataUtility.ToDataTable(list);
-            //// 不要なカラムの削除
-            //datas.Columns.Remove("商品名");
-            //datas.Columns.Remove("単価");
-            //datas.Columns.Remove("和合商品コード");
-            //datas.Columns.Remove("相手先品番");
-            //new CsvUtility().Write(datas, fullName, true);
+            var list = YamanakaItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var datas = DataUtility.ToDataTable(list);
+            // 不要なカラムの削除
+            datas.Columns.Remove("販促文字表示名");
+            datas.Columns.Remove("商品名");
+            new CsvUtility().Write(datas, fullName, true);
         }
 
         /// <summary>
@@ -657,8 +675,8 @@ namespace PriceTagPrint.ViewModel
             // ※振分発行用ＰＧ
             var appPath = @"C:\Program Files (x86)\SATO\MLV5\MLPrint.exe";
             var layPath = @"Y:\WAGOAPL\SATO\MLV5_Layout";
-            var grpName = @"\0112_ヤスサキ\【総額対応】ヤスサキ_V5_RT308R_振分発行";
-            var layName = @"41300-ﾔｽｻｷ_JAN1段＋税_ST308R_振分発行.mldenx";
+            var grpName = @"\0127_ヤマナカ\【総額対応】ヤマナカ_V5_RT308R_振分発行";
+            var layName = @"ヤマナカESPO_V5_ST308R_振分発行.mldenx";
             var layNo = layPath + @"\" + grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");

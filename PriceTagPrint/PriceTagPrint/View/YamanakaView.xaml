@@ -197,13 +197,13 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" Text="相手品番" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" x:Name="SttHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="5"
+                     HorizontalContentAlignment="Center" MaxLength="7"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      TabIndex="7"/>            
             <TextBlock Grid.Column="3" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="4" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="5"
+                     HorizontalContentAlignment="Center" MaxLength="7"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      KeyDown="TextBox_KeyDown"

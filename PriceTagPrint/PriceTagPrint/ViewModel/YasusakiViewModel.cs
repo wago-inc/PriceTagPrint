@@ -564,7 +564,7 @@ namespace PriceTagPrint.ViewModel
         {
             var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
             var fname = "0112" + "_" + this.HachuBangou.Value + ".csv";
-            var fullName = path + fname;
+            var fullName = Path.Combine(path, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {
