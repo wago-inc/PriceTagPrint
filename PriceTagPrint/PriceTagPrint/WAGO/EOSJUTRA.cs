@@ -11,6 +11,10 @@ namespace PriceTagPrint.WAGO
     public class EOSJUTRA
     {
         /// <summary>
+        /// DATNO
+        /// </summary>
+        public string DATNO { get; set; }
+        /// <summary>
         /// 得意先CD
         /// </summary>
         public string VRYOHNCD { get; set; }
@@ -22,6 +26,8 @@ namespace PriceTagPrint.WAGO
         /// 分類コード
         /// </summary>
         public string VBUNCD { get; set; }
+
+        public string VROWNO { get; set; }
         /// <summary>
         /// 取引先コード
         /// </summary>
@@ -55,6 +61,10 @@ namespace PriceTagPrint.WAGO
         /// </summary>
         public string VCYOBI7 { get; set; }
 
+        public string VHEAD1 { get; set; }
+
+        public string VBODY1 { get; set; }
+
         /// <summary>
         /// ヤマナカ用
         /// </summary>
@@ -70,7 +80,8 @@ namespace PriceTagPrint.WAGO
         /// <param name="hincd"></param>
         /// <param name="vcyobi7"></param>
         public EOSJUTRA(string vryohncd, string vrcvdt, string vbuncd, string qoltorid, string vnohindt,
-                        string vhincd, string vhinnma, decimal vsuryo, decimal vuritk, string hincd, string vcyobi7)
+                        string vhincd, string vhinnma, decimal vsuryo, decimal vuritk, string hincd, string vcyobi7,
+                        string vhead1, string vbody1)
         {
             this.VRYOHNCD = vryohncd;
             this.VRCVDT = vrcvdt;
@@ -83,6 +94,8 @@ namespace PriceTagPrint.WAGO
             this.VURITK = vuritk;
             this.HINCD = hincd;
             this.VCYOBI7 = vcyobi7;
+            this.VHEAD1 = vhead1;
+            this.VBODY1 = vbody1;
         }
     }
 
@@ -133,7 +146,8 @@ namespace PriceTagPrint.WAGO
                                     row.Field<string>("VRYOHNCD"), row.Field<string>("VRCVDT"), row.Field<string>("VBUNCD"),
                                     row.Field<string>("QOLTORID"), row.Field<string>("VNOHINDT"), row.Field<string>("VHINCD"),
                                     row.Field<string>("VHINNMA"), row.Field<decimal>("VSURYO"), row.Field<decimal>("VURITK"),
-                                    row.Field<string>("HINCD"), row.Field<string>("VCYOBI7")
+                                    row.Field<string>("HINCD"), row.Field<string>("VCYOBI7"), row.Field<string>("VHEAD1"),
+                                    row.Field<string>("VBODY1")
                                 ));
                         }
                     }

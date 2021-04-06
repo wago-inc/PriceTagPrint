@@ -7,6 +7,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\MaruyoshiView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\YamanakaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -19,6 +22,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Style\StyleDic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\MaruyoshiView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\YamanakaView.xaml">

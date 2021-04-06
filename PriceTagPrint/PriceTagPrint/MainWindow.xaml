@@ -52,7 +52,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0" x:Name="Cmd01" Command="{Binding SelectCommand}" CommandParameter="1" Content="ヤスサキ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd02" Command="{Binding SelectCommand}" CommandParameter="2" Content="ヤマナカ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
-            <Button Grid.Row="0" Grid.Column="2" x:Name="Cmd03" Command="{Binding SelectCommand}" Content="マルヨシ" Style="{StaticResource TitleButton}" Visibility="Visible" />
+            <Button Grid.Row="0" Grid.Column="2" x:Name="Cmd03" Command="{Binding SelectCommand}" CommandParameter="3" Content="マルヨシ" Style="{StaticResource TitleButton}" Visibility="Visible" />
             <Button Grid.Row="1" Grid.Column="0" x:Name="Cmd04" Command="{Binding SelectCommand}" Content="沖縄三喜マルエー" Style="{StaticResource TitleButton}" Visibility="Visible" />
             <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd05" Command="{Binding SelectCommand}" Content="わたせい" Style="{StaticResource TitleButton}" Visibility="Visible" />
             <Button Grid.Row="1" Grid.Column="2" x:Name="Cmd06" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
