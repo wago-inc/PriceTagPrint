@@ -398,8 +398,10 @@ namespace PriceTagPrint.ViewModel
             EndHincd.Value = "";
             TotalMaisu.Value = "";
             YamanakaDatas.Clear();
-            YamanakaItems.Value.Clear();
-
+            if (YamanakaItems.Value != null && YamanakaItems.Value.Any())
+            {
+                YamanakaItems.Value.Clear();
+            }
             HakkouTypeTextBox.Focus();
         }
 

@@ -125,7 +125,7 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Row="1" Grid.Column="7" x:Name="BunruiCodeText"
                      Text="{Binding BunruiCodeText.Value}" Style="{StaticResource ContentText}" 
-                     HorizontalContentAlignment="Center" MaxLength="4"
+                     HorizontalContentAlignment="Center" MaxLength="1"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      LostFocus="TextBox_LostFocus"
@@ -141,7 +141,7 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Row="3" Grid.Column="7" x:Name="NefudaBangouText" 
                      Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
-                     HorizontalContentAlignment="Center" MaxLength="2"
+                     HorizontalContentAlignment="Center" MaxLength="1"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      LostFocus="TextBox_LostFocus"                     
@@ -156,14 +156,16 @@
             <!--単品コード-->
             <TextBlock Grid.Row="5" Grid.Column="6" Text="単品コード" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" x:Name="SttHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="7"
+            <TextBox Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
+                     Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="4" Margin="0,0,10,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      TabIndex="6"/>
             <TextBlock Grid.Row="5" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Row="5" Grid.Column="10" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="7"
+            <TextBox Grid.Row="5" Grid.Column="10" x:Name="EndHincdText"
+                     Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="4" Margin="10,0,0,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      KeyDown="TextBox_KeyDown"
@@ -261,7 +263,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="品番" Binding="{Binding Path=品番}" Width="1*"
+                    <DataGridTextColumn Header="品番" Binding="{Binding Path=品番}" Width="1.2*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -271,7 +273,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="棚番" Binding="{Binding Path=棚番}" Width="auto"
+                    <DataGridTextColumn Header="棚番" Binding="{Binding Path=棚番}" Width="0.9*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -296,7 +298,7 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -306,12 +308,12 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="単品" Binding="{Binding Path=単品}" Width="auto"
+                    <DataGridTextColumn Header="単品" Binding="{Binding Path=単品}" Width="0.8*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -321,7 +323,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="組" Binding="{Binding Path=組}" Width="auto"
+                    <DataGridTextColumn Header="組" Binding="{Binding Path=組}" Width="0.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -331,7 +333,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="FLG" Binding="{Binding Path=FLG}" Width="auto"
+                    <DataGridTextColumn Header="FLG" Binding="{Binding Path=FLG}" Width="0.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -341,7 +343,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="追加" Binding="{Binding Path=追加}" Width="auto"
+                    <DataGridTextColumn Header="追加" Binding="{Binding Path=追加}" Width="0.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -351,7 +353,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="タグ" Binding="{Binding Path=タグ}" Width="auto"
+                    <DataGridTextColumn Header="タグ" Binding="{Binding Path=タグ}" Width="0.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

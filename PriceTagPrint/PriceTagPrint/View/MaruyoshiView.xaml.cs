@@ -163,6 +163,9 @@ namespace PriceTagPrint.View
                 {
                     if (((MaruyoshiViewModel)this.DataContext).InputCheck())
                     {
+                        // 何故か変更通知が飛ばないので検索処理直前にセット
+                        ((MaruyoshiViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
+                        ((MaruyoshiViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
                         ((MaruyoshiViewModel)this.DataContext).NefudaDataDisplay();
                     }
                 }

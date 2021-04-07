@@ -374,8 +374,10 @@ namespace PriceTagPrint.ViewModel
             EndEdaban.Value = "";
             TotalMaisu.Value = "";
             YasusakiDatas.Clear();
-            YasusakiItems.Value.Clear();
-
+            if (YasusakiItems.Value != null && YasusakiItems.Value.Any())
+            {
+                YasusakiItems.Value.Clear();
+            }
             HakkouTypeTextBox.Focus();
         }
 
