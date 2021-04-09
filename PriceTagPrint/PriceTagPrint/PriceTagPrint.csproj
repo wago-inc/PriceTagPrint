@@ -12,6 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="新しいフォルダー1\**" />
+    <Compile Remove="新しいフォルダー\**" />
+    <EmbeddedResource Remove="新しいフォルダー1\**" />
+    <EmbeddedResource Remove="新しいフォルダー\**" />
+    <None Remove="新しいフォルダー1\**" />
+    <None Remove="新しいフォルダー\**" />
+    <Page Remove="新しいフォルダー1\**" />
+    <Page Remove="新しいフォルダー\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LivetCask.Core" Version="3.2.3.2" />
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="MicrosoftExpressionInteractions" Version="3.0.40218" />

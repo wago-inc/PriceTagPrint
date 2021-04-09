@@ -58,6 +58,12 @@ namespace PriceTagPrint.ViewModel
                         }
                         break;
                     case TorihikisakiId.OKINAWA_SANKI:
+                        {
+                            var view = new OkinawaSankiView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
                         break;
                     case TorihikisakiId.WATASEI:
                         break;

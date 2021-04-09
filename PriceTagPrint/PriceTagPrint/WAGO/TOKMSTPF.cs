@@ -8,41 +8,37 @@ using System.Windows;
 
 namespace PriceTagPrint.WAGO
 {
-    public class TOKMTE
+    public class TOKMSTPF
     {
-        /// <summary>
-        /// デプトクラスコード
-        /// </summary>
-        public string COLCD { get; set; }
-        /// <summary>
-        /// 得意先CD
-        /// </summary>
-        public string TOKCD { get; set; }
-        /// <summary>
-        /// 品番
-        /// </summary>
-        public string EOSHINID { get; set; }
+        public decimal TCODE { get; set; }
+        public decimal TENPO { get; set; }
+        public string TNAMEN { get; set; }
+        public string RYAKU { get; set; }
+        public string JISYA { get; set; }
 
-        public TOKMTE(string colcd, string tokcd, string eoshinid)
+        public TOKMSTPF(decimal tcode, decimal tenpo, string tnamen, string ryaku, string jisya)
         {
-            this.COLCD = colcd;
-            this.TOKCD = tokcd;
-            this.EOSHINID = eoshinid;
+            this.TCODE = tcode;
+            this.TENPO = tenpo;
+            this.TNAMEN = tnamen;
+            this.RYAKU = ryaku;
+            this.JISYA = jisya;
         }
     }
 
-    public class TOKMTE_LIST
+    public class TOKMSTPF_LIST
     {
-        public List<TOKMTE> QueryWhereTcode(int tcode)
+        public List<TOKMSTPF> QueryWhereTcodeTenpo(int tcode, int tenpo = 9999)
         {
             var sql = "SELECT * " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
-            sql += " WAG_USR1.TOKMTE " + Environment.NewLine;
+            sql += " WAGO.TOKMSTPF " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
-            sql += " TOKCD = '" + tcode.ToString("000000") + "' ";
+            sql += " TCODE = " + tcode + " " + Environment.NewLine;
+            sql += "AND TENPO = " + tenpo;
 
             DataTable orcDt = new DataTable();
-            var results = new List<TOKMTE>();
+            var results = new List<TOKMSTPF>();
             try
             {
                 using (OracleConnection orcConn = new OracleConnection(DBConnect.OrclConnectString))
@@ -57,9 +53,13 @@ namespace PriceTagPrint.WAGO
                         orcDt.Load(reader);
                         foreach (DataRow row in orcDt.Rows)
                         {
-                            results.Add(new TOKMTE
+                            results.Add(new TOKMSTPF
                                 (
-                                    row.Field<string>("COLCD"), row.Field<string>("TOKCD"), row.Field<string>("EOSHINID")
+                                    row.Field<decimal>("TCODE"), 
+                                    row.Field<decimal>("TENPO"), 
+                                    row.Field<string>("TNAMEN"),
+                                    row.Field<string>("RYAKU"),
+                                    row.Field<string>("JISYA")
                                 ));
                         }
                     }

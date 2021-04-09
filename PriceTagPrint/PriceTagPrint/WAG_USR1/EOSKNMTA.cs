@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows;
 
-namespace PriceTagPrint.WAGO
+namespace PriceTagPrint.WAG_USR1
 {
     public class EOSKNMTA
     {

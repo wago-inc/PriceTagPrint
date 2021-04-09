@@ -1,7 +1,7 @@
 ﻿using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
-using PriceTagPrint.WAGO;
+using PriceTagPrint.WAG_USR1;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
