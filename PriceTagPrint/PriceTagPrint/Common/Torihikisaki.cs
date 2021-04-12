@@ -15,10 +15,12 @@ namespace PriceTagPrint.Common
     public class Torihikisaki
     {
         public string Id { get; set; }
+        public string Tcode { get; set; }
         public string Name { get; set; }
-        public Torihikisaki(string id, string name)
+        public Torihikisaki(string id, string tcode, string name)
         {
             this.Id = id;
+            this.Tcode = tcode;
             this.Name = name;
         }
     }
@@ -35,11 +37,11 @@ namespace PriceTagPrint.Common
         {
             list = new List<Torihikisaki>()
             {
-                new Torihikisaki(TorihikisakiId.YASUSAKI, "ヤスサキ"),
-                new Torihikisaki(TorihikisakiId.YAMANAKA, "ヤマナカ"),
-                new Torihikisaki(TorihikisakiId.MARUYOSI, "マルヨシ"),
-                new Torihikisaki(TorihikisakiId.OKINAWA_SANKI, "沖縄三喜マルエー"),
-                new Torihikisaki(TorihikisakiId.WATASEI, "わたせい"),
+                new Torihikisaki(TorihikisakiId.YASUSAKI, "0112", "ヤスサキ"),
+                new Torihikisaki(TorihikisakiId.YAMANAKA, "0127", "ヤマナカ"),
+                new Torihikisaki(TorihikisakiId.MARUYOSI, "0102", "マルヨシ"),
+                new Torihikisaki(TorihikisakiId.OKINAWA_SANKI, "0118", "沖縄三喜マルエー"),
+                new Torihikisaki(TorihikisakiId.WATASEI, "7858", "わたせい"),
             };
         }
     }

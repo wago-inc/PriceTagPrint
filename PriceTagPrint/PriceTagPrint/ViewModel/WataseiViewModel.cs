@@ -642,19 +642,17 @@ namespace PriceTagPrint.ViewModel
         private void NefudaOutput(string fname, bool isPreview)
         {
             // ※振分発行用ＰＧ
-            var appPath = @"C:\Program Files (x86)\SATO\MLV5\MLPrint.exe";
-            var layPath = @"Y:\WAGOAPL\SATO\MLV5_Layout";
             var grpName = @"\7858_わたせい\【総額対応】わたせい_V5_RT308R";
             var layName = NefudaBangouText.Value == 1 ? @"貼り札.mllayx" : "下札.mllayx";
 
-            var layNo = layPath + @"\" + grpName + @"\" + layName;
+            var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
 
             //Processオブジェクトを作成する
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //起動する実行ファイルのパスを設定する
-            p.StartInfo.FileName = appPath;
+            p.StartInfo.FileName = CommonStrings.MLPRINTEXE_PATH;
             //コマンドライン引数を指定する
             p.StartInfo.Arguments = args;
             //起動する。プロセスが起動した時はTrueを返す。

@@ -520,8 +520,8 @@ namespace PriceTagPrint.ViewModel
                              NEFUDANO = GetNefudaBangou(g.Key.VHINNMA, "ﾂﾘ", "3ﾖﾘ"),
                              VRCVDT = g.Key.VRCVDT,
                              VNOHINDT = g.Key.VNOHINDT,
-                             QOLTORID = g.Key.QOLTORID,
-                             COLCD = !string.IsNullOrEmpty(g.Key.COLCD) ? g.Key.COLCD : "0",
+                             QOLTORID = g.Key.QOLTORID.TrimStart(new Char[] { '0' }),
+                             COLCD = !string.IsNullOrEmpty(g.Key.COLCD) ? g.Key.COLCD.TrimStart(new Char[] { '0' }) : "0",
                              FACENO = g.Key.FACENO,
                              VHINCD = g.Key.VHINCD.TrimEnd(),
                              MCCD = McCodeText.Value.ToString(),
@@ -676,18 +676,16 @@ namespace PriceTagPrint.ViewModel
         private void NefudaOutput(string fname, bool isPreview)
         {
             // ※振分発行用ＰＧ
-            var appPath = @"C:\Program Files (x86)\SATO\MLV5\MLPrint.exe";
-            var layPath = @"Y:\WAGOAPL\SATO\MLV5_Layout";
             var grpName = @"\0127_ヤマナカ\【総額対応】ヤマナカ_V5_RT308R_振分発行";
             var layName = @"ヤマナカESPO_V5_ST308R_振分発行.mldenx";
-            var layNo = layPath + @"\" + grpName + @"\" + layName;
+            var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
 
             //Processオブジェクトを作成する
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             //起動する実行ファイルのパスを設定する
-            p.StartInfo.FileName = appPath;
+            p.StartInfo.FileName = CommonStrings.MLPRINTEXE_PATH;
             //コマンドライン引数を指定する
             p.StartInfo.Arguments = args;
             //起動する。プロセスが起動した時はTrueを返す。
