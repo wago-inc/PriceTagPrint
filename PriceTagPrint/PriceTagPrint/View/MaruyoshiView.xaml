@@ -10,7 +10,7 @@
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="マルヨシ" Height="700" Width="1100">
+        Title="【0102-マルヨシ】値札発行" Height="700" Width="1100">
     <Window.DataContext>
         <vm:MaruyoshiViewModel/>
     </Window.DataContext>

@@ -601,7 +601,7 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool InputCheck()
         {
-            if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
+            if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 3)
             {
                 MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -645,7 +645,7 @@ namespace PriceTagPrint.ViewModel
                         OkinawaSankiDatas.AddRange(
                             dB0118EosHachuList.Where(x => x.NSU > 0)
                                 .Join(
-                                       wWebTorihikisakiTankaList.Where(x => x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString()),
+                                       wWebTorihikisakiTankaList,
                                        e => new
                                        {
                                            SCODE = int.Parse(e.SCODE),
@@ -662,7 +662,7 @@ namespace PriceTagPrint.ViewModel
                                        {
                                            HNO = eos.HNO,
                                            TOKCD = eos.TOKCD,
-                                           NEFUDA_KBN = tanka.NEFUDA_KBN,
+                                           NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ? "1" : tanka.NEFUDA_KBN,
                                            CENTCD = eos.CENTCD,
                                            HINBANCD = eos.HINBANCD,
                                            CYUBUNCD = eos.CYUBUNCD,
@@ -701,11 +701,14 @@ namespace PriceTagPrint.ViewModel
                                      HINCD = g.Key.HINCD,
                                      NSU = g.Sum(y => y.NSU),
                                  })
-                                 .Where(x => x.NSU > 0  &&
-                                             !string.IsNullOrEmpty(CenterText.Value) && CenterText.Value != "99" ?
-                                                x.CENTCD == selectCenter : true)
+                                 .Where(x => x.NSU > 0 &&
+                                             x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString() &&
+                                             (!string.IsNullOrEmpty(CenterText.Value) && CenterText.Value != "99" ?
+                                                x.CENTCD == selectCenter : true) &&
+                                             (!string.IsNullOrEmpty(HinbanCodeText.Value) ?
+                                                x.HINBANCD == HinbanCodeText.Value : true))
                                  .OrderBy(g => g.HNO)
-                                 .ThenBy(g => g.SYOHINCD.Replace("-", ""))
+                                 .ThenBy(g => g.HINCD.Replace("-", ""))
                              );
 
                         if (OkinawaSankiItems.Value == null)
@@ -728,7 +731,87 @@ namespace PriceTagPrint.ViewModel
                 case 2:
                     if (dB0118HchusyoList.Any() && tOKMSTPFs.Any() && wWebTorihikisakiTankaList.Any())
                     {
+                        OkinawaSankiDatas.Clear();
+                        OkinawaSankiDatas.AddRange(
+                            dB0118HchusyoList.Where(x => x.NSU > 0)
+                                .Join(
+                                       wWebTorihikisakiTankaList,
+                                       e => new
+                                       {
+                                           SCODE = int.Parse(e.SCODE),
+                                           BUNRUI = short.Parse(e.BUNRUI.ToString()),
+                                           SAIZUS = short.Parse(e.SAIZUS.ToString()),
+                                       },
+                                       w => new
+                                       {
+                                           SCODE = w.HCODE,
+                                           BUNRUI = w.BUNRUI,
+                                           SAIZUS = w.SAIZU
+                                       },
+                                       (eos, tanka) => new
+                                       {
+                                           HNO = eos.HNO,
+                                           TOKCD = eos.TOKCD,
+                                           NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ? "1" : tanka.NEFUDA_KBN,
+                                           CENTCD = eos.CENTCD,
+                                           HINBANCD = eos.HINBANCD,
+                                           CYUBUNCD = eos.CYUBUNCD,
+                                           BAIKA = eos.BAIKA,
+                                           SYOHINCD = eos.SYOHINCD,
+                                           BIKOU1 = tanka.BIKOU1,
+                                           HINCD = eos.HINCD,
+                                           NSU = eos.NSU,
+                                       })
+                                 .GroupBy(a => new
+                                 {
+                                     a.HNO,
+                                     a.TOKCD,
+                                     a.NEFUDA_KBN,
+                                     a.CENTCD,
+                                     a.HINBANCD,
+                                     a.CYUBUNCD,
+                                     a.BAIKA,
+                                     a.SYOHINCD,
+                                     a.BIKOU1,
+                                     a.HINCD,
+                                 })
+                                 .Select(g => new OkinawaSankiData
+                                 {
+                                     HNO = g.Key.HNO,
+                                     TOKCD = g.Key.TOKCD,
+                                     NEFUDA_KBN = g.Key.NEFUDA_KBN,
+                                     JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA ?? "",
+                                     EOS = " ",
+                                     CENTCD = g.Key.CENTCD,
+                                     HINBANCD = g.Key.HINBANCD,
+                                     CYUBUNCD = g.Key.CYUBUNCD,
+                                     BAIKA = g.Key.BAIKA,
+                                     SYOHINCD = g.Key.SYOHINCD,
+                                     BIKOU1 = g.Key.BIKOU1,
+                                     HINCD = g.Key.HINCD,
+                                     NSU = g.Sum(y => y.NSU),
+                                 })
+                                 .Where(x => x.NSU > 0 &&
+                                             x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString() &&
+                                             (!string.IsNullOrEmpty(CenterText.Value) && CenterText.Value != "99" ?
+                                                x.CENTCD == selectCenter : true) &&
+                                             (!string.IsNullOrEmpty(HinbanCodeText.Value) ?
+                                                x.HINBANCD == HinbanCodeText.Value : true))
+                                 .OrderBy(g => g.HNO)
+                                 .ThenBy(g => g.HINCD.Replace("-", ""))
+                             );
 
+                        if (OkinawaSankiItems.Value == null)
+                        {
+                            OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>();
+                        }
+                        if (OkinawaSankiDatas.Any())
+                        {
+                            OkinawaSankiItems.Value.Clear();
+                            var OkinawaSankiModelList = new OkinawaSankiItemList();
+                            OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
+                            TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
                     }
                     else
                     {
@@ -738,7 +821,73 @@ namespace PriceTagPrint.ViewModel
                 case 3:
                     if (dB0118KaitukesyoList.Any() && tOKMSTPFs.Any() && wWebTorihikisakiTankaList.Any())
                     {
+                        OkinawaSankiDatas.Clear();
+                        OkinawaSankiDatas.AddRange(
+                            dB0118KaitukesyoList.Where(x => x.NSU > 0)
+                                .Select(kaituke => new
+                                       {
+                                           HNO = kaituke.HNO,
+                                           TOKCD = kaituke.TOKCD,
+                                           NEFUDA_KBN = "1",
+                                           CENTCD = kaituke.CENTCD,
+                                           HINBANCD = kaituke.HINBANCD,
+                                           CYUBUNCD = kaituke.CYUBUNCD,
+                                           BAIKA = kaituke.BAIKA,
+                                           SYOHINCD = kaituke.SYOHINCD,
+                                           BIKOU1 = " ",
+                                           HINCD = " ",
+                                           NSU = kaituke.NSU,
+                                       })
+                                 .GroupBy(a => new
+                                 {
+                                     a.HNO,
+                                     a.TOKCD,
+                                     a.NEFUDA_KBN,
+                                     a.CENTCD,
+                                     a.HINBANCD,
+                                     a.CYUBUNCD,
+                                     a.BAIKA,
+                                     a.SYOHINCD,
+                                     a.BIKOU1,
+                                     a.HINCD,
+                                 })
+                                 .Select(g => new OkinawaSankiData
+                                 {
+                                     HNO = g.Key.HNO,
+                                     TOKCD = g.Key.TOKCD,
+                                     NEFUDA_KBN = g.Key.NEFUDA_KBN,
+                                     JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA ?? "",
+                                     EOS = " ",
+                                     CENTCD = g.Key.CENTCD,
+                                     HINBANCD = g.Key.HINBANCD,
+                                     CYUBUNCD = g.Key.CYUBUNCD,
+                                     BAIKA = g.Key.BAIKA,
+                                     SYOHINCD = g.Key.SYOHINCD,
+                                     BIKOU1 = g.Key.BIKOU1,
+                                     HINCD = g.Key.HINCD,
+                                     NSU = g.Sum(y => y.NSU),
+                                 })
+                                 .Where(x => x.NSU > 0 &&
+                                             x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString() &&
+                                             (!string.IsNullOrEmpty(CenterText.Value) && CenterText.Value != "99" ?
+                                                x.CENTCD == selectCenter : true) &&
+                                             (!string.IsNullOrEmpty(HinbanCodeText.Value) ?
+                                                x.HINBANCD == HinbanCodeText.Value : true))
+                                 .OrderBy(g => g.HNO)
+                                 .ThenBy(g => g.SYOHINCD)
+                             );
 
+                        if (OkinawaSankiItems.Value == null)
+                        {
+                            OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>();
+                        }
+                        if (OkinawaSankiDatas.Any())
+                        {
+                            OkinawaSankiItems.Value.Clear();
+                            var OkinawaSankiModelList = new OkinawaSankiItemList();
+                            OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
+                            TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
                     }
                     else
                     {
@@ -766,7 +915,7 @@ namespace PriceTagPrint.ViewModel
         public void ExecPrint(bool isPreview)
         {
             var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0112" + "_" + this.HachuBangou.Value + ".csv";
+            var fname = "0118" + "_" + this.HachuBangou.Value + ".csv";
             var fullName = Path.Combine(path, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
@@ -783,13 +932,10 @@ namespace PriceTagPrint.ViewModel
         /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {
-            var list = OkinawaSankiItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var list = OkinawaSankiItems.Value.Where(x => x.発行枚数 > 0).OrderBy(x => x.JANフリー).ToList();
             var datas = DataUtility.ToDataTable(list);
             // 不要なカラムの削除
-            datas.Columns.Remove("商品名");
-            datas.Columns.Remove("単価");
-            datas.Columns.Remove("和合商品コード");
-            datas.Columns.Remove("相手先品番");
+            datas.Columns.Remove("センター");
             new CsvUtility().Write(datas, fullName, true);
         }
 
@@ -803,8 +949,8 @@ namespace PriceTagPrint.ViewModel
             // ※振分発行用ＰＧ
             var appPath = @"C:\Program Files (x86)\SATO\MLV5\MLPrint.exe";
             var layPath = @"Y:\WAGOAPL\SATO\MLV5_Layout";
-            var grpName = @"\0112_ヤスサキ\【総額対応】ヤスサキ_V5_RT308R_振分発行";
-            var layName = @"41300-ﾔｽｻｷ_JAN1段＋税_ST308R_振分発行.mldenx";
+            var grpName = @"\0122_沖縄三喜\【総額対応】沖縄三喜_V5_RT308R_振分発行";
+            var layName = @"00019-◆三喜（自動発行）.mldenx";
             var layNo = layPath + @"\" + grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");

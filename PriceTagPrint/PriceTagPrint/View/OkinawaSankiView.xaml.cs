@@ -59,9 +59,20 @@ namespace PriceTagPrint.View
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
-            var regex = new Regex("[^1-2]+");
+            var txt = sender as TextBox;
             var text = e.Text;
-            var result = regex.IsMatch(text);
+            var result = true;
+            Regex regex;
+            if (txt.Name == "HakkouTypeText")
+            {
+                regex = new Regex("[^1-3]+");
+                result = regex.IsMatch(text);
+            }
+            else if(txt.Name == "NefudaBangouText")
+            {
+                regex = new Regex("[^1-2]+");
+                result = regex.IsMatch(text);
+            }
             e.Handled = result;
         }
 
