@@ -895,6 +895,7 @@ namespace PriceTagPrint.ViewModel
                     }
                     break;
             }
+            this.HakkouTypeTextBox.Focus();
         }
 
         /// <summary>

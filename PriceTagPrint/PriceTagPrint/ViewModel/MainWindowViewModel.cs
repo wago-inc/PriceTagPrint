@@ -66,6 +66,12 @@ namespace PriceTagPrint.ViewModel
                         }
                         break;
                     case TorihikisakiId.WATASEI:
+                        {
+                            var view = new WataseiView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
                         break;
                     default:break;
                 }

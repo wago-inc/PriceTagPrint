@@ -565,6 +565,7 @@ namespace PriceTagPrint.ViewModel
             {
                 MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            this.HakkouTypeTextBox.Focus();
         }
 
         private string GetNefudaBangou(string hinnm, string typenm1, string typenm2)
