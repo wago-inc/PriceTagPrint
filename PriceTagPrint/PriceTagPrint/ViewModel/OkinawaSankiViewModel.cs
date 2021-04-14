@@ -326,10 +326,10 @@ namespace PriceTagPrint.ViewModel
                                 dbCentCd = item.CENTCD;
                                 if (item.CENTCD == "OC")
                                 {
-                                    _TOKCD = 122;
+                                    _TOKCD = TidNum.OKINAWA_SANKI;
                                     break;
                                 }
-                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : 118;
+                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : TidNum.SANKI;
                             }
 
                             tOKMSTPFs = tOKMSTPF_LIST.QueryWhereTcodeTenpo(_TOKCD);
@@ -358,10 +358,10 @@ namespace PriceTagPrint.ViewModel
                                 dbCentCd = item.CENTCD;
                                 if (item.CENTCD == "OC")
                                 {
-                                    _TOKCD = 122;
+                                    _TOKCD = TidNum.OKINAWA_SANKI;
                                     break;
                                 }                                
-                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : 118;
+                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : TidNum.SANKI;
                             }
                             tOKMSTPFs = tOKMSTPF_LIST.QueryWhereTcodeTenpo(_TOKCD);
                             if (tOKMSTPFs.Any())
@@ -389,10 +389,10 @@ namespace PriceTagPrint.ViewModel
                                 dbCentCd = item.CENTCD;
                                 if (item.CENTCD == "OC")
                                 {
-                                    _TOKCD = 122;
+                                    _TOKCD = TidNum.OKINAWA_SANKI;
                                     break;
                                 }
-                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : 118;
+                                _TOKCD = int.TryParse(item.TOKCD, out convTok) ? convTok : TidNum.SANKI;
                             }
                             tOKMSTPFs = tOKMSTPF_LIST.QueryWhereTcodeTenpo(_TOKCD);
                             if (tOKMSTPFs.Any())
@@ -431,7 +431,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                _TOKCD = 118;
+                _TOKCD = TidNum.SANKI;
                 HnoResultString.Value = "※未登録";
                 HnoResultColor.Value = Brushes.Red;
             }
@@ -915,9 +915,8 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0118" + "_" + this.HachuBangou.Value + ".csv";
-            var fullName = Path.Combine(path, fname);
+            var fname = Tid.SANKI + "_" + this.HachuBangou.Value + ".csv";
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {

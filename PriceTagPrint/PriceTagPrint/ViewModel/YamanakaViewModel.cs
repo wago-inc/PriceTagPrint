@@ -448,8 +448,8 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void NefudaDataDisplay()
         {
-            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(127, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
-            var tokmteList = tOKMTE_LIST.QueryWhereTcode(127);
+            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.YAMANAKA, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
+            var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.YAMANAKA);
 
             if(eosJutraList.Any() && tokmteList.Any())
             {
@@ -639,12 +639,11 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0127" + "_" + 
+            var fname = Tid.YAMANAKA + "_" + 
                         this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.NouhinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.BunruiCodeText.Value + ".csv";
-            var fullName = Path.Combine(path, fname);
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {

@@ -463,7 +463,7 @@ namespace PriceTagPrint.ViewModel
         {
             var w0112EosHchuList = dB_0112_EOS_HACHU_LIST.QueryWhereHno(this.HachuBangou.Value);
 
-            var wWebTorihikisakiTankaList = wEB_TORIHIKISAKI_TANKA_LIST.QueryWhereTcodeTenpo("112", "9999");
+            var wWebTorihikisakiTankaList = wEB_TORIHIKISAKI_TANKA_LIST.QueryWhereTcodeTenpo(TidNum.YASUSAKI.ToString(), "9999");
 
             if (w0112EosHchuList.Any() && this.HakkouTypeText.Value == 2)
             {
@@ -610,9 +610,8 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0112" + "_" + this.HachuBangou.Value + ".csv";
-            var fullName = Path.Combine(path, fname);
+            var fname = Tid.YASUSAKI + "_" + this.HachuBangou.Value + ".csv";
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {

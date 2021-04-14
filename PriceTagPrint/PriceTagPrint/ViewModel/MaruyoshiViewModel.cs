@@ -402,8 +402,8 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void NefudaDataDisplay()
         {
-            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(102, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value.ToString("000"));
-            var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(102);
+            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.MARUYOSI, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value.ToString("000"));
+            var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(TidNum.MARUYOSI);
 
             if (eosJutraList.Any() && easKnmtaList.Any())
             {
@@ -790,12 +790,11 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var path = @"c:\Program Files (x86)\MLV5\NEFUDA\";
-            var fname = "0102" + "_" +
+            var fname = Tid.MARUYOSI + "_" +
                         this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.NouhinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.BunruiCodeText.Value.ToString("000") + ".csv";
-            var fullName = Path.Combine(path, fname);
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
             {

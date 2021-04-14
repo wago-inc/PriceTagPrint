@@ -6,18 +6,19 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:PriceTagPrint"
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
+        xmlns:conv="clr-namespace:PriceTagPrint.Common"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="値札発行メニュー" Height="600" Width="950">
+        Title="値札発行メニュー" Height="700" Width="1100">
     
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext> 
 
-    <Window.Resources>
-        <ResourceDictionary Source="/Style/StyleDic.xaml"/>
+    <Window.Resources>        
+        <ResourceDictionary Source="/Style/StyleDic.xaml"/>        
     </Window.Resources>
-
+    
     <Window.CommandBindings>
         <CommandBinding Command="Close" Executed="ExecuteCommand" />
     </Window.CommandBindings>
@@ -25,47 +26,163 @@
         <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
     </Window.InputBindings>
     
-    <Grid ShowGridLines="True" >
+    <Grid ShowGridLines="False">
+        <Grid.Resources>
+            <conv:RadioButtonConverter x:Key="EnumConverter" />
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <Label Content=""/>
+        <StackPanel Grid.Row="0" Margin="5,5,5,0">
+            <TextBlock Text="{Binding SubTitleText.Value}"  FontSize="23" FontFamily="Yu Gothic" HorizontalAlignment="Stretch" TextAlignment="Center" Style="{StaticResource TitleText}"/>
         </StackPanel>
+        
+        <DockPanel Grid.Row="1" Margin="4">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="8.5*"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" ShowGridLines="True" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" x:Name="Cmd01" Command="{Binding SelectCommand}" CommandParameter="1" Content="ヤスサキ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd02" Command="{Binding SelectCommand}" CommandParameter="2" Content="ヤマナカ" Style="{StaticResource TitleButton}" Visibility="Visible"/>
-            <Button Grid.Row="0" Grid.Column="2" x:Name="Cmd03" Command="{Binding SelectCommand}" CommandParameter="3" Content="マルヨシ" Style="{StaticResource TitleButton}" Visibility="Visible" />
-            <Button Grid.Row="1" Grid.Column="0" x:Name="Cmd04" Command="{Binding SelectCommand}" CommandParameter="4" Content="沖縄三喜マルエー" Style="{StaticResource TitleButton}" Visibility="Visible" />
-            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd05" Command="{Binding SelectCommand}" CommandParameter="5" Content="わたせい" Style="{StaticResource TitleButton}" Visibility="Visible" />
-            <Button Grid.Row="1" Grid.Column="2" x:Name="Cmd06" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="2" Grid.Column="0" x:Name="Cmd07" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="2" Grid.Column="1" x:Name="Cmd08" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="2" Grid.Column="2" x:Name="Cmd09" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="3" Grid.Column="0" x:Name="Cmd10" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="3" Grid.Column="1" x:Name="Cmd11" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="3" Grid.Column="2" x:Name="Cmd12" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="4" Grid.Column="0" x:Name="Cmd13" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="4" Grid.Column="1" x:Name="Cmd14" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-            <Button Grid.Row="4" Grid.Column="2" x:Name="Cmd15" Command="{Binding SelectCommand}" Content="未使用" Style="{StaticResource TitleButton}" Visibility="Hidden" />
-        </Grid>
+                <!--メインメニュー左側-->
+                <Border Grid.Column="0"
+                        CornerRadius="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Margin="1">
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <RadioButton Name="AutoBtn" GroupName="buttons" Content="自動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,15,0,5" 
+                                     IsChecked="{Binding SubMenuKind.Value, 
+                                        ConverterParameter=Auto, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                        <RadioButton Name="InputBtn" GroupName="buttons" Content="手動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
+                                     IsChecked="{Binding SubMenuKind.Value, 
+                                        ConverterParameter=Input, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                    </StackPanel>
+                </Border>
+
+                <!--メインメニュー右側-->
+                <Border Grid.Column="1"
+                        CornerRadius="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Margin="1">
+
+                    <StackPanel Orientation="Vertical">
+                        <Grid ShowGridLines="false" Visibility="{Binding AutoMenuVisibility.Value}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="1" />
+                            <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="2" />
+                            <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="3" />
+                            <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="4" />
+                            <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="5" />
+                            <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="6" Visibility="Hidden" />
+
+                            <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd01" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Visibility="Visible" Content="ヤスサキ" />
+                            <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd02" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource TitleButton}" Visibility="Visible" Content="ヤマナカ" />
+                            <Button Grid.Row="0" Grid.Column="5" x:Name="Cmd03" Command="{Binding SelectAutoCommand}" CommandParameter="0102" Style="{StaticResource TitleButton}" Visibility="Visible" Content="マルヨシ" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd04" Command="{Binding SelectAutoCommand}" CommandParameter="0122" Style="{StaticResource TitleButton}" Visibility="Visible" Content="沖縄三喜マルエー" />
+                            <Button Grid.Row="1" Grid.Column="3" x:Name="Cmd05" Command="{Binding SelectAutoCommand}" CommandParameter="7858" Style="{StaticResource TitleButton}" Visibility="Visible" Content="わたせい" />
+                            <Button Grid.Row="1" Grid.Column="5" x:Name="Cmd06" Command="{Binding SelectAutoCommand}" CommandParameter=" " Style="{StaticResource TitleButton}" Visibility="Hidden" Content="未使用" />
+                        </Grid>
+
+                        <Grid ShowGridLines="false" Visibility="{Binding InputMenuVisibility.Value}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="1" />
+                            <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="2" />
+                            <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="3" />
+                            <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="4" />
+                            <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="5" />
+                            <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="6" />
+                            <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="7" />
+                            <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="8" />
+                            <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="9" />
+                            <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="10" />
+                            <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="11" />
+                            <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="12" />
+                            <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="13" />
+                            <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="14" />
+                            <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="15" />
+                            <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="16" />
+                            <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="17" />
+                            <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="18" />
+                            <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="19" />
+                            <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="20" />
+                            <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="21" />
+                            <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="22" />
+                            <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="23" />
+                            <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Visibility="Hidden" Content="24" />
+
+                            <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd20" Command="{Binding SelectInputCommand}" CommandParameter="0170" Style="{StaticResource TitleButton}" Content="アージュ" />
+                            <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd21" Command="{Binding SelectInputCommand}" CommandParameter="8104" Style="{StaticResource TitleButton}" Content="アブアブ赤札堂" />
+                            <Button Grid.Row="0" Grid.Column="5" x:Name="Cmd22" Command="{Binding SelectInputCommand}" CommandParameter="7705" Style="{StaticResource TitleButton}" Content="イトウゴフク" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd23" Command="{Binding SelectInputCommand}" CommandParameter="7501" Style="{StaticResource TitleButton}" Content="おかだ" />
+                            <Button Grid.Row="1" Grid.Column="3" x:Name="Cmd24" Command="{Binding SelectInputCommand}" CommandParameter="7500" Style="{StaticResource TitleButton}" Content="カネタ" />
+                            <Button Grid.Row="1" Grid.Column="5" x:Name="Cmd25" Command="{Binding SelectInputCommand}" CommandParameter="0101" Style="{StaticResource TitleButton}" Content="キョーエイ" />
+                            <Button Grid.Row="2" Grid.Column="1" x:Name="Cmd26" Command="{Binding SelectInputCommand}" CommandParameter="7883" Style="{StaticResource TitleButton}" Content="コスモマツオカ" />
+                            <Button Grid.Row="2" Grid.Column="3" x:Name="Cmd27" Command="{Binding SelectInputCommand}" CommandParameter="0117" Style="{StaticResource TitleButton}" Content="サンエー" />
+                            <Button Grid.Row="2" Grid.Column="5" x:Name="Cmd28" Command="{Binding SelectInputCommand}" CommandParameter="7846" Style="{StaticResource TitleButton}" Content="タイフク東京" />
+                            <Button Grid.Row="3" Grid.Column="1" x:Name="Cmd29" Command="{Binding SelectInputCommand}" CommandParameter="0109" Style="{StaticResource TitleButton}" Content="天満屋ストア" />
+                            <Button Grid.Row="3" Grid.Column="3" x:Name="Cmd30" Command="{Binding SelectInputCommand}" CommandParameter="0129" Style="{StaticResource TitleButton}" Content="ドミー" />
+                            <Button Grid.Row="3" Grid.Column="5" x:Name="Cmd31" Command="{Binding SelectInputCommand}" CommandParameter="8108" Style="{StaticResource TitleButton}" Content="ビッグエー" />
+                            <Button Grid.Row="4" Grid.Column="1" x:Name="Cmd32" Command="{Binding SelectInputCommand}" CommandParameter="0103" Style="{StaticResource TitleButton}" Content="フジ" />
+                            <Button Grid.Row="4" Grid.Column="3" x:Name="Cmd33" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="フジヤ" />
+                            <Button Grid.Row="4" Grid.Column="5" x:Name="Cmd34" Command="{Binding SelectInputCommand}" CommandParameter="0121" Style="{StaticResource TitleButton}" Content="北海道三喜" />
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="Cmd35" Command="{Binding SelectInputCommand}" CommandParameter="8103" Style="{StaticResource TitleButton}" Content="本店タカハシ" />
+                            <Button Grid.Row="5" Grid.Column="3" x:Name="Cmd36" Command="{Binding SelectInputCommand}" CommandParameter="0110" Style="{StaticResource TitleButton}" Content="マックスバリュ西日本" />
+                            <Button Grid.Row="5" Grid.Column="5" x:Name="Cmd37" Command="{Binding SelectInputCommand}" CommandParameter="0102" Style="{StaticResource TitleButton}" Content="マルヨシ" />
+                            <Button Grid.Row="6" Grid.Column="1" x:Name="Cmd38" Command="{Binding SelectInputCommand}" CommandParameter="8110" Style="{StaticResource TitleButton}" Content="マーブル" />
+                            <Button Grid.Row="6" Grid.Column="3" x:Name="Cmd39" Command="{Binding SelectInputCommand}" CommandParameter="8102" Style="{StaticResource TitleButton}" Content="ミヤマ" />
+                            <Button Grid.Row="6" Grid.Column="5" x:Name="Cmd40" Command="{Binding SelectInputCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
+                            <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd41" Command="{Binding SelectInputCommand}" CommandParameter="7840" Style="{StaticResource TitleButton}" Content="柳屋" />
+                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd42" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}"  Content="ワークウェイ" />
+                            <Button Grid.Row="7" Grid.Column="5" x:Name="Cmd43" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Visibility="Hidden" Content="未使用" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
 
         <Grid Grid.Row="2" ShowGridLines="False" Margin="1,0,1,0">
             <Grid.ColumnDefinitions>
@@ -83,9 +200,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content="ESC&#xa;終了" Style="{StaticResource FkeyButton}" Visibility="Visible">
-
-            </Button>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content=" ESC&#xa;終 了" Style="{StaticResource FkeyButton}" Visibility="Visible"/>
             <Button Grid.Column="1" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="2" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
             <Button Grid.Column="3" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed"/>
