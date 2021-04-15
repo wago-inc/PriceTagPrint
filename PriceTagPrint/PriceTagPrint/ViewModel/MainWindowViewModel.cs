@@ -43,12 +43,12 @@ namespace PriceTagPrint.ViewModel
                 case MenuKind.Auto:
                     InputMenuVisibility.Value = Visibility.Collapsed;
                     AutoMenuVisibility.Value = Visibility.Visible;                    
-                    SubTitleText.Value = "自動発行メニュー";
+                    SubTitleText.Value = "自 動 発 行 メ ニ ュ ー";
                     break;
                 case MenuKind.Input:
                     AutoMenuVisibility.Value = Visibility.Collapsed;
                     InputMenuVisibility.Value = Visibility.Visible;                    
-                    SubTitleText.Value = "手動発行メニュー";
+                    SubTitleText.Value = "手 動 発 行 メ ニ ュ ー";
                     break;
             }
         }
@@ -60,15 +60,13 @@ namespace PriceTagPrint.ViewModel
                 return;
             }
 
-            var torihikisaki = Torihikisakis.list.FirstOrDefault(x => x.Tcode == tcode && x.Kind == HakkouKind.Input);
+            var torihikisaki = Torihikisakis.list.FirstOrDefault(x => x.Tcode == tcode && x.Kind != HakkouKind.Auto);
             if (torihikisaki != null)
             {
-                switch (torihikisaki.Tcode)
-                {
-                    case Tid.AJU:
-
-                        break;
-                }
+                var view = new LayoutSelectView(torihikisaki);
+                view.Owner = window;
+                view.Show();
+                view.Owner.Hide();
             }
         }
         private void ShowAutoDisplay(string tcode)

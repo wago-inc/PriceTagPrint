@@ -199,6 +199,8 @@ namespace PriceTagPrint.View
                 {
                     if (((YasusakiViewModel)this.DataContext).InputCheck())
                     {
+                        int nefudaBangou;
+                        ((YasusakiViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
                         ((YasusakiViewModel)this.DataContext).NefudaDataDisplay();
                     }
                 }

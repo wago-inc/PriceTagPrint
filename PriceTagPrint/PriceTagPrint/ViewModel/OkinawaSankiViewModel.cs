@@ -722,6 +722,10 @@ namespace PriceTagPrint.ViewModel
                             OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
                             TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
                         }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
@@ -812,6 +816,10 @@ namespace PriceTagPrint.ViewModel
                             OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
                             TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
                         }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
@@ -887,6 +895,10 @@ namespace PriceTagPrint.ViewModel
                             var OkinawaSankiModelList = new OkinawaSankiItemList();
                             OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
                             TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else

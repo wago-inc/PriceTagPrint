@@ -630,7 +630,6 @@ namespace PriceTagPrint.ViewModel
             return YamanakaItems.Value != null &&
                    YamanakaItems.Value.Any() &&
                    YamanakaItems.Value.Sum(x => x.発行枚数) > 0;
-            return false;
         }
 
         /// <summary>

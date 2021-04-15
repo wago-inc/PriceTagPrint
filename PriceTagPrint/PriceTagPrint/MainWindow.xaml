@@ -9,7 +9,7 @@
         xmlns:conv="clr-namespace:PriceTagPrint.Common"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="値札発行メニュー" Height="700" Width="1100">
+        Title="値札発行メニュー" Height="720" Width="1100">
     
     <Window.DataContext>
         <vm:MainWindowViewModel/>
@@ -55,11 +55,11 @@
                         BorderThickness="1"
                         Margin="1">
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <RadioButton Name="AutoBtn" GroupName="buttons" Content="自動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,15,0,5" 
+                        <RadioButton Name="AutoBtn" GroupName="buttons" Content=" 自動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,15,0,5" 
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Auto, 
                                         Converter={StaticResource EnumConverter}}"/>
-                        <RadioButton Name="InputBtn" GroupName="buttons" Content="手動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
+                        <RadioButton Name="InputBtn" GroupName="buttons" Content=" 手動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Input, 
                                         Converter={StaticResource EnumConverter}}"/>
@@ -119,6 +119,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
@@ -152,7 +153,10 @@
                             <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="21" />
                             <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="22" />
                             <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="23" />
-                            <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Visibility="Hidden" Content="24" />
+                            <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="24" />
+                            <Button Grid.Row="8" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="25" />
+                            <Button Grid.Row="8" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="26" />
+                            <Button Grid.Row="8" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="27" />
 
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd20" Command="{Binding SelectInputCommand}" CommandParameter="0170" Style="{StaticResource TitleButton}" Content="アージュ" />
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd21" Command="{Binding SelectInputCommand}" CommandParameter="8104" Style="{StaticResource TitleButton}" Content="アブアブ赤札堂" />
@@ -167,7 +171,7 @@
                             <Button Grid.Row="3" Grid.Column="3" x:Name="Cmd30" Command="{Binding SelectInputCommand}" CommandParameter="0129" Style="{StaticResource TitleButton}" Content="ドミー" />
                             <Button Grid.Row="3" Grid.Column="5" x:Name="Cmd31" Command="{Binding SelectInputCommand}" CommandParameter="8108" Style="{StaticResource TitleButton}" Content="ビッグエー" />
                             <Button Grid.Row="4" Grid.Column="1" x:Name="Cmd32" Command="{Binding SelectInputCommand}" CommandParameter="0103" Style="{StaticResource TitleButton}" Content="フジ" />
-                            <Button Grid.Row="4" Grid.Column="3" x:Name="Cmd33" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="フジヤ" />
+                            <Button Grid.Row="4" Grid.Column="3" x:Name="Cmd33" Command="{Binding SelectInputCommand}" CommandParameter="1420" Style="{StaticResource TitleButton}" Content="フジヤ" />
                             <Button Grid.Row="4" Grid.Column="5" x:Name="Cmd34" Command="{Binding SelectInputCommand}" CommandParameter="0121" Style="{StaticResource TitleButton}" Content="北海道三喜" />
                             <Button Grid.Row="5" Grid.Column="1" x:Name="Cmd35" Command="{Binding SelectInputCommand}" CommandParameter="8103" Style="{StaticResource TitleButton}" Content="本店タカハシ" />
                             <Button Grid.Row="5" Grid.Column="3" x:Name="Cmd36" Command="{Binding SelectInputCommand}" CommandParameter="0110" Style="{StaticResource TitleButton}" Content="マックスバリュ西日本" />
@@ -176,8 +180,11 @@
                             <Button Grid.Row="6" Grid.Column="3" x:Name="Cmd39" Command="{Binding SelectInputCommand}" CommandParameter="8102" Style="{StaticResource TitleButton}" Content="ミヤマ" />
                             <Button Grid.Row="6" Grid.Column="5" x:Name="Cmd40" Command="{Binding SelectInputCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
                             <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd41" Command="{Binding SelectInputCommand}" CommandParameter="7840" Style="{StaticResource TitleButton}" Content="柳屋" />
-                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd42" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}"  Content="ワークウェイ" />
-                            <Button Grid.Row="7" Grid.Column="5" x:Name="Cmd43" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Visibility="Hidden" Content="未使用" />
+                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd42" Command="{Binding SelectInputCommand}" CommandParameter="7858" Style="{StaticResource TitleButton}" Content="わたせい" />
+                            <Button Grid.Row="7" Grid.Column="5" x:Name="Cmd43" Command="{Binding SelectInputCommand}" CommandParameter="7510" Style="{StaticResource TitleButton}" Content="ワークウェイ" />
+                            <Button Grid.Row="8" Grid.Column="1" x:Name="Cmd44" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
+                            <Button Grid.Row="8" Grid.Column="3" x:Name="Cmd45" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
+                            <Button Grid.Row="8" Grid.Column="5" x:Name="Cmd46" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
                         </Grid>
                     </StackPanel>
                 </Border>

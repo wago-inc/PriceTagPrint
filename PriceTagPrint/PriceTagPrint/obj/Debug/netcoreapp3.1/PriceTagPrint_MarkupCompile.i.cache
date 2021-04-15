@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\App.xaml
-7-185031310
+8-219039421
 
-50293886173
+52-2142103502
 2121994904576
-MainWindow.xaml;Style\StyleDic.xaml;View\MaruyoshiView.xaml;View\OkinawaSankiView.xaml;View\WataseiView.xaml;View\YamanakaView.xaml;View\YasusakiView.xaml;
+MainWindow.xaml;Style\StyleDic.xaml;View\LayoutSelectView.xaml;View\MaruyoshiView.xaml;View\OkinawaSankiView.xaml;View\WataseiView.xaml;View\YamanakaView.xaml;View\YasusakiView.xaml;
 
 True
 

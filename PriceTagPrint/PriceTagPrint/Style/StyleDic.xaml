@@ -29,6 +29,23 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
+    <!--読み取り専用テキストボックス-->
+    <Style x:Key="ReadOnlyTextBox" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <!--<Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <ContentPresenter x:Name="ContentElement" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>-->
+    </Style>
     
     <!--テキストボックス-->
     <Style x:Key="ContentText" TargetType="TextBox">
@@ -123,12 +140,49 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="IsTabStop" Value="False"/>
     </Style>
+
+    <!--ファイル名データグリッド-->
+    <Style x:Key="FileDataGrid" TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="RowBackground" Value="LightYellow"/>
+        <Setter Property="AlternatingRowBackground" Value="LightGreen"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="RowHeight" Value="32"/>
+        <Setter Property="VerticalGridLinesBrush" Value="White"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="White"/>
+        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="CanUserSortColumns" Value="False"/>
+    </Style>
+
+    <!--ファイル名データグリッドカラムヘッダ-->
+    <Style x:Key="FileDataGridColumnHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="UltraBold"/>
+    </Style>
+    
+    <!--ファイル名データグリッドロー-->
+    <Style x:Key="FileDataGridRow" TargetType="DataGridRow">
+        <Setter Property="FontFamily" Value="Yu Gothic Medium" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="IsTabStop" Value="False"/>
+    </Style>
     
     <!--データグリッドセル-->
     <Style x:Key="UnTabStopCell" TargetType="{x:Type DataGridCell }">
         <Setter Property="IsTabStop" Value="False"/>
     </Style>
 
+    <!--ラジオボタン-->
     <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
         <!--<Setter Property="Background" Value="Blue"/>-->
         <Setter Property="Template">
@@ -156,4 +210,67 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!--ボタン-->
+    <ControlTemplate  x:Key="ButtonTemplate" TargetType="Button">
+        <!--角の丸みを取りたいためGridを使用-->
+        <Grid x:Name="MyButton" Background="{TemplateBinding Background}">
+            <!--ボタンの枠線-->
+            <Border x:Name="MyBorder" BorderBrush="White" BorderThickness="1"/>
+            <!--ボタン内のコンテンツ（テキストなど）-->
+            <ContentPresenter x:Name="Presenter"
+                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                          />
+
+            <!--各イベントで表示を変えたいためVisualStateManagerを使用する-->
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup Name="CommonStates">
+                    <!--通常時（これが無いとマウスが外れても表示が戻らない）-->
+                    <VisualState Name="Normal" />
+                    <!--マウスオーバー時-->
+                    <VisualState Name="MouseOver">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="MyButton"
+                                       Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                       Duration="00:00:00.1"
+                                       To="GreenYellow" />
+                            <ColorAnimation Storyboard.TargetName="Presenter"
+                                       Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                       Duration="00:00:00.1"
+                                       To="Black" />
+                        </Storyboard>
+                    </VisualState>
+                    <!--ボタン押下時-->
+                    <VisualState Name="Pressed">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="MyButton"
+                                       Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                       Duration="00:00:00.1"
+                                       To="DarkGreen" />
+                            <ColorAnimation Storyboard.TargetName="Presenter"
+                                       Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                       Duration="00:00:00.1"
+                                       To="White" />
+                            <ThicknessAnimation Storyboard.TargetName="MyButton"
+                                            Storyboard.TargetProperty="Margin"
+                                            Duration="00:00:00.1"
+                                            To="0,0,0,0" />
+                        </Storyboard>
+                    </VisualState>
+                    <!--ボタン無効化時-->
+                    <VisualState Name="Disabled">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="MyBorder"
+                                       Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
+                                       To="LightSeaGreen"/>
+                            <ColorAnimation Storyboard.TargetName="Presenter"
+                                       Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                       To="DarkGray"/>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ControlTemplate>
 </ResourceDictionary>

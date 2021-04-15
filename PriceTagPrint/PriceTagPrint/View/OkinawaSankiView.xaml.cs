@@ -210,6 +210,8 @@ namespace PriceTagPrint.View
                 {
                     if (((OkinawaSankiViewModel)this.DataContext).InputCheck())
                     {
+                        int nefudaBangou;
+                        ((OkinawaSankiViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
                         ((OkinawaSankiViewModel)this.DataContext).NefudaDataDisplay();
                     }
                 }
