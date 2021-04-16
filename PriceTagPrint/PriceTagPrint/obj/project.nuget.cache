@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TCe9I3YnyER5q2ii6aU9lIKzcojduMETcZrg/gnkI+8cqndfDVoIIwKF2FBpxpGW5QHDaxeSZmvsjJgjk6HWEg==",
+  "dgSpecHash": "24hNJeMLok/FkdvSj+4RtL36WMenrXxOQHje4tYhVx5++fFcccZN1b1Ass0K8Djhm5C11sqtMMk5STzKcwesmw==",
   "success": true,
   "projectFilePath": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,7 @@
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.visualbasic\\10.3.0\\microsoft.visualbasic.10.3.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
-    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoftexpressioninteractions\\3.0.40218\\microsoftexpressioninteractions.3.0.40218.nupkg.sha512",
+    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.31\\microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\oracle.manageddataaccess.core\\3.21.1\\oracle.manageddataaccess.core.3.21.1.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\reactiveproperty\\7.8.0\\reactiveproperty.7.8.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\reactiveproperty.core\\7.8.0\\reactiveproperty.core.7.8.0.nupkg.sha512",
@@ -33,29 +33,7 @@
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.text.json\\4.7.1\\system.text.json.4.7.1.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
-    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512",
-    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.windows.interactivity.wpf\\2.0.20525\\system.windows.interactivity.wpf.2.0.20525.nupkg.sha512"
+    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "パッケージ 'MicrosoftExpressionInteractions 3.0.40218' はプロジェクトのターゲット フレームワーク '.NETCoreApp,Version=v3.1' ではなく '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' を使用して復元されました。このパッケージは、使用しているプロジェクトとの完全な互換性がない可能性があります。",
-      "libraryId": "MicrosoftExpressionInteractions",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "パッケージ 'System.Windows.Interactivity.WPF 2.0.20525' はプロジェクトのターゲット フレームワーク '.NETCoreApp,Version=v3.1' ではなく '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' を使用して復元されました。このパッケージは、使用しているプロジェクトとの完全な互換性がない可能性があります。",
-      "libraryId": "System.Windows.Interactivity.WPF",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "logs": []
 }

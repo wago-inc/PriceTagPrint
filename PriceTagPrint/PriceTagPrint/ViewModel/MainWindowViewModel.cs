@@ -54,11 +54,11 @@ namespace PriceTagPrint.ViewModel
         }
         private void ShowInputDisplay(string tcode)
         {
-            if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
-            {
-                MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            //if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
+            //{
+            //    MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
 
             var torihikisaki = Torihikisakis.list.FirstOrDefault(x => x.Tcode == tcode && x.Kind != HakkouKind.Auto);
             if (torihikisaki != null)
@@ -71,11 +71,11 @@ namespace PriceTagPrint.ViewModel
         }
         private void ShowAutoDisplay(string tcode)
         {
-            if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
-            {
-                MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            //if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
+            //{
+            //    MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
 
             var torihikisaki = Torihikisakis.list.FirstOrDefault(x => x.Tcode == tcode && x.Kind != HakkouKind.Input);
             if(torihikisaki != null)

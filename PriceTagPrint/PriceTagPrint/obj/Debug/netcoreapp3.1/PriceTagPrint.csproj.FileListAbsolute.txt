@@ -30,11 +30,9 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\Livet.Core.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\MvvmHelpers.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\Splat.dll
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\Microsoft.Expression.Interactions.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\ReactiveProperty.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\ReactiveProperty.Core.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.ComponentModel.Annotations.dll
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.Windows.Interactivity.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.Reactive.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\System.Reactive.xml
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\Microsoft.Win32.Registry.dll
@@ -78,3 +76,4 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Debug\netcoreapp3.1\View\WataseiView.baml
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Debug\netcoreapp3.1\View\LayoutSelectView.g.cs
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Debug\netcoreapp3.1\View\LayoutSelectView.baml
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Debug\netcoreapp3.1\Microsoft.Xaml.Behaviors.dll
