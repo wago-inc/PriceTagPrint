@@ -69,7 +69,7 @@ namespace PriceTagPrint.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/PriceTagPrint;component/view/layoutselectview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/PriceTagPrint;V1.0.0.0;component/view/layoutselectview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\LayoutSelectView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -165,7 +165,7 @@ namespace PriceTagPrint.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/PriceTagPrint;component/view/yasusakiview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/PriceTagPrint;V1.0.0.0;component/view/yasusakiview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\YasusakiView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

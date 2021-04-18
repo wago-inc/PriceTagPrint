@@ -7,7 +7,7 @@
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Livet.Core.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Microsoft.Win32.Registry.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Microsoft.Win32.SystemEvents.dll
-\\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Microsoft.Expression.Interactions.dll
+\\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Microsoft.Xaml.Behaviors.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\Oracle.ManagedDataAccess.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\ReactiveProperty.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\ReactiveProperty.Core.dll
@@ -28,7 +28,6 @@
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\System.Text.Encoding.CodePages.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\System.Text.Json.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\System.Windows.Extensions.dll
-\\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\System.Windows.Interactivity.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\release\runtimes\freebsd\lib\netcoreapp2.0\System.Data.Odbc.dll
