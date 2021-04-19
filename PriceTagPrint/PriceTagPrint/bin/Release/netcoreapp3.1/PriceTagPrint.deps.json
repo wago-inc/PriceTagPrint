@@ -10,7 +10,7 @@
         "dependencies": {
           "LivetCask.Core": "3.2.3.2",
           "Microsoft.VisualBasic": "10.3.0",
-          "MicrosoftExpressionInteractions": "3.0.40218",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.31",
           "Oracle.ManagedDataAccess.Core": "3.21.1",
           "ReactiveProperty": "7.8.0",
           "Refractored.MvvmHelpers": "1.6.2",
@@ -18,7 +18,6 @@
           "System.Data.Odbc": "5.0.0",
           "System.Data.OleDb": "5.0.0",
           "System.Text.Encoding.CodePages": "5.0.0",
-          "System.Windows.Interactivity.WPF": "2.0.20525",
           "Oracle.DataAccess": "4.112.2.0",
           "System.Reactive.Reference": "5.0.0.0"
         },
@@ -75,11 +74,11 @@
           }
         }
       },
-      "MicrosoftExpressionInteractions/3.0.40218": {
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.31": {
         "runtime": {
-          "lib/net45/Microsoft.Expression.Interactions.dll": {
-            "assemblyVersion": "4.5.0.0",
-            "fileVersion": "3.0.40218.0"
+          "lib/netcoreapp3.1/Microsoft.Xaml.Behaviors.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.31.10800"
           }
         }
       },
@@ -425,14 +424,6 @@
           }
         }
       },
-      "System.Windows.Interactivity.WPF/2.0.20525": {
-        "runtime": {
-          "lib/net40/System.Windows.Interactivity.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "2.0.20525.0"
-          }
-        }
-      },
       "Oracle.DataAccess/4.112.2.0": {
         "runtime": {
           "Oracle.DataAccess.dll": {
@@ -492,12 +483,12 @@
       "path": "microsoft.win32.systemevents/5.0.0",
       "hashPath": "microsoft.win32.systemevents.5.0.0.nupkg.sha512"
     },
-    "MicrosoftExpressionInteractions/3.0.40218": {
+    "Microsoft.Xaml.Behaviors.Wpf/1.1.31": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QPi+KYM//nirPGmTsKl3xLQAyfxxYUsyERBun3am32QQnVB+3I3izRbtcYLgy5kcBuAX9ZhHzWFD7n7SEu0WPw==",
-      "path": "microsoftexpressioninteractions/3.0.40218",
-      "hashPath": "microsoftexpressioninteractions.3.0.40218.nupkg.sha512"
+      "sha512": "sha512-LZpuf82ACZWldmfMuv3CTUMDh3o0xo0uHUaybR5HgqVLDBJJ9RZLykplQ/bTJd0/VDt3EhD4iDgUgbdIUAM+Kg==",
+      "path": "microsoft.xaml.behaviors.wpf/1.1.31",
+      "hashPath": "microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512"
     },
     "Oracle.ManagedDataAccess.Core/3.21.1": {
       "type": "package",
@@ -666,13 +657,6 @@
       "sha512": "sha512-c1ho9WU9ZxMZawML+ssPKZfdnrg/OjR3pe0m9v8230z3acqphwvPJqzAkH54xRYm5ntZHGG1EPP3sux9H3qSPg==",
       "path": "system.windows.extensions/5.0.0",
       "hashPath": "system.windows.extensions.5.0.0.nupkg.sha512"
-    },
-    "System.Windows.Interactivity.WPF/2.0.20525": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-0r+Le4E7hCm4zToUvBzjSUyTcuU3rFeoPa7JyTdWIzR/F7wH6+O/pWkjHIG40hIA0z1wvRdZayvoizA4wcK1dg==",
-      "path": "system.windows.interactivity.wpf/2.0.20525",
-      "hashPath": "system.windows.interactivity.wpf.2.0.20525.nupkg.sha512"
     },
     "Oracle.DataAccess/4.112.2.0": {
       "type": "reference",

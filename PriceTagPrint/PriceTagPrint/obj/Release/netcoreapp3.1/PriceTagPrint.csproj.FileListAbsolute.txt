@@ -8,7 +8,6 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Livet.Core.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Microsoft.Win32.Registry.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Microsoft.Expression.Interactions.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Oracle.ManagedDataAccess.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\ReactiveProperty.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\ReactiveProperty.Core.dll
@@ -29,7 +28,6 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\System.Text.Encoding.CodePages.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\System.Text.Json.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\System.Windows.Extensions.dll
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\System.Windows.Interactivity.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\runtimes\freebsd\lib\netcoreapp2.0\System.Data.Odbc.dll
@@ -77,7 +75,5 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.pdb
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.genruntimeconfig.cache
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\PriceTagPrint.dll.manifest
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\PriceTagPrint.application
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.dll.manifest
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.application
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Microsoft.Xaml.Behaviors.dll
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.csprojAssemblyReference.cache
