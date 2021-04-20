@@ -27,13 +27,14 @@ namespace PriceTagPrint.Common
 
         private void Create()
         {
+            var connectString = DBConnect.OrclConnectString + DBConnect.OrclDataSource;
             try
             {
-                using (OracleConnection con = new OracleConnection(DBConnect.OrclConnectString))
+                using (OracleConnection con = new OracleConnection(connectString))
                 {
                     con.Open();
 
-                    string sql = "SELECT * FROM CLSMTA WHERE CLSKB = 7";
+                    string sql = "SELECT * FROM WAG_USR1.CLSMTA WHERE CLSKB = 7";
                     OracleCommand cmd = new OracleCommand(sql, con);
 
                     OracleDataReader reader = cmd.ExecuteReader();
@@ -57,13 +58,14 @@ namespace PriceTagPrint.Common
         public List<BunruiCode> GetBunruiCodes()
         {
             var results = new List<BunruiCode>();
+            var connectString = DBConnect.OrclConnectString + DBConnect.OrclDataSource;
             try
             {
-                using (OracleConnection con = new OracleConnection(DBConnect.OrclConnectString))
+                using (OracleConnection con = new OracleConnection(connectString))
                 {
                     con.Open();
 
-                    string sql = "SELECT * FROM CLSMTA WHERE CLSKB = 7";
+                    string sql = "SELECT * FROM WAG_USR1.CLSMTA WHERE CLSKB = 7";
                     OracleCommand cmd = new OracleCommand(sql, con);
 
                     OracleDataReader reader = cmd.ExecuteReader();

@@ -32,9 +32,10 @@ namespace PriceTagPrint.WAG_USR1
 
             DataTable orcDt = new DataTable();
             var results = new List<EOSKNMTA>();
+            var connectString = DBConnect.OrclConnectString + DBConnect.OrclDataSource;
             try
             {
-                using (OracleConnection orcConn = new OracleConnection(DBConnect.OrclConnectString))
+                using (OracleConnection orcConn = new OracleConnection(connectString))
                 {
                     orcConn.Open();
 
