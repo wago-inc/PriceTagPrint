@@ -55,6 +55,7 @@ namespace PriceTagPrint
         private void ExecuteCommand(object sender, RoutedEventArgs e)
         {
             this.Close();
+            Application.Current.Shutdown();
         }
     }
 }
