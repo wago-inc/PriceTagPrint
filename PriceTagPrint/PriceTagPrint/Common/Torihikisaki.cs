@@ -145,11 +145,11 @@ namespace PriceTagPrint.Common
             var dirs = new List<string>();
             list = new List<Torihikisaki>()
             {
-                new Torihikisaki(1,  Tid.YASUSAKI,       Tnm.YASUSAKI,       HakkouKind.Both, CreateDirList(TidNum.YASUSAKI)),
+                new Torihikisaki(1,  Tid.YASUSAKI,       Tnm.YASUSAKI,       HakkouKind.Both,  CreateDirList(TidNum.YASUSAKI)),
                 new Torihikisaki(2,  Tid.YAMANAKA,       Tnm.YAMANAKA,       HakkouKind.Auto),
-                new Torihikisaki(3,  Tid.MARUYOSI,       Tnm.MARUYOSI,       HakkouKind.Both, CreateDirList(TidNum.MARUYOSI)),
+                new Torihikisaki(3,  Tid.MARUYOSI,       Tnm.MARUYOSI,       HakkouKind.Both,  CreateDirList(TidNum.MARUYOSI)),
                 new Torihikisaki(4,  Tid.OKINAWA_SANKI,  Tnm.OKINAWA_SANKI,  HakkouKind.Auto),
-                new Torihikisaki(5,  Tid.WATASEI,        Tnm.WATASEI,        HakkouKind.Both, CreateDirList(TidNum.WATASEI)),
+                new Torihikisaki(5,  Tid.WATASEI,        Tnm.WATASEI,        HakkouKind.Both,  CreateDirList(TidNum.WATASEI)),
                 new Torihikisaki(6,  Tid.SANKI,          Tnm.SANKI,          HakkouKind.None),
                 new Torihikisaki(7,  Tid.AJU,            Tnm.AJU,            HakkouKind.Input, CreateDirList(TidNum.AJU)),
                 new Torihikisaki(8,  Tid.ABUABU,         Tnm.ABUABU,         HakkouKind.Input, CreateDirList(TidNum.ABUABU)),
@@ -218,7 +218,7 @@ namespace PriceTagPrint.Common
                 case TidNum.SANEI:
                     return new List<DirItem>()
                     {
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\【総額】サンエー_V5_RT308R", true)
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\【総額】サンエー_V5_RT308R", false)
                     };
                 case TidNum.TAIFUKUTOKYO:
                     return new List<DirItem>()
