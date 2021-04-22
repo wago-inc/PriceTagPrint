@@ -77,3 +77,5 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.genruntimeconfig.cache
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\Microsoft.Xaml.Behaviors.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.csprojAssemblyReference.cache
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\KyoeiView.g.cs
+C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\KyoeiView.baml

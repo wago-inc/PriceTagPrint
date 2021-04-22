@@ -10,64 +10,92 @@ namespace PriceTagPrint.Common
 {
     public class CsvUtility
     {
-        /// <summary>
-        /// CSVを読み込みDataTableとして返す
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="isHeader"></param>
-        /// <param name="limit"></param>
-        /// <param name="enccodeName"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public DataTable Read(string filename, bool isHeader, long limit = long.MaxValue, string encodeName = "shift-jis", string delimiter = "")
+        //dt:データを入れるDataTable
+        //hasHeader:CSVの一行目がカラム名かどうか
+        //fileName:ファイル名
+        //separator:カラムを分けている文字(,など)
+        //quote:カラムを囲んでいる文字("など)
+        public DataTable ReadCSV(bool hasHeader, string fileName, string separator = ",", bool quote = false)
         {
-
-
-            limit += (isHeader == true && limit < long.MaxValue) ? 1 : 0;
-            long count = 0;
-
-
-            var enc = Encoding.GetEncoding(encodeName);
-            delimiter = (delimiter == "") ? GetDelimiter(filename, enc) : delimiter;
-
             DataTable dt = new DataTable();
 
-            using (TextFieldParser parser = new TextFieldParser(filename, enc) { TextFieldType = FieldType.Delimited })
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            //CSVを便利に読み込んでくれるTextFieldParserを使います。
+            TextFieldParser parser = new TextFieldParser(fileName, Encoding.GetEncoding("shift_jis"));
+            //これは可変長のフィールドでフィールドの区切りのマーカーが使われている場合です。
+            //フィールドが固定長の場合は
+            //parser.TextFieldType = FieldType.FixedWidth;
+            parser.TextFieldType = FieldType.Delimited;
+            //区切り文字を設定します。
+            parser.SetDelimiters(separator);
+            //クォーテーションがあるかどうか。
+            //但しダブルクォーテーションにしか対応していません。シングルクォーテーションは認識しません。
+            parser.HasFieldsEnclosedInQuotes = quote;
+            string[] data;
+            //ここのif文では、DataTableに必要なカラムを追加するために最初に1行だけ読み込んでいます。
+            //データがあるか確認します。
+            if (!parser.EndOfData)
             {
-                parser.Delimiters = new string[] { delimiter };
-
-                while (!parser.EndOfData)
+                //CSVファイルから1行読み取ります。
+                data = parser.ReadFields();
+                //カラムの数を取得します。
+                int cols = data.Length;
+                if (hasHeader)
                 {
-                    var fields = parser.ReadFields();
+                    var duplicates = data.GroupBy(name => name).Where(name => name.Count() > 1)
+                                        .Select(group => group.Key).ToList();
 
-                    if (count++ == 0)
+                    var seqno = 1;
+                    foreach(var dup in duplicates)
                     {
-                        //ヘッダがある場合、1行目のデータで列を追加
-                        dt.Columns.AddRange(fields.Select(i => (isHeader) ? new DataColumn(i) : new DataColumn()).ToArray());
-                        if (isHeader)
+                        var indexes = data.Select((name, index) => new { name, index })
+                                        .Where(a => a.name == dup)
+                                        .Select(a => a.index);
+                        foreach(var idx in indexes)
                         {
-                            continue;
+                            data[idx] += "_" + seqno.ToString("00");
+                            seqno++;
                         }
+                        seqno = 1;
                     }
-
-                    if (fields.Length > dt.Columns.Count)
+                    
+                    for (int i = 0; i < cols; i++)
                     {
-                        dt.Columns.AddRange(Enumerable.Range(0, fields.Length - dt.Columns.Count).Select(i => new DataColumn()).ToArray());
+                        dt.Columns.Add(new DataColumn(data[i]));
                     }
-
-                    if (count > limit)
+                }
+                else
+                {
+                    for (int i = 0; i < cols; i++)
                     {
-                        break;
+                        //カラム名にダミーを設定します。
+                        dt.Columns.Add(new DataColumn());
                     }
-
-                    DataRow dr = dt.NewRow();
-                    Enumerable.Range(0, fields.Length).Select(i => dr[i] = fields[i]).ToArray();
-                    dt.Rows.Add(dr);
+                    //DataTableに追加するための新規行を取得します。
+                    DataRow row = dt.NewRow();
+                    for (int i = 0; i < cols; i++)
+                    {
+                        //カラムの数だけデータをうつします。
+                        row[i] = data[i];
+                    }
+                    //DataTableに追加します。
+                    dt.Rows.Add(row);
                 }
             }
-
+            //ここのループがCSVを読み込むメインの処理です。
+            //内容は先ほどとほとんど一緒です。
+            while (!parser.EndOfData)
+            {
+                data = parser.ReadFields();
+                DataRow row = dt.NewRow();
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    row[i] = data[i];
+                }
+                dt.Rows.Add(row);
+            }
             return dt;
-
         }
 
         /// <summary>

@@ -156,7 +156,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(9,  Tid.ITOGOFUKU,      Tnm.ITOGOFUKU,      HakkouKind.Input, CreateDirList(TidNum.ITOGOFUKU)),
                 new Torihikisaki(10, Tid.OKADA,          Tnm.OKADA,          HakkouKind.Input, CreateDirList(TidNum.OKADA)),
                 new Torihikisaki(11, Tid.KANETA,         Tnm.KANETA,         HakkouKind.Input, CreateDirList(TidNum.KANETA)),
-                new Torihikisaki(12, Tid.KYOEI,          Tnm.KYOEI,          HakkouKind.Input, CreateDirList(TidNum.KYOEI)),
+                new Torihikisaki(12, Tid.KYOEI,          Tnm.KYOEI,          HakkouKind.Both,  CreateDirList(TidNum.KYOEI)),
                 new Torihikisaki(13, Tid.COSMOMATUOKA,   Tnm.COSMOMATUOKA,   HakkouKind.Input, CreateDirList(TidNum.COSMOMATUOKA)),
                 new Torihikisaki(14, Tid.SANEI,          Tnm.SANEI,          HakkouKind.Input, CreateDirList(TidNum.SANEI)),
                 new Torihikisaki(15, Tid.TAIFUKUTOKYO,   Tnm.TAIFUKUTOKYO,   HakkouKind.Input, CreateDirList(TidNum.TAIFUKUTOKYO)),
@@ -207,8 +207,7 @@ namespace PriceTagPrint.Common
                 case TidNum.KYOEI:
                     return new List<DirItem>()
                     {
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\キョーエイ【総額表示】 _V5_ST308R", false),
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\キョーエイ【総額表示】 _V5_ST308R\手打ち用", false)
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0101_キョーエイ\【総額表示】_V5_ST308R\手打ち用", false)
                     };
                 case TidNum.COSMOMATUOKA:
                     return new List<DirItem>()

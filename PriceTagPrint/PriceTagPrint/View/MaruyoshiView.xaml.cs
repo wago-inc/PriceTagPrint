@@ -210,6 +210,7 @@ namespace PriceTagPrint.View
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message.ToString());
                     return;
                 }
 

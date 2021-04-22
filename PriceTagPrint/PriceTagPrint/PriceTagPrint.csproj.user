@@ -9,6 +9,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\KyoueiView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\LayoutSelectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -33,6 +36,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Style\StyleDic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\KyoueiView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\LayoutSelectView.xaml">

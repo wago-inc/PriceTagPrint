@@ -168,6 +168,7 @@ namespace PriceTagPrint.MDB
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message.ToString());
                 return false;
             }
         }

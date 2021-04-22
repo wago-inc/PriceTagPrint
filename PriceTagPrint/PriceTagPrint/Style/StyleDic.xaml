@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:PriceTagPrint.Style">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <!--タイトル用テキストブロック-->
     <Style x:Key="TitleText" TargetType="TextBlock">
@@ -216,7 +215,7 @@
         <!--角の丸みを取りたいためGridを使用-->
         <Grid x:Name="MyButton" Background="{TemplateBinding Background}">
             <!--ボタンの枠線-->
-            <Border x:Name="MyBorder" BorderBrush="White" BorderThickness="1"/>
+            <Border x:Name="MyBorder" BorderBrush="LightGoldenrodYellow" BorderThickness="1"/>
             <!--ボタン内のコンテンツ（テキストなど）-->
             <ContentPresenter x:Name="Presenter"
                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -238,7 +237,7 @@
                             <ColorAnimation Storyboard.TargetName="Presenter"
                                        Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                        Duration="00:00:00.1"
-                                       To="Black" />
+                                       To="LightGoldenrodYellow" />
                         </Storyboard>
                     </VisualState>
                     <!--ボタン押下時-->
