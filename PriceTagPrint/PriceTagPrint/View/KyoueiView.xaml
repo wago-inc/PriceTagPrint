@@ -182,7 +182,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=発行枚数}" Width="auto"
+                    <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=数量}" Width="auto"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

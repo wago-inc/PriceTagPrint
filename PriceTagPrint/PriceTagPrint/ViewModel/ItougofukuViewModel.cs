@@ -265,7 +265,7 @@ namespace PriceTagPrint.ViewModel
                     );
             }
             TotalMaisu.Value = ItougofukuItems.Value.Any() ?
-                                ItougofukuItems.Value.Sum(x => x.発行枚数).ToString() : "";
+                                ItougofukuItems.Value.Sum(x => x.数量計).ToString() : "";
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace PriceTagPrint.ViewModel
         {
             return ItougofukuItems.Value != null &&
                    ItougofukuItems.Value.Any() &&
-                   ItougofukuItems.Value.Sum(x => x.発行枚数) > 0;
+                   ItougofukuItems.Value.Sum(x => x.数量計) > 0;
         }
 
         /// <summary>
@@ -285,8 +285,29 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var fullName = FilePathText.Value;
+            var fname = Tid.KYOEI + "_" +
+                        Path.GetFileNameWithoutExtension(FilePathText.Value) + "_" + 
+                        DateTime.Today.ToString("yyyyMMddmmhhss") + ".csv";
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
+            CsvExport(fullName);
+            if (!File.Exists(fullName))
+            {
+                MessageBox.Show("CSVファイルのエクスポートに失敗しました。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             NefudaOutput(fullName, isPreview);
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 CSV発行処理
+        /// </summary>
+        /// <param name="fullName"></param>
+        private void CsvExport(string fullName)
+        {
+            var list = ItougofukuItems.Value.Where(x => x.数量計 > 0).ToList();
+
+            var datas = DataUtility.ToDataTable(list);
+            new CsvUtility().Write(datas, fullName, true);
         }
 
         /// <summary>
@@ -336,7 +357,7 @@ namespace PriceTagPrint.ViewModel
         public string コメント { get; set; }
         public string 商品区分 { get; set; }
         public string シーズン { get; set; }
-        public string 数量計 { get; set; }
+        public int 数量計 { get; set; }
         public string セット数 { get; set; }
         public string 入数 { get; set; }
         public string 値札 { get; set; }
@@ -348,27 +369,13 @@ namespace PriceTagPrint.ViewModel
         public string 下代 { get; set; }
         public string 税込金額 { get; set; }
         public string 部門コード { get; set; }
-        public int 発行枚数
-        {
-            get
-            {
-                int conv = 0;
-                if (int.TryParse(数量計, out conv))
-                {
-                    return conv;
-                }
-                else
-                {
-                    return 0;
-                };
-            }
-        }
 
         public ItougofukuItem(string 帳票種別, string 仕入先, string 仕入先名, string 商品コード, string 発注日, string 納入日, string 販売開始, string メーカーコード,
                               string クラス, string クラス名, string ユニット, string 商品名, string サイズ, string カラー, string 原単価, string 売単価, string 税込売価,
                               string コメント, string 商品区分, string シーズン, string 数量計, string セット数, string 入数, string 値札, string 店数量, string 納入場所,
                               string バイヤー, string 発注No, string 行No, string 下代, string 税込金額, string 部門コード)
         {
+            int conv;
             this.帳票種別 = 帳票種別;
             this.仕入先 = 仕入先;
             this.仕入先名 = 仕入先名;
@@ -389,7 +396,7 @@ namespace PriceTagPrint.ViewModel
             this.コメント = コメント;
             this.商品区分 = 商品区分;
             this.シーズン = シーズン;
-            this.数量計 = 数量計;
+            this.数量計 = int.TryParse(数量計, out conv) ? conv : 0;
             this.セット数 = セット数;
             this.入数 = 入数;
             this.値札 = 値札;

@@ -113,7 +113,7 @@ namespace PriceTagPrint.ViewModel
             NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
 
-            FilePathSetExists(CommonStrings.KYOEI_SCV_PATH);
+            //FilePathSetExists(CommonStrings.KYOEI_SCV_PATH);
 
 
         }
@@ -281,7 +281,7 @@ namespace PriceTagPrint.ViewModel
                     );
             }
             TotalMaisu.Value = KyoeiItems.Value.Any() ?
-                                KyoeiItems.Value.Sum(x => x.発行枚数).ToString() : "";
+                                KyoeiItems.Value.Sum(x => x.数量).ToString() : "";
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace PriceTagPrint.ViewModel
         {
             return KyoeiItems.Value != null &&
                    KyoeiItems.Value.Any() &&
-                   KyoeiItems.Value.Sum(x => x.発行枚数) > 0;
+                   KyoeiItems.Value.Sum(x => x.数量) > 0;
         }
 
         /// <summary>
@@ -301,8 +301,27 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var fullName = FilePathText.Value;
+            var fname = Tid.KYOEI + "_EOWPR01_" + DateTime.Today.ToString("yyyyMMddmmhhss") + ".csv";
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
+            CsvExport(fullName);
+            if (!File.Exists(fullName))
+            {
+                MessageBox.Show("CSVファイルのエクスポートに失敗しました。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             NefudaOutput(fullName, isPreview);
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 CSV発行処理
+        /// </summary>
+        /// <param name="fullName"></param>
+        private void CsvExport(string fullName)
+        {
+            var list = KyoeiItems.Value.Where(x => x.数量 > 0).ToList();            
+
+            var datas = DataUtility.ToDataTable(list);
+            new CsvUtility().Write(datas, fullName, true);
         }
 
         /// <summary>
@@ -341,7 +360,7 @@ namespace PriceTagPrint.ViewModel
         public string 品名 { get; set; }
         public string 規格 { get; set; }
         public string 文字予備７ { get; set; }
-        public string 数量 { get; set; }
+        public int 数量 { get; set; }
         public string 原単価 { get; set; }
         public string 売単価 { get; set; }
         public string 店コード1 { get; set; }
@@ -358,21 +377,6 @@ namespace PriceTagPrint.ViewModel
         public string 受注数量6 { get; set; }
         public string 件数 { get; set; }
         public string 色コード { get; set; }
-        public int 発行枚数
-        {
-            get
-            {
-                int conv = 0;
-                if (int.TryParse(数量, out conv))
-                {
-                    return conv;
-                }
-                else
-                {
-                    return 0;
-                };
-            }
-        }
 
         public KyoeiItem(string 分類コード, string 伝票番号, string 行番号, string 京屋商品コード, string 商品コード,
                          string マーク, string 品名, string 規格, string 文字予備７, string 数量, string 原単価, string 売単価,
@@ -380,6 +384,7 @@ namespace PriceTagPrint.ViewModel
                          string 受注数量1, string 受注数量2, string 受注数量3, string 受注数量4, string 受注数量5, string 受注数量6,
                          string 件数, string 色コード)
         {
+            int conv;
             this.分類コード = 分類コード;
             this.伝票番号 = 伝票番号;
             this.行番号 = 行番号;
@@ -389,7 +394,7 @@ namespace PriceTagPrint.ViewModel
             this.品名 = 品名;
             this.規格 = 規格;
             this.文字予備７ = 文字予備７;
-            this.数量 = 数量;
+            this.数量 = int.TryParse(数量, out conv) ? conv : 0;
             this.原単価 = 原単価;
             this.売単価 = 売単価;
             this.店コード1 = 店コード1;
