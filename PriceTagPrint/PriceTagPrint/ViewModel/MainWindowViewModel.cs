@@ -4,6 +4,7 @@ using PriceTagPrint.View;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -71,6 +72,21 @@ namespace PriceTagPrint.ViewModel
         }
         private void ShowAutoDisplay(string tcode)
         {
+            DirectoryInfo di = new DirectoryInfo(CommonStrings.CSV_PATH);
+            FileAttributes fas = File.GetAttributes(CommonStrings.CSV_PATH);
+
+            if (!di.Exists)
+            {
+                string msg = string.Format("CSV出力パス：{0}が存在しません。作成してください。", CommonStrings.CSV_PATH);
+                MessageBox.Show(msg, "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else if((fas & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            {
+                string msg = string.Format("CSV出力パス：{0}が読み取り専用になっています。属性を変更してください。", CommonStrings.CSV_PATH);
+                MessageBox.Show(msg, "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             //if (!RegistryUtil.isInstalled("Multi LABELIST V5"))
             //{
             //    MessageBox.Show("Multi LABELIST V5がインストールされていません。", "起動時チェック", MessageBoxButton.OK, MessageBoxImage.Error);
