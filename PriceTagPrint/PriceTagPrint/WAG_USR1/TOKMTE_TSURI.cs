@@ -8,8 +8,8 @@ using System.Windows;
 
 namespace PriceTagPrint.WAG_USR1
 {
-    public class TOKMTE
-    {        
+    public class TOKMTE_TSURI
+    {
         /// <summary>
         /// 得意先CD
         /// </summary>
@@ -31,8 +31,8 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string SIZCD { get; set; }
 
-        public TOKMTE(string tokcd, string hincd, string eoshinid, string colcd, string sizcd)
-        {            
+        public TOKMTE_TSURI(string tokcd, string hincd, string eoshinid, string colcd, string sizcd)
+        {
             this.TOKCD = tokcd;
             this.HINCD = hincd;
             this.EOSHINID = eoshinid;
@@ -41,18 +41,18 @@ namespace PriceTagPrint.WAG_USR1
         }
     }
 
-    public class TOKMTE_LIST
+    public class TOKMTE_TSURI_LIST
     {
-        public List<TOKMTE> QueryWhereTcode(int tcode)
+        public List<TOKMTE_TSURI> QueryWhereTcode(int tcode)
         {
             var sql = "SELECT * " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
-            sql += " WAG_USR1.TOKMTE " + Environment.NewLine;
+            sql += " WAG_USR1.TOKMTE_TSURI " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
             sql += " TOKCD = '" + tcode.ToString("000000") + "' ";
 
             DataTable orcDt = new DataTable();
-            var results = new List<TOKMTE>();
+            var results = new List<TOKMTE_TSURI>();
             var connectString = DBConnect.OrclConnectString + DBConnect.OrclDataSource;
             try
             {
@@ -68,7 +68,7 @@ namespace PriceTagPrint.WAG_USR1
                         orcDt.Load(reader);
                         foreach (DataRow row in orcDt.Rows)
                         {
-                            results.Add(new TOKMTE
+                            results.Add(new TOKMTE_TSURI
                                 (
                                     row.Field<string>("TOKCD"), row.Field<string>("HINCD"), row.Field<string>("EOSHINID"),
                                     row.Field<string>("COLCD"), row.Field<string>("SIZCD")

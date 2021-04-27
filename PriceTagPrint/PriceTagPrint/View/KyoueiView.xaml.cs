@@ -92,6 +92,9 @@ namespace PriceTagPrint.View
             InitializeComponent();
             NefudaBangouText.Focus();
             ((KyoueiViewModel)this.DataContext).NefudaBangouTextBox = this.NefudaBangouText;
+            ((KyoueiViewModel)this.DataContext).JusinDatePicker = this.JusinbiDatePicker;
+            ((KyoueiViewModel)this.DataContext).NouhinDatePicker = this.NouhinbiDatePicker;
+            this.JusinbiDatePicker.Focus();
         }
 
         /// <summary>
@@ -135,6 +138,53 @@ namespace PriceTagPrint.View
             }
         }
 
+        private void DatePicker_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (Keyboard.Modifiers == ModifierKeys.None)
+                {
+                    UIElement element = e.OriginalSource as UIElement;
+                    element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    e.Handled = true;
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Shift)
+                {
+                    UIElement element = sender as UIElement;
+                    element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Previous));
+                    e.Handled = true;
+                }
+            }
+        }
+
+        // 不正な日時を入力した場合、確定のタイミングで呼び出される
+        private void DatePicker_DateValidationError(object sender, DatePickerDateValidationErrorEventArgs e)
+        {
+            if (sender is DatePicker)
+            {
+                DatePicker picker = (DatePicker)sender;
+
+                // 文字列をDateTimeに
+                DateTime convDt;
+
+                try
+                {
+                    // 入力された"yyyyMMdd"書式での日付でDateTimeに変換
+                    convDt = System.DateTime.ParseExact(picker.Text, "yyyyMMdd",
+                                System.Globalization.DateTimeFormatInfo.InvariantInfo,
+                                System.Globalization.DateTimeStyles.None);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message.ToString());
+                    return;
+                }
+
+                // DatePicker用のDateTimeをセット
+                picker.SelectedDate = convDt;
+            }
+        }
+
         private void Act_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -152,8 +202,8 @@ namespace PriceTagPrint.View
                     {
                         return;
                     }
-
-                                ((KyoueiViewModel)this.DataContext).FilePathText.Value = cofd.FileName;
+                    ((KyoueiViewModel)this.DataContext).FilePathText.Value = cofd.FileName;
+                    this.JusinbiDatePicker.Focus();
                 }
             }
             else if (button.Name == "btnFileRead")

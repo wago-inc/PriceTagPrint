@@ -15,6 +15,7 @@ using Oracle.ManagedDataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
+using PriceTagPrint.WAG_USR1;
 using PriceTagPrint.WAGO2;
 using Reactive.Bindings;
 
@@ -23,6 +24,12 @@ namespace PriceTagPrint.ViewModel
     public class KyoueiViewModel : ViewModelsBase
     {
         #region プロパティ
+
+        // 受信日
+        public ReactiveProperty<DateTime> JusinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today);
+
+        // 納品日
+        public ReactiveProperty<DateTime> NouhinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today.AddDays(1));
 
         // 選択ファイルパス
         public ReactiveProperty<string> FilePathText { get; set; } = new ReactiveProperty<string>();
@@ -47,6 +54,11 @@ namespace PriceTagPrint.ViewModel
 
         // 値札テキストボックス
         public TextBox NefudaBangouTextBox = null;
+        public DatePicker JusinDatePicker = null;
+        public DatePicker NouhinDatePicker = null;
+
+        private EOSJUTRA_LIST eOSJUTRA_LIST;
+        private TOKMTE_TSURI_LIST tOKMTE_LIST;
 
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
@@ -105,6 +117,9 @@ namespace PriceTagPrint.ViewModel
 
         public KyoueiViewModel()
         {
+            eOSJUTRA_LIST = new EOSJUTRA_LIST();
+            tOKMTE_LIST = new TOKMTE_TSURI_LIST();
+
             CreateComboItems();
 
             KyoeiItems.Value = new ObservableCollection<KyoeiItem>();
@@ -113,8 +128,7 @@ namespace PriceTagPrint.ViewModel
             NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
 
-            //FilePathSetExists(CommonStrings.KYOEI_SCV_PATH);
-
+            //FilePathSetExists(CommonStrings.KYOEI_SCV_PATH);            
 
         }
 
@@ -204,6 +218,8 @@ namespace PriceTagPrint.ViewModel
             {
                 FilePathText.Value = "";
             }
+            JusinDate.Value = DateTime.Today;
+            NouhinDate.Value = DateTime.Today.AddDays(1);
             SelectedNefudaBangouIndex.Value = 0;
             KyoeiItems.Value.Clear();
             TotalMaisu.Value = "";
@@ -216,6 +232,19 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool InputCheck()
         {
+            DateTime convDate;
+            if (string.IsNullOrEmpty(this.JusinDatePicker.Text) || !DateTime.TryParse(this.JusinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("受信日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.JusinDatePicker.Focus();
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.NouhinDatePicker.Text) || !DateTime.TryParse(this.NouhinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("納品日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.NouhinDatePicker.Focus();
+                return false;
+            }
             if (!File.Exists(FilePathText.Value))
             {
                 MessageBox.Show("選択ファイルが存在しません。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -239,47 +268,93 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void CsvReadDisplay()
         {
+            if (!InputCheck())
+            {
+                return;
+            }
+            
             var dt = csvUtility.ReadCSV(true, FilePathText.Value);
+            
             if (dt.Rows.Count > 0)
             {
                 KyoeiItems.Value.Clear();
-            }
-            foreach (DataRow row in dt.Rows)
-            {
-                var arr = row.ItemArray.Cast<string>().ToArray();
 
-                KyoeiItems.Value.Add(
-                    new KyoeiItem
-                    (
-                        arr.ElementAtOrDefault(0),
-                        arr.ElementAtOrDefault(1),
-                        arr.ElementAtOrDefault(2),
-                        arr.ElementAtOrDefault(3),
-                        arr.ElementAtOrDefault(4),
-                        arr.ElementAtOrDefault(5),
-                        arr.ElementAtOrDefault(6),
-                        arr.ElementAtOrDefault(7),
-                        arr.ElementAtOrDefault(8),
-                        arr.ElementAtOrDefault(9),
-                        arr.ElementAtOrDefault(10),
-                        arr.ElementAtOrDefault(11),
-                        arr.ElementAtOrDefault(12),
-                        arr.ElementAtOrDefault(13),
-                        arr.ElementAtOrDefault(14),
-                        arr.ElementAtOrDefault(15),
-                        arr.ElementAtOrDefault(16),
-                        arr.ElementAtOrDefault(17),
-                        arr.ElementAtOrDefault(18),
-                        arr.ElementAtOrDefault(19),
-                        arr.ElementAtOrDefault(20),
-                        arr.ElementAtOrDefault(21),
-                        arr.ElementAtOrDefault(22),
-                        arr.ElementAtOrDefault(23),
-                        arr.ElementAtOrDefault(24),
-                        arr.ElementAtOrDefault(25)
-                        )
-                    );
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.KYOEI, JusinDate.Value, NouhinDate.Value);
+                //todo:元のプログラムがゴミなのでTOKMTEをwag_usr1ではなく値札出力のアクセスに定義している。
+                // 対策：wag_usr1にTOKMTEをコピーして吊り札判定に特化したTOKMTE_TSURIを作成した。
+                var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.KYOEI);
+                if(eosJutraList.Any() && tokmteList.Any())
+                {
+                    var turifudaHincds = eosJutraList
+                        .GroupJoin(
+                               tokmteList,
+                               e => new
+                               {
+                                   VHINCD = e.VHINCD.ToString().TrimEnd(),
+                                   TOKCD = e.VRYOHNCD.ToString().TrimEnd(),
+                                   HINCD = e.HINCD.ToString().TrimEnd(),
+                               },
+                               t => new
+                               {
+                                   VHINCD = t.EOSHINID.TrimEnd(),
+                                   TOKCD = t.TOKCD.TrimEnd(),
+                                   HINCD = t.HINCD.TrimEnd(),
+                               },
+                               (eos, tok) => new
+                               {
+                                   HINCD = eos.HINCD,
+                                   SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }).TrimEnd() : "",
+                               }).OrderBy(x => x.HINCD)
+                               .Where(x => x.SIZCD == "2")
+                               .Select(x => x.HINCD.TrimEnd())
+                               .ToList();
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                       // 0:１１号吊り 1:２１号貼り
+                       var addFlg = NefudaBangouText.Value == 0 ?
+                                   turifudaHincds.Contains(row.Field<string>("商品コード_02").TrimEnd()) :
+                                   !turifudaHincds.Contains(row.Field<string>("商品コード_02").TrimEnd());
+                        if (addFlg)
+                        {
+                            var arr = row.ItemArray.Cast<string>().ToArray();
+
+                            KyoeiItems.Value.Add(
+                                new KyoeiItem
+                                (
+                                    arr.ElementAtOrDefault(0),
+                                    arr.ElementAtOrDefault(1),
+                                    arr.ElementAtOrDefault(2),
+                                    arr.ElementAtOrDefault(3),
+                                    arr.ElementAtOrDefault(4),
+                                    arr.ElementAtOrDefault(5),
+                                    arr.ElementAtOrDefault(6),
+                                    arr.ElementAtOrDefault(7),
+                                    arr.ElementAtOrDefault(8),
+                                    arr.ElementAtOrDefault(9),
+                                    arr.ElementAtOrDefault(10),
+                                    arr.ElementAtOrDefault(11),
+                                    arr.ElementAtOrDefault(12),
+                                    arr.ElementAtOrDefault(13),
+                                    arr.ElementAtOrDefault(14),
+                                    arr.ElementAtOrDefault(15),
+                                    arr.ElementAtOrDefault(16),
+                                    arr.ElementAtOrDefault(17),
+                                    arr.ElementAtOrDefault(18),
+                                    arr.ElementAtOrDefault(19),
+                                    arr.ElementAtOrDefault(20),
+                                    arr.ElementAtOrDefault(21),
+                                    arr.ElementAtOrDefault(22),
+                                    arr.ElementAtOrDefault(23),
+                                    arr.ElementAtOrDefault(24),
+                                    arr.ElementAtOrDefault(25)
+                                    )
+                                );
+                        }
+                    }
+                }
             }
+            
             TotalMaisu.Value = KyoeiItems.Value.Any() ?
                                 KyoeiItems.Value.Sum(x => x.数量).ToString() : "";
         }

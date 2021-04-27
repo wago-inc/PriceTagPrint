@@ -48,6 +48,8 @@ namespace PriceTagPrint.ViewModel
         // 値札テキストボックス
         public TextBox NefudaBangouTextBox = null;
 
+        private DB_T05001_SHOHIN_DAICHO_LIST t05001_SHOHIN_DAICHO_LIST;
+
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -105,6 +107,8 @@ namespace PriceTagPrint.ViewModel
 
         public ItougofukuViewModel()
         {
+            t05001_SHOHIN_DAICHO_LIST = new DB_T05001_SHOHIN_DAICHO_LIST();
+
             CreateComboItems();
 
             ItougofukuItems.Value = new ObservableCollection<ItougofukuItem>();
@@ -132,15 +136,13 @@ namespace PriceTagPrint.ViewModel
             var searchExtension = "*." + CommonStrings.INPUT_EXTENSION;
             var files = Directory.EnumerateFiles(_grpFullName, searchExtension);
             var list = new List<CommonIdName>();
-            var id = 0;
             foreach (var file in files)
             {
                 var fName = Path.GetFileNameWithoutExtension(file);
                 var item = new CommonIdName();
-                item.Id = id;
+                item.Id = fName.Contains("タグ") ? 2 : fName.Contains("ラベル") ? 3 : 0;
                 item.Name = fName;
                 list.Add(item);
-                id++;
             }
             return list;
         }
@@ -204,7 +206,7 @@ namespace PriceTagPrint.ViewModel
                 MessageBox.Show("対象データが存在しません。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            if (this.NefudaBangouText.Value < 0 || this.NefudaBangouText.Value > 1)
+            if (this.NefudaBangouText.Value < 2 || this.NefudaBangouText.Value > 3)
             {
                 MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -217,53 +219,69 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void CsvReadDisplay()
         {
+            if (!InputCheck())
+            {
+                return;
+            }
+
             var dt = csvUtility.ReadCSV(true, FilePathText.Value);
+
             if (dt.Rows.Count > 0)
             {
                 ItougofukuItems.Value.Clear();
-            }
-            foreach (DataRow row in dt.Rows)
-            {
-                var arr = row.ItemArray.Cast<string>().ToArray();
 
-                ItougofukuItems.Value.Add(
-                    new ItougofukuItem
-                    (
-                        arr.ElementAtOrDefault(0),
-                        arr.ElementAtOrDefault(1),
-                        arr.ElementAtOrDefault(2),
-                        arr.ElementAtOrDefault(3),
-                        arr.ElementAtOrDefault(4),
-                        arr.ElementAtOrDefault(5),
-                        arr.ElementAtOrDefault(6),
-                        arr.ElementAtOrDefault(7),
-                        arr.ElementAtOrDefault(8),
-                        arr.ElementAtOrDefault(9),
-                        arr.ElementAtOrDefault(10),
-                        arr.ElementAtOrDefault(11),
-                        arr.ElementAtOrDefault(12),
-                        arr.ElementAtOrDefault(13),
-                        arr.ElementAtOrDefault(14),
-                        arr.ElementAtOrDefault(15),
-                        arr.ElementAtOrDefault(16),
-                        arr.ElementAtOrDefault(17),
-                        arr.ElementAtOrDefault(18),
-                        arr.ElementAtOrDefault(19),
-                        arr.ElementAtOrDefault(20),
-                        arr.ElementAtOrDefault(21),
-                        arr.ElementAtOrDefault(22),
-                        arr.ElementAtOrDefault(23),
-                        arr.ElementAtOrDefault(24),
-                        arr.ElementAtOrDefault(25),
-                        arr.ElementAtOrDefault(26),
-                        arr.ElementAtOrDefault(27),
-                        arr.ElementAtOrDefault(28),
-                        arr.ElementAtOrDefault(29),
-                        arr.ElementAtOrDefault(30),
-                        arr.ElementAtOrDefault(31)
-                        )
-                    );
+                var targetItems = t05001_SHOHIN_DAICHO_LIST.QueryWhereNefudaNo(NefudaBangouText.Value)
+                                    .Select(x => x.バーコード.TrimEnd())
+                                    .ToList();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    var addFlg = targetItems.Contains(row.Field<string>("商品コード").TrimEnd());
+                    if (addFlg)
+                    {
+                        var arr = row.ItemArray.Cast<string>().ToArray();
+
+                        ItougofukuItems.Value.Add(
+                            new ItougofukuItem
+                            (
+                                arr.ElementAtOrDefault(0),
+                                arr.ElementAtOrDefault(1),
+                                arr.ElementAtOrDefault(2),
+                                arr.ElementAtOrDefault(3),
+                                arr.ElementAtOrDefault(4),
+                                arr.ElementAtOrDefault(5),
+                                arr.ElementAtOrDefault(6),
+                                arr.ElementAtOrDefault(7),
+                                arr.ElementAtOrDefault(8),
+                                arr.ElementAtOrDefault(9),
+                                arr.ElementAtOrDefault(10),
+                                arr.ElementAtOrDefault(11),
+                                arr.ElementAtOrDefault(12),
+                                arr.ElementAtOrDefault(13),
+                                arr.ElementAtOrDefault(14),
+                                arr.ElementAtOrDefault(15),
+                                arr.ElementAtOrDefault(16),
+                                arr.ElementAtOrDefault(17),
+                                arr.ElementAtOrDefault(18),
+                                arr.ElementAtOrDefault(19),
+                                arr.ElementAtOrDefault(20),
+                                arr.ElementAtOrDefault(21),
+                                arr.ElementAtOrDefault(22),
+                                arr.ElementAtOrDefault(23),
+                                arr.ElementAtOrDefault(24),
+                                arr.ElementAtOrDefault(25),
+                                arr.ElementAtOrDefault(26),
+                                arr.ElementAtOrDefault(27),
+                                arr.ElementAtOrDefault(28),
+                                arr.ElementAtOrDefault(29),
+                                arr.ElementAtOrDefault(30),
+                                arr.ElementAtOrDefault(31)
+                                )
+                            );
+                    }
+                }
             }
+            
             TotalMaisu.Value = ItougofukuItems.Value.Any() ?
                                 ItougofukuItems.Value.Sum(x => x.数量計).ToString() : "";
         }
@@ -285,7 +303,7 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var fname = Tid.KYOEI + "_" +
+            var fname = Tid.ITOGOFUKU + "_" +
                         Path.GetFileNameWithoutExtension(FilePathText.Value) + "_" + 
                         DateTime.Today.ToString("yyyyMMddmmhhss") + ".csv";
             var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
