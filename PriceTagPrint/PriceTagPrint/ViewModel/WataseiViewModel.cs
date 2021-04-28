@@ -543,7 +543,7 @@ namespace PriceTagPrint.ViewModel
                                  LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO,
                                  LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO,
                                  SCODE = g.Key.SCODE,
-                                 SAIZUS = g.Key.SAIZUS,
+                                 SAIZUS = g.Key.SAIZUS.ToString("00"),
                                  HINCD = g.Key.HINCD,
                                  JANCD = g.Key.JANCD,
                                  HINMEI = g.Key.HINMEI,
@@ -690,13 +690,13 @@ namespace PriceTagPrint.ViewModel
         public string 部門 { get; set; }  // CSV
         public int 分類 { get; set; } // CSV
         public string 品番 { get; set; }  // CSV
-        public int サイズ { get; set; }    // CSV
+        public string サイズ { get; set; }    // CSV
         public int 本体価格 { get; set; }  // CSV
         public int 発行枚数 { get; set; }   // CSV
 
         public WataseiItem(int 発注No, string 取引先CD, string 値札No, string 商品コード, string JANコード, int 市価,
-                           int 売価, string サイズ名, string カラー名, string 商品名, string 部門, int 分類, string 品番, 
-                           int サイズ, int 発行枚数)
+                           int 売価, string サイズ名, string カラー名, string 商品名, string 部門, int 分類, string 品番,
+                           string サイズ, int 発行枚数)
         {
             this.発注No = 発注No;
             this.取引先CD = 取引先CD;

@@ -49,7 +49,7 @@ namespace PriceTagPrint.Model
         /// <summary>
         /// 社内サイズ・カラーコード
         /// </summary>
-        public int SAIZUS { get; set; }
+        public string SAIZUS { get; set; }
         /// <summary>
         /// 社内商品コード
         /// </summary>
