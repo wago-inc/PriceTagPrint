@@ -145,7 +145,7 @@ namespace PriceTagPrint.ViewModel
 
             // コンボボックス初期値セット
             HakkouTypeText = new ReactiveProperty<int>(1);
-            BunruiCodeText = new ReactiveProperty<string>("910");
+            BunruiCodeText = new ReactiveProperty<string>("");
             NefudaBangouText = new ReactiveProperty<int>(1);
 
             // SubScribe定義
@@ -362,7 +362,7 @@ namespace PriceTagPrint.ViewModel
         public void Clear()
         {
             SelectedHakkouTypeIndex.Value = 0;
-            BunruiCodeText.Value = "910";
+            BunruiCodeText.Value = "";
             HachuBangou.Value = "";
             HnoResultString.Value = "";
             HnoResultColor.Value = Brushes.Black;
@@ -402,7 +402,7 @@ namespace PriceTagPrint.ViewModel
                 MessageBox.Show("未登録の発注番号が選択されています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            if (string.IsNullOrEmpty(this.BunruiCodeText.Value))
+            if (!string.IsNullOrEmpty(this.BunruiCodeText.Value) && !BunruiCodeItems.Value.Select(x => x.Id.TrimEnd()).Contains(this.BunruiCodeText.Value))
             {
                 MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -484,7 +484,7 @@ namespace PriceTagPrint.ViewModel
             {
                 YasusakiDatas.Clear();
                 YasusakiDatas.AddRange(
-                    w0112EosHchuList.Where(x => x.NSU > 0 && x.BUNRUI == int.Parse(this.BunruiCodeText.Value))
+                    w0112EosHchuList.Where(x => x.NSU > 0 && !string.IsNullOrEmpty(this.BunruiCodeText.Value) ? x.BUNRUI == int.Parse(this.BunruiCodeText.Value) : true)
                         .Join(
                                wWebTorihikisakiTankaList.Where(x => x.NEFUDA_KBN == this.NefudaBangouText.Value.ToString()),
                                e => new
