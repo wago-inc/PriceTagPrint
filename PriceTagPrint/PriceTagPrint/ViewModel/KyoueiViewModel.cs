@@ -353,10 +353,27 @@ namespace PriceTagPrint.ViewModel
                         }
                     }
                 }
+                else
+                {
+                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (KyoeiItems.Value.Any())
+                {
+                    TotalMaisu.Value = KyoeiItems.Value.Sum(x => x.数量).ToString();
+                }
+                else
+                {
+                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
             }
-            
-            TotalMaisu.Value = KyoeiItems.Value.Any() ?
-                                KyoeiItems.Value.Sum(x => x.数量).ToString() : "";
+            else
+            {
+                MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         /// <summary>

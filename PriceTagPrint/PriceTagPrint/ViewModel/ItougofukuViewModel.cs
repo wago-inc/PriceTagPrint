@@ -234,56 +234,77 @@ namespace PriceTagPrint.ViewModel
                                     .Select(x => x.バーコード.TrimEnd())
                                     .ToList();
 
-                foreach (DataRow row in dt.Rows)
+                if (targetItems.Any())
                 {
-                    var addFlg = targetItems.Contains(row.Field<string>("商品コード").TrimEnd());
-                    if (addFlg)
+                    foreach (DataRow row in dt.Rows)
                     {
-                        var arr = row.ItemArray.Cast<string>().ToArray();
+                        var addFlg = targetItems.Contains(row.Field<string>("商品コード").TrimEnd());
+                        if (addFlg)
+                        {
+                            var arr = row.ItemArray.Cast<string>().ToArray();
 
-                        ItougofukuItems.Value.Add(
-                            new ItougofukuItem
-                            (
-                                arr.ElementAtOrDefault(0),
-                                arr.ElementAtOrDefault(1),
-                                arr.ElementAtOrDefault(2),
-                                arr.ElementAtOrDefault(3),
-                                arr.ElementAtOrDefault(4),
-                                arr.ElementAtOrDefault(5),
-                                arr.ElementAtOrDefault(6),
-                                arr.ElementAtOrDefault(7),
-                                arr.ElementAtOrDefault(8),
-                                arr.ElementAtOrDefault(9),
-                                arr.ElementAtOrDefault(10),
-                                arr.ElementAtOrDefault(11),
-                                arr.ElementAtOrDefault(12),
-                                arr.ElementAtOrDefault(13),
-                                arr.ElementAtOrDefault(14),
-                                arr.ElementAtOrDefault(15),
-                                arr.ElementAtOrDefault(16),
-                                arr.ElementAtOrDefault(17),
-                                arr.ElementAtOrDefault(18),
-                                arr.ElementAtOrDefault(19),
-                                arr.ElementAtOrDefault(20),
-                                arr.ElementAtOrDefault(21),
-                                arr.ElementAtOrDefault(22),
-                                arr.ElementAtOrDefault(23),
-                                arr.ElementAtOrDefault(24),
-                                arr.ElementAtOrDefault(25),
-                                arr.ElementAtOrDefault(26),
-                                arr.ElementAtOrDefault(27),
-                                arr.ElementAtOrDefault(28),
-                                arr.ElementAtOrDefault(29),
-                                arr.ElementAtOrDefault(30),
-                                arr.ElementAtOrDefault(31)
-                                )
-                            );
+                            ItougofukuItems.Value.Add(
+                                new ItougofukuItem
+                                (
+                                    arr.ElementAtOrDefault(0),
+                                    arr.ElementAtOrDefault(1),
+                                    arr.ElementAtOrDefault(2),
+                                    arr.ElementAtOrDefault(3),
+                                    arr.ElementAtOrDefault(4),
+                                    arr.ElementAtOrDefault(5),
+                                    arr.ElementAtOrDefault(6),
+                                    arr.ElementAtOrDefault(7),
+                                    arr.ElementAtOrDefault(8),
+                                    arr.ElementAtOrDefault(9),
+                                    arr.ElementAtOrDefault(10),
+                                    arr.ElementAtOrDefault(11),
+                                    arr.ElementAtOrDefault(12),
+                                    arr.ElementAtOrDefault(13),
+                                    arr.ElementAtOrDefault(14),
+                                    arr.ElementAtOrDefault(15),
+                                    arr.ElementAtOrDefault(16),
+                                    arr.ElementAtOrDefault(17),
+                                    arr.ElementAtOrDefault(18),
+                                    arr.ElementAtOrDefault(19),
+                                    arr.ElementAtOrDefault(20),
+                                    arr.ElementAtOrDefault(21),
+                                    arr.ElementAtOrDefault(22),
+                                    arr.ElementAtOrDefault(23),
+                                    arr.ElementAtOrDefault(24),
+                                    arr.ElementAtOrDefault(25),
+                                    arr.ElementAtOrDefault(26),
+                                    arr.ElementAtOrDefault(27),
+                                    arr.ElementAtOrDefault(28),
+                                    arr.ElementAtOrDefault(29),
+                                    arr.ElementAtOrDefault(30),
+                                    arr.ElementAtOrDefault(31)
+                                    )
+                                );
+                        }
                     }
                 }
+                else
+                {
+                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (ItougofukuItems.Value.Any())
+                {
+                    TotalMaisu.Value = ItougofukuItems.Value.Sum(x => x.数量計).ToString();
+                }
+                else
+                {
+                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                
             }
-            
-            TotalMaisu.Value = ItougofukuItems.Value.Any() ?
-                                ItougofukuItems.Value.Sum(x => x.数量計).ToString() : "";
+            else
+            {
+                MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         /// <summary>
