@@ -10,11 +10,11 @@ none
 false
 TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_1;
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\App.xaml
-10-2072469848
+11-1030913550
 
-58987006631
+591850421969
 2141062399837
-MainWindow.xaml;Style\StyleDic.xaml;View\ItougofukuView.xaml;View\KyoueiView.xaml;View\LayoutSelectView.xaml;View\MaruyoshiView.xaml;View\OkinawaSankiView.xaml;View\WataseiView.xaml;View\YamanakaView.xaml;View\YasusakiView.xaml;
+MainWindow.xaml;Style\StyleDic.xaml;View\ItougofukuView.xaml;View\KyoueiView.xaml;View\LayoutSelectView.xaml;View\MaruyoshiView.xaml;View\OkinawaSankiView.xaml;View\ProcessingSplash.xaml;View\WataseiView.xaml;View\YamanakaView.xaml;View\YasusakiView.xaml;
 
 False
 

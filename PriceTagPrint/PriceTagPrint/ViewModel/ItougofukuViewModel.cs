@@ -15,6 +15,7 @@ using Oracle.ManagedDataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
+using PriceTagPrint.View;
 using PriceTagPrint.WAGO2;
 using Reactive.Bindings;
 
@@ -230,9 +231,24 @@ namespace PriceTagPrint.ViewModel
             {
                 ItougofukuItems.Value.Clear();
 
-                var targetItems = t05001_SHOHIN_DAICHO_LIST.QueryWhereNefudaNo(NefudaBangouText.Value)
+                var targetItems = new List<string>();
+                ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
+                {
+                    targetItems = t05001_SHOHIN_DAICHO_LIST.QueryWhereNefudaNo(NefudaBangouText.Value)
                                     .Select(x => x.バーコード.TrimEnd())
                                     .ToList();
+                });
+                //バックグラウンド処理が終わるまで表示して待つ
+                ps.ShowDialog();
+
+                if (ps.complete)
+                {
+                    //処理が成功した
+                }
+                else
+                {
+                    //処理が失敗した
+                }
 
                 if (targetItems.Any())
                 {
@@ -295,6 +311,7 @@ namespace PriceTagPrint.ViewModel
                 }
                 else
                 {
+                    TotalMaisu.Value = "";
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }

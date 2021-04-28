@@ -1,6 +1,7 @@
 ﻿using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
+using PriceTagPrint.View;
 using PriceTagPrint.WAG_USR1;
 using Reactive.Bindings;
 using System;
@@ -133,9 +134,9 @@ namespace PriceTagPrint.ViewModel
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
             eOSKNMTA_LIST = new EOSKNMTA_LIST();
-            hINMTA_LIST = new HINMTA_LIST();
+            
             dB_0127_HANSOKU_LIST = new DB_0127_HANSOKU_BAIKA_CONV_LIST();
-            hinmtaList = hINMTA_LIST.QueryWhereAll();
+
             CreateComboItems();
 
             // コンボボックス初期値セット
@@ -151,6 +152,23 @@ namespace PriceTagPrint.ViewModel
             SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
             SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
+
+            ProcessingSplash ps = new ProcessingSplash("起動中", () =>
+            {
+                hINMTA_LIST = new HINMTA_LIST();
+                hinmtaList = hINMTA_LIST.QueryWhereAll();
+            });
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
+            }
+            else
+            {
+                //処理が失敗した
+            }
         }
 
         #endregion
@@ -402,200 +420,203 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void NefudaDataDisplay()
         {
-            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.MARUYOSI, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value.ToString("000"));
-            var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(TidNum.MARUYOSI);
-
-            if (eosJutraList.Any() && easKnmtaList.Any())
+            ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
-                var innerJoinData = eosJutraList
-                        .Join(
-                               easKnmtaList,
-                               e1 => new
-                               {
-                                   VRYOHNCD = e1.VRYOHNCD.ToString()
-                               },
-                               e2 => new
-                               {
-                                   VRYOHNCD = e2.VRYOHNCD.ToString()
-                               },
-                               (eosj, eosm) => new
-                               {
-                                   VRYOHNCD = eosj.VRYOHNCD,
-                                   VRYOHNNM = eosm.VRYOHNNM,
-                                   VRCVDT = eosj.VRCVDT,
-                                   VNOHINDT = eosj.VNOHINDT,
-                                   VBUNCD = eosj.VBUNCD,
-                                   DATNO = eosj.DATNO,
-                                   VROWNO = eosj.VROWNO,
-                                   VHEAD1 = eosj.VHEAD1,
-                                   VBODY1 = eosj.VBODY1,
-                                   VHINCD = eosj.VHINCD,
-                                   HINCD = eosj.HINCD,
-                               })
-                        .OrderBy(x => x.VRYOHNCD)
-                                .ThenBy(x => x.VRCVDT)
-                                .ThenBy(x => x.VBUNCD)
-                                .ThenBy(x => x.VHINCD);
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.MARUYOSI, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value.ToString("000"));
+                var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(TidNum.MARUYOSI);
 
-                if (innerJoinData.Any() && hinmtaList.Any())
+                if (eosJutraList.Any() && easKnmtaList.Any())
                 {
-                    var dateNow = DateTime.Now;
-                    if (hinmtaList.Any())
+                    var innerJoinData = eosJutraList
+                            .Join(
+                                   easKnmtaList,
+                                   e1 => new
+                                   {
+                                       VRYOHNCD = e1.VRYOHNCD.ToString()
+                                   },
+                                   e2 => new
+                                   {
+                                       VRYOHNCD = e2.VRYOHNCD.ToString()
+                                   },
+                                   (eosj, eosm) => new
+                                   {
+                                       VRYOHNCD = eosj.VRYOHNCD,
+                                       VRYOHNNM = eosm.VRYOHNNM,
+                                       VRCVDT = eosj.VRCVDT,
+                                       VNOHINDT = eosj.VNOHINDT,
+                                       VBUNCD = eosj.VBUNCD,
+                                       DATNO = eosj.DATNO,
+                                       VROWNO = eosj.VROWNO,
+                                       VHEAD1 = eosj.VHEAD1,
+                                       VBODY1 = eosj.VBODY1,
+                                       VHINCD = eosj.VHINCD,
+                                       HINCD = eosj.HINCD,
+                                   })
+                            .OrderBy(x => x.VRYOHNCD)
+                                    .ThenBy(x => x.VRCVDT)
+                                    .ThenBy(x => x.VBUNCD)
+                                    .ThenBy(x => x.VHINCD);
+
+                    if (innerJoinData.Any() && hinmtaList.Any())
                     {
-                        int sttHincd;
-                        int endHincd;
-                        int aitSttHincd;
-                        int aitEndHincd;
-                        decimal convdec;
-                        MaruyoshiDatas.Clear();
-                        MaruyoshiDatas.AddRange(
-                            innerJoinData
-                                .GroupJoin(
-                                       hinmtaList,
-                                       e => new
-                                       {
-                                           HINCD = e.HINCD.ToString().TrimEnd(),
-                                       },
-                                       h => new
-                                       {
-                                           HINCD = h.HINCD.TrimEnd(),
-                                       },
-                                       (a, hin) => new
-                                       {
-                                           RPTCLTID =  " ",
-                                           VRYOHNCD = a.VRYOHNCD,
-                                           VRYOHNNM = a.VRYOHNNM,
-                                           VRCVDT = a.VRCVDT,
-                                           VNOHINDT = a.VNOHINDT,
-                                           VBUNCD = !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
-                                           DATNO = a.DATNO,
-                                           VROWNO = a.VROWNO,
-                                           NEFCMA = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
-                                           NEFCMB = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
-                                           NEFCMB2 = " ",
-                                           NEFCMC = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
-                                           NEFCMD = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
-                                           NEFCMD2 = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
-                                           NEFCME = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
-                                           NEFCMF = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
-                                           NEFCMG = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
-                                           NEFCMH = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
-                                           NEFCMI = !string.IsNullOrEmpty(a.VBODY1) ? 
-                                                        a.VBODY1.Substring(118, 1) == "1" ? "8" :
-                                                        a.VBODY1.Substring(118, 1) == "2" ? "2" : " " : " ",
-                                           NEFCMJ = !string.IsNullOrEmpty(a.VBODY1) ?
-                                                        a.VBODY1.Substring(126, 1) == "1" ? "T" :
-                                                        a.VBODY1.Substring(126, 1) == "2" ? "Y" :
-                                                        a.VBODY1.Substring(126, 1) == "3" ? "X" : " " : " ",
-                                           NEFCMK = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
-                                           NEFTKA = !string.IsNullOrEmpty(a.VBODY1) &&  
-                                                        (a.VBODY1.Substring(119, 1) == "2" || 
-                                                         a.VBODY1.Substring(119, 1) == "4" || 
-                                                         a.VBODY1.Substring(119, 1) == "6") && decimal.TryParse(a.VBODY1.Substring(120, 6), out convdec) ? convdec : 0,
-                                           NEFTKB = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
-                                           NEFSUA = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
+                        var dateNow = DateTime.Now;
+                        if (hinmtaList.Any())
+                        {
+                            int sttHincd;
+                            int endHincd;
+                            int aitSttHincd;
+                            int aitEndHincd;
+                            decimal convdec;
+                            MaruyoshiDatas.Clear();
+                            MaruyoshiDatas.AddRange(
+                                innerJoinData
+                                    .GroupJoin(
+                                           hinmtaList,
+                                           e => new
+                                           {
+                                               HINCD = e.HINCD.ToString().TrimEnd(),
+                                           },
+                                           h => new
+                                           {
+                                               HINCD = h.HINCD.TrimEnd(),
+                                           },
+                                           (a, hin) => new
+                                           {
+                                               RPTCLTID = " ",
+                                               VRYOHNCD = a.VRYOHNCD,
+                                               VRYOHNNM = a.VRYOHNNM,
+                                               VRCVDT = a.VRCVDT,
+                                               VNOHINDT = a.VNOHINDT,
+                                               VBUNCD = !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
+                                               DATNO = a.DATNO,
+                                               VROWNO = a.VROWNO,
+                                               NEFCMA = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
+                                               NEFCMB = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
+                                               NEFCMB2 = " ",
+                                               NEFCMC = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
+                                               NEFCMD = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
+                                               NEFCMD2 = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
+                                               NEFCME = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
+                                               NEFCMF = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
+                                               NEFCMG = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
+                                               NEFCMH = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
+                                               NEFCMI = !string.IsNullOrEmpty(a.VBODY1) ?
+                                                            a.VBODY1.Substring(118, 1) == "1" ? "8" :
+                                                            a.VBODY1.Substring(118, 1) == "2" ? "2" : " " : " ",
+                                               NEFCMJ = !string.IsNullOrEmpty(a.VBODY1) ?
+                                                            a.VBODY1.Substring(126, 1) == "1" ? "T" :
+                                                            a.VBODY1.Substring(126, 1) == "2" ? "Y" :
+                                                            a.VBODY1.Substring(126, 1) == "3" ? "X" : " " : " ",
+                                               NEFCMK = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
+                                               NEFTKA = !string.IsNullOrEmpty(a.VBODY1) &&
+                                                            (a.VBODY1.Substring(119, 1) == "2" ||
+                                                             a.VBODY1.Substring(119, 1) == "4" ||
+                                                             a.VBODY1.Substring(119, 1) == "6") && decimal.TryParse(a.VBODY1.Substring(120, 6), out convdec) ? convdec : 0,
+                                               NEFTKB = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
+                                               NEFSUA = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
                                            //NEFTKB2 = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? Math.Floor(convdec * 1.1m) : 0, 
                                            NEFTKB2 = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
-                                           NEFSEZ = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
-                                           VHINCD = a.VHINCD,
-                                           HINCD = a.HINCD,
-                                           JANCD = hin.Any() ? hin.FirstOrDefault().JANCD : "",
-                                           WRTDT = dateNow.ToString("yyyyMMdd"),
-                                           WRTTM = dateNow.ToString("hhmmss"),
-                                       })
-                                .GroupBy(a => new 
-                                {
-                                    a.RPTCLTID,
-                                    a.VRYOHNCD,
-                                    a.VRYOHNNM,
-                                    a.VRCVDT,
-                                    a.VNOHINDT,
-                                    a.VBUNCD,
-                                    a.NEFCMA,
-                                    a.NEFCMB,
-                                    a.NEFCMB2,
-                                    a.NEFCMC,
-                                    a.NEFCMD,
-                                    a.NEFCMD2,
-                                    a.NEFCME,
-                                    a.NEFCMF,
-                                    a.NEFCMG,
-                                    a.NEFCMH,
-                                    a.NEFCMI,
-                                    a.NEFCMJ,
-                                    a.NEFCMK,
-                                    a.NEFTKA,
-                                    a.NEFTKB,
-                                    a.WRTTM,
-                                    a.WRTDT,
-                                    a.VHINCD,
-                                    a.HINCD,
-                                    a.NEFTKB2,
-                                    a.NEFSEZ,
-                                    a.JANCD
-                                })
-                                .Select(g => new MaruyoshiData() 
-                                {
-                                    RPTCLTID = g.Key.RPTCLTID,
-                                    VRYOHNCD = g.Key.VRYOHNCD,
-                                    VRYOHNNM = g.Key.VRYOHNNM,
-                                    VRCVDT = g.Key.VRCVDT,
-                                    VNOHINDT = g.Key.VNOHINDT,
-                                    VBUNCD = g.Key.VBUNCD,
-                                    NEFCMA = g.Key.NEFCMA,
-                                    NEFCMB = g.Key.NEFCMB,
-                                    NEFCMB2 = TanabanCheck(g.Key.NEFCMC),
-                                    NEFCMC = g.Key.NEFCMC,
-                                    NEFCMD = g.Key.NEFCMD,
-                                    NEFCMD2 = g.Key.NEFCMD2,
-                                    NEFCME = g.Key.NEFCME.TrimEnd(),
-                                    NEFCMF = g.Key.NEFCMF,
-                                    NEFCMG = g.Key.NEFCMG,
-                                    NEFCMH = g.Key.NEFCMH,
-                                    NEFCMI = g.Key.NEFCMI,
-                                    NEFCMJ = g.Key.NEFCMJ,
-                                    NEFCMK = g.Key.NEFCMK,
-                                    NEFTKA = g.Key.NEFTKA,
-                                    NEFTKB = g.Key.NEFTKB,
-                                    NEFSUA = g.Sum(y => y.NEFSUA),
-                                    WRTTM = g.Key.WRTTM,
-                                    WRTDT = g.Key.WRTDT,
-                                    VHINCD = g.Key.VHINCD,
-                                    HINCD = g.Key.HINCD,
-                                    NEFTKB2 = g.Key.NEFTKB2,
-                                    NEFSEZ = g.Key.NEFSEZ,
-                                    JANCD = g.Key.JANCD
-                                })
-                                .Where(x => !string.IsNullOrEmpty(this.SttHincd.Value) ? 
-                                                int.TryParse(this.SttHincd.Value, out sttHincd) && 
-                                                int.TryParse(x.NEFCMG, out aitSttHincd) ? 
-                                                    aitSttHincd >= sttHincd : true
-                                            : true)
-                                .Where(x => !string.IsNullOrEmpty(this.EndHincd.Value) ?
-                                                int.TryParse(this.EndHincd.Value, out endHincd) &&
-                                                int.TryParse(x.NEFCMG, out aitEndHincd) ?
-                                                    aitEndHincd <= endHincd : true
-                                            : true)
-                                .Where(x => this.NefudaBangouText.Value != 0 ? 
-                                                this.NefudaBangouText.Value != 6 ? 
-                                                x.NEFCMK == this.NefudaBangouText.Value.ToString() : x.NEFTKA != 0 : true)
-                                .OrderBy(x => x.VRYOHNCD)
-                                .ThenBy(x => x.VRCVDT)
-                                .ThenBy(x => x.VBUNCD)
-                                .ThenBy(x => x.VHINCD)
-                                );
-                    }
+                                               NEFSEZ = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
+                                               VHINCD = a.VHINCD,
+                                               HINCD = a.HINCD,
+                                               JANCD = hin.Any() ? hin.FirstOrDefault().JANCD : "",
+                                               WRTDT = dateNow.ToString("yyyyMMdd"),
+                                               WRTTM = dateNow.ToString("hhmmss"),
+                                           })
+                                    .GroupBy(a => new
+                                    {
+                                        a.RPTCLTID,
+                                        a.VRYOHNCD,
+                                        a.VRYOHNNM,
+                                        a.VRCVDT,
+                                        a.VNOHINDT,
+                                        a.VBUNCD,
+                                        a.NEFCMA,
+                                        a.NEFCMB,
+                                        a.NEFCMB2,
+                                        a.NEFCMC,
+                                        a.NEFCMD,
+                                        a.NEFCMD2,
+                                        a.NEFCME,
+                                        a.NEFCMF,
+                                        a.NEFCMG,
+                                        a.NEFCMH,
+                                        a.NEFCMI,
+                                        a.NEFCMJ,
+                                        a.NEFCMK,
+                                        a.NEFTKA,
+                                        a.NEFTKB,
+                                        a.WRTTM,
+                                        a.WRTDT,
+                                        a.VHINCD,
+                                        a.HINCD,
+                                        a.NEFTKB2,
+                                        a.NEFSEZ,
+                                        a.JANCD
+                                    })
+                                    .Select(g => new MaruyoshiData()
+                                    {
+                                        RPTCLTID = g.Key.RPTCLTID,
+                                        VRYOHNCD = g.Key.VRYOHNCD,
+                                        VRYOHNNM = g.Key.VRYOHNNM,
+                                        VRCVDT = g.Key.VRCVDT,
+                                        VNOHINDT = g.Key.VNOHINDT,
+                                        VBUNCD = g.Key.VBUNCD,
+                                        NEFCMA = g.Key.NEFCMA,
+                                        NEFCMB = g.Key.NEFCMB,
+                                        NEFCMB2 = TanabanCheck(g.Key.NEFCMC),
+                                        NEFCMC = g.Key.NEFCMC,
+                                        NEFCMD = g.Key.NEFCMD,
+                                        NEFCMD2 = g.Key.NEFCMD2,
+                                        NEFCME = g.Key.NEFCME.TrimEnd(),
+                                        NEFCMF = g.Key.NEFCMF,
+                                        NEFCMG = g.Key.NEFCMG,
+                                        NEFCMH = g.Key.NEFCMH,
+                                        NEFCMI = g.Key.NEFCMI,
+                                        NEFCMJ = g.Key.NEFCMJ,
+                                        NEFCMK = g.Key.NEFCMK,
+                                        NEFTKA = g.Key.NEFTKA,
+                                        NEFTKB = g.Key.NEFTKB,
+                                        NEFSUA = g.Sum(y => y.NEFSUA),
+                                        WRTTM = g.Key.WRTTM,
+                                        WRTDT = g.Key.WRTDT,
+                                        VHINCD = g.Key.VHINCD,
+                                        HINCD = g.Key.HINCD,
+                                        NEFTKB2 = g.Key.NEFTKB2,
+                                        NEFSEZ = g.Key.NEFSEZ,
+                                        JANCD = g.Key.JANCD
+                                    })
+                                    .Where(x => !string.IsNullOrEmpty(this.SttHincd.Value) ?
+                                                    int.TryParse(this.SttHincd.Value, out sttHincd) &&
+                                                    int.TryParse(x.NEFCMG, out aitSttHincd) ?
+                                                        aitSttHincd >= sttHincd : true
+                                                : true)
+                                    .Where(x => !string.IsNullOrEmpty(this.EndHincd.Value) ?
+                                                    int.TryParse(this.EndHincd.Value, out endHincd) &&
+                                                    int.TryParse(x.NEFCMG, out aitEndHincd) ?
+                                                        aitEndHincd <= endHincd : true
+                                                : true)
+                                    .Where(x => this.NefudaBangouText.Value != 0 ?
+                                                    this.NefudaBangouText.Value != 6 ?
+                                                    x.NEFCMK == this.NefudaBangouText.Value.ToString() : x.NEFTKA != 0 : true)
+                                    .OrderBy(x => x.VRYOHNCD)
+                                    .ThenBy(x => x.VRCVDT)
+                                    .ThenBy(x => x.VBUNCD)
+                                    .ThenBy(x => x.VHINCD)
+                                    );
+                        }
 
-                    if (MaruyoshiItems.Value == null)
-                    {
-                        MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>();
-                    }
-                    if (MaruyoshiDatas.Any())
-                    {
-                        MaruyoshiItems.Value.Clear();
-                        var maruyoshiModelList = new MaruyoshiItemList();
-                        MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>(maruyoshiModelList.ConvertMaruyoshiDataToModel(MaruyoshiDatas));
-                        TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
+                        if (MaruyoshiDatas.Any())
+                        {
+                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>();
+                            var maruyoshiModelList = new MaruyoshiItemList();
+                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>(maruyoshiModelList.ConvertMaruyoshiDataToModel(MaruyoshiDatas));
+                            TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
@@ -606,12 +627,20 @@ namespace PriceTagPrint.ViewModel
                 {
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                this.HakkouTypeTextBox.Focus();
+            });
+
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
             }
             else
             {
-                MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                //処理が失敗した
             }
-            this.HakkouTypeTextBox.Focus();
         }
 
         private string TanabanCheck(string inStr)
@@ -661,11 +690,11 @@ namespace PriceTagPrint.ViewModel
                     if (svPos2 == 0)
                     {
                         svPos2 = myPos;
-                    }                        
+                    }
                     else if (myPos < svPos2)
                     {
                         svPos2 = myPos;
-                    }                        
+                    }
                 }
             }
 
@@ -688,7 +717,7 @@ namespace PriceTagPrint.ViewModel
                 else
                 {
                     out_Char = (out_Char.Substring(0, out_Char.Length - 1)).TrimEnd();
-                }                    
+                }
             }
 
             // ◆出力文字に"A-Z"、"0-9"、"-"以外の文字が含まれていないかチェック
@@ -710,12 +739,12 @@ namespace PriceTagPrint.ViewModel
                     if (chk_Str == "-")
                     {
                         chk_Cnt = chk_Cnt + 1;
-                    }                        
+                    }
                 }
                 if (chk_Cnt < j)
                 {
                     out_Char = " ";
-                }                    
+                }
             }
             return out_Char;
         }
@@ -811,11 +840,11 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = MaruyoshiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            list.ForEach(x => 
-            { 
-                x.サイズ = ""; 
-                x.カラー = ""; 
-                if(!string.IsNullOrEmpty(x.棚番))
+            list.ForEach(x =>
+            {
+                x.サイズ = "";
+                x.カラー = "";
+                if (!string.IsNullOrEmpty(x.棚番))
                 {
                     x.品番 = x.棚番;
                 }
@@ -871,22 +900,22 @@ namespace PriceTagPrint.ViewModel
         public string 品番 { get; set; }  //csv
         public string 単品 { get; set; }  //csv
         public string JANコード { get; set; }  //csv        
-        
-        
+
+
         public string 棚番 { get; set; }
-        public string 品名 { get; set; }                
+        public string 品名 { get; set; }
         public string 組 { get; set; }
-        public string FLG { get; set; }        
-        public string タグ { get; set; }        
+        public string FLG { get; set; }
+        public string タグ { get; set; }
         public decimal 消売価 { get; set; }
-        public decimal 売価 { get; set; }        
+        public decimal 売価 { get; set; }
 
         public MaruyoshiItem(decimal 発行枚数, string クラスCD, string 品番, string 棚番,
                             string 品名, string カラー, string サイズ, string 単品, string 組, string FLG,
                             string 追加, string タグ, decimal 消売価, decimal 売価, decimal 税込売価, string JANコード,
                             string シーズンコード)
         {
-            this.発行枚数 = 発行枚数;            
+            this.発行枚数 = 発行枚数;
             this.クラスCD = クラスCD;
             this.品番 = 品番;
             this.棚番 = 棚番;
@@ -919,7 +948,7 @@ namespace PriceTagPrint.ViewModel
                 jancd = !string.IsNullOrEmpty(data.JANCD) ? data.JANCD : " ";
                 result.Add(
                     new MaruyoshiItem(data.NEFSUA, data.NEFCMA, hinban, data.NEFCMB2, data.NEFCMC, data.NEFCMD,
-                                      data.NEFCME + " " + data.NEFCMF, data.NEFCMG, data.NEFCMH, data.NEFCMI, data.NEFCMJ, 
+                                      data.NEFCME + " " + data.NEFCMF, data.NEFCMG, data.NEFCMH, data.NEFCMI, data.NEFCMJ,
                                       data.NEFCMK, data.NEFTKA, data.NEFTKB, data.NEFTKB2, jancd, data.NEFSEZ));
             });
             return result;

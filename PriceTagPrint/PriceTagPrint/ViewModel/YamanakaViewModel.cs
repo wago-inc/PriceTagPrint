@@ -1,6 +1,7 @@
 ﻿using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
+using PriceTagPrint.View;
 using PriceTagPrint.WAG_USR1;
 using Reactive.Bindings;
 using System;
@@ -448,124 +449,136 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void NefudaDataDisplay()
         {
-            var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.YAMANAKA, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
-            var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.YAMANAKA);
-
-            if(eosJutraList.Any() && tokmteList.Any())
+            ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
-                int sttHincd;
-                int endHincd;
-                int vhincd;
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.YAMANAKA, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
+                var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.YAMANAKA);
 
-                YamanakaDatas.Clear();
-                YamanakaDatas.AddRange(
-                    eosJutraList
-                        .GroupJoin(
-                               tokmteList,
-                               e => new
-                               {
-                                   HINCD = e.VHINCD.ToString().TrimEnd(),
-                                   TOKCD = e.VRYOHNCD.ToString().TrimEnd(),
-                               },
-                               t => new
-                               {
-                                   HINCD = t.EOSHINID.TrimEnd(),
-                                   TOKCD = t.TOKCD.TrimEnd(),
-                               },
-                               (eos, tok) => new
-                               {
-                                   HNO = "",
-                                   VRYOHNCD = eos.VRYOHNCD,
-                                   NEFUDANO = "",
-                                   VRCVDT = eos.VRCVDT,
-                                   VNOHINDT = eos.VNOHINDT,
-                                   QOLTORID = eos.QOLTORID,
-                                   COLCD = tok.Any() ? tok.FirstOrDefault().COLCD.TrimStart(new Char[] { '0' }) : "",
-                                   FACENO = "",
-                                   VHINCD = eos.VHINCD,
-                                   MCCD = "20",
-                                   VCYOBI7 = eos.VCYOBI7,                                   
-                                   VURITK = eos.VURITK,
-                                   HANSOKUMOJI2 = "",
-                                   HANSOKUMOJIDISP = "",
-                                   TOUHINBAN = "",
-                                   HINCD = eos.HINCD,
-                                   VHINNMA = eos.VHINNMA,
-                                   VSURYO = eos.VSURYO,
-                               })
-                         .GroupBy(a => new
-                         {
-                             a.HNO,
-                             a.VRYOHNCD,
-                             a.NEFUDANO,
-                             a.VRCVDT,
-                             a.VNOHINDT,
-                             a.QOLTORID,
-                             a.COLCD,
-                             a.FACENO,
-                             a.VHINCD,
-                             a.MCCD,
-                             a.VCYOBI7,                             
-                             a.VURITK,
-                             a.HANSOKUMOJI2,
-                             a.HANSOKUMOJIDISP,
-                             a.TOUHINBAN,
-                             a.HINCD,
-                             a.VHINNMA,
-                         })                         
-                         .Select(g => new YamanakaData
-                         {
-                             HNO = g.Key.HNO,
-                             VRYOHNCD = g.Key.VRYOHNCD,
-                             NEFUDANO = GetNefudaBangou(g.Key.VHINNMA, "ﾂﾘ", "3ﾖﾘ"),
-                             VRCVDT = g.Key.VRCVDT,
-                             VNOHINDT = g.Key.VNOHINDT,
-                             QOLTORID = g.Key.QOLTORID.TrimStart(new Char[] { '0' }),
-                             COLCD = !string.IsNullOrEmpty(g.Key.COLCD) ? g.Key.COLCD.TrimStart(new Char[] { '0' }) : "0",
-                             FACENO = g.Key.FACENO,
-                             VHINCD = g.Key.VHINCD.TrimEnd(),
-                             MCCD = McCodeText.Value.ToString(),
-                             VCYOBI7 = g.Key.VCYOBI7.TrimEnd(),
-                             VURITK = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.値付売価 ?? g.Key.VURITK,
-                             HANSOKUMOJI2 = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.販促文字2 ?? g.Key.HANSOKUMOJI2,
-                             HANSOKUMOJIDISP = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.販促文字表示名 ?? g.Key.HANSOKUMOJIDISP,
-                             TOUHINBAN = g.Key.HINCD.Substring(4),
-                             HINCD = g.Key.HINCD.TrimEnd(),
-                             VHINNMA = g.Key.VHINNMA.TrimEnd(),
-                             VSURYO = g.Sum(y => y.VSURYO),
-                         })
-                         .Where(x => x.NEFUDANO == NefudaBangouText.Value.ToString() && !string.IsNullOrEmpty(x.COLCD) && x.COLCD != "0" &&
-                                     (!string.IsNullOrEmpty(this.SttHincd.Value) && 
-                                      int.TryParse(this.SttHincd.Value, out sttHincd) && 
-                                      int.TryParse(x.VHINCD, out vhincd) ? vhincd >= sttHincd : true) &&
-                                     (!string.IsNullOrEmpty(this.EndHincd.Value) &&
-                                      int.TryParse(this.EndHincd.Value, out endHincd) &&
-                                      int.TryParse(x.VHINCD, out vhincd) ? vhincd <= endHincd : true))
-                         .OrderBy(x => x.COLCD)
-                         .ThenBy(x => x.VHINCD)
-                     );
+                if (eosJutraList.Any() && tokmteList.Any())
+                {
+                    int sttHincd;
+                    int endHincd;
+                    int vhincd;
 
-                if (YamanakaItems.Value == null)
-                {
-                    YamanakaItems.Value = new ObservableCollection<YamanakaItem>();
-                }
-                if (YamanakaDatas.Any())
-                {
-                    YamanakaItems.Value.Clear();
-                    var yamanakaModelList = new YamanakaItemList();
-                    YamanakaItems.Value = new ObservableCollection<YamanakaItem>(yamanakaModelList.ConvertYamanakaDataToModel(YamanakaDatas));
-                    TotalMaisu.Value = YamanakaItems.Value.Sum(x => x.発行枚数).ToString();
+                    YamanakaDatas.Clear();
+                    YamanakaDatas.AddRange(
+                        eosJutraList
+                            .GroupJoin(
+                                   tokmteList,
+                                   e => new
+                                   {
+                                       HINCD = e.VHINCD.ToString().TrimEnd(),
+                                       TOKCD = e.VRYOHNCD.ToString().TrimEnd(),
+                                   },
+                                   t => new
+                                   {
+                                       HINCD = t.EOSHINID.TrimEnd(),
+                                       TOKCD = t.TOKCD.TrimEnd(),
+                                   },
+                                   (eos, tok) => new
+                                   {
+                                       HNO = "",
+                                       VRYOHNCD = eos.VRYOHNCD,
+                                       NEFUDANO = "",
+                                       VRCVDT = eos.VRCVDT,
+                                       VNOHINDT = eos.VNOHINDT,
+                                       QOLTORID = eos.QOLTORID,
+                                       COLCD = tok.Any() ? tok.FirstOrDefault().COLCD.TrimStart(new Char[] { '0' }) : "",
+                                       FACENO = "",
+                                       VHINCD = eos.VHINCD,
+                                       MCCD = "20",
+                                       VCYOBI7 = eos.VCYOBI7,
+                                       VURITK = eos.VURITK,
+                                       HANSOKUMOJI2 = "",
+                                       HANSOKUMOJIDISP = "",
+                                       TOUHINBAN = "",
+                                       HINCD = eos.HINCD,
+                                       VHINNMA = eos.VHINNMA,
+                                       VSURYO = eos.VSURYO,
+                                   })
+                             .GroupBy(a => new
+                             {
+                                 a.HNO,
+                                 a.VRYOHNCD,
+                                 a.NEFUDANO,
+                                 a.VRCVDT,
+                                 a.VNOHINDT,
+                                 a.QOLTORID,
+                                 a.COLCD,
+                                 a.FACENO,
+                                 a.VHINCD,
+                                 a.MCCD,
+                                 a.VCYOBI7,
+                                 a.VURITK,
+                                 a.HANSOKUMOJI2,
+                                 a.HANSOKUMOJIDISP,
+                                 a.TOUHINBAN,
+                                 a.HINCD,
+                                 a.VHINNMA,
+                             })
+                             .Select(g => new YamanakaData
+                             {
+                                 HNO = g.Key.HNO,
+                                 VRYOHNCD = g.Key.VRYOHNCD,
+                                 NEFUDANO = GetNefudaBangou(g.Key.VHINNMA, "ﾂﾘ", "3ﾖﾘ"),
+                                 VRCVDT = g.Key.VRCVDT,
+                                 VNOHINDT = g.Key.VNOHINDT,
+                                 QOLTORID = g.Key.QOLTORID.TrimStart(new Char[] { '0' }),
+                                 COLCD = !string.IsNullOrEmpty(g.Key.COLCD) ? g.Key.COLCD.TrimStart(new Char[] { '0' }) : "0",
+                                 FACENO = g.Key.FACENO,
+                                 VHINCD = g.Key.VHINCD.TrimEnd(),
+                                 MCCD = McCodeText.Value.ToString(),
+                                 VCYOBI7 = g.Key.VCYOBI7.TrimEnd(),
+                                 VURITK = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.値付売価 ?? g.Key.VURITK,
+                                 HANSOKUMOJI2 = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.販促文字2 ?? g.Key.HANSOKUMOJI2,
+                                 HANSOKUMOJIDISP = GetNefudaBaika(g.Key.VURITK, g.Key.VHINNMA, "3ﾖﾘ")?.販促文字表示名 ?? g.Key.HANSOKUMOJIDISP,
+                                 TOUHINBAN = g.Key.HINCD.Substring(4),
+                                 HINCD = g.Key.HINCD.TrimEnd(),
+                                 VHINNMA = g.Key.VHINNMA.TrimEnd(),
+                                 VSURYO = g.Sum(y => y.VSURYO),
+                             })
+                             .Where(x => x.NEFUDANO == NefudaBangouText.Value.ToString() && !string.IsNullOrEmpty(x.COLCD) && x.COLCD != "0" &&
+                                         (!string.IsNullOrEmpty(this.SttHincd.Value) &&
+                                          int.TryParse(this.SttHincd.Value, out sttHincd) &&
+                                          int.TryParse(x.VHINCD, out vhincd) ? vhincd >= sttHincd : true) &&
+                                         (!string.IsNullOrEmpty(this.EndHincd.Value) &&
+                                          int.TryParse(this.EndHincd.Value, out endHincd) &&
+                                          int.TryParse(x.VHINCD, out vhincd) ? vhincd <= endHincd : true))
+                             .OrderBy(x => x.COLCD)
+                             .ThenBy(x => x.VHINCD)
+                         );
+
+                    if (YamanakaDatas.Any())
+                    {
+                        YamanakaItems.Value = new ObservableCollection<YamanakaItem>();
+                        var yamanakaModelList = new YamanakaItemList();
+                        YamanakaItems.Value = new ObservableCollection<YamanakaItem>(yamanakaModelList.ConvertYamanakaDataToModel(YamanakaDatas));
+                        TotalMaisu.Value = YamanakaItems.Value.Sum(x => x.発行枚数).ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 else
                 {
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                this.HakkouTypeTextBox.Focus();
+            });
+
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
             }
             else
             {
-                MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                //処理が失敗した
             }
-            this.HakkouTypeTextBox.Focus();
+            
         }
 
         private string GetNefudaBangou(string hinnm, string typenm1, string typenm2)
