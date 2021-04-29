@@ -67,6 +67,10 @@ namespace PriceTagPrint.MDB
         /// </summary>
         public string SAIZUN { get; set; }
         /// <summary>
+        /// 仕入単価
+        /// </summary>
+        public int STANKA { get; set; }
+        /// <summary>
         /// 販売単価
         /// </summary>
         public int HTANKA { get; set; }
@@ -84,7 +88,7 @@ namespace PriceTagPrint.MDB
         /// </summary>
         public DB_JYUCYU(int tcode, int nefuda_kbn, int hno, int tsu, int loctana_soko_code, int loctana_floor_no, int loctana_tana_no,
                          int loctana_case_no, int bunrui, string scode, int saizus, string jancd, string hinmei, string saizun,
-                         int htanka, int jyodai, int bumon)
+                         int stanka, int htanka, int jyodai, int bumon)
         {
             this.TCODE = tcode;
             this.NEFUDA_KBN = nefuda_kbn;
@@ -100,7 +104,8 @@ namespace PriceTagPrint.MDB
             this.JANCD = jancd;
             this.HINMEI = hinmei;
             this.SAIZUN = saizun;
-            this.HTANKA = htanka;
+            this.STANKA = stanka;
+            this.HTANKA = htanka;            
             this.JYODAI = jyodai;
             this.BUMON = bumon;
         }
@@ -136,7 +141,7 @@ namespace PriceTagPrint.MDB
                                 dr.Field<int>("TSU"), dr.Field<int>("LOCTANA_SOKO_CODE"), dr.Field<int>("LOCTANA_FLOOR_NO"),
                                 dr.Field<int>("LOCTANA_TANA_NO"), dr.Field<int>("LOCTANA_CASE_NO"), dr.Field<int>("BUNRUI"),
                                 dr.Field<string>("SCODE"), dr.Field<int>("SAIZUS"), dr.Field<string>("JANCD"),
-                                dr.Field<string>("HINMEI"), dr.Field<string>("SAIZUN"), dr.Field<int>("HTANKA"),
+                                dr.Field<string>("HINMEI"), dr.Field<string>("SAIZUN"), dr.Field<int>("STANKA"), dr.Field<int>("HTANKA"),
                                 dr.Field<int>("JYODAI"), dr.Field<int>("BUMON")
                             ));
                     }

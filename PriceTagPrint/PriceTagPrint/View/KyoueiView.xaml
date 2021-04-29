@@ -159,6 +159,17 @@
                       RowStyle="{StaticResource BasicDataGridRow}">
 
                 <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=数量}" Width="auto"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    
                     <DataGridTextColumn Header="分類ｺｰﾄﾞ" Binding="{Binding Path=分類コード}" Width="auto" 
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
@@ -238,16 +249,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=数量}" Width="auto"
-                                        CellStyle="{StaticResource UnTabStopCell}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    
                 </DataGrid.Columns>
                 <!-- 右クリックによるコンテキストメニュー表示時、選択中セルの背景色/テキスト色が解除されないようにするためのコード-->
                 <DataGrid.Resources>

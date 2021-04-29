@@ -172,13 +172,13 @@
 
             <TextBlock Grid.Column="9" Text="JANコード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Column="10" Text="{Binding SttJancd.Value}" Style="{StaticResource ContentText}" x:Name="SttJancdText"
-                     HorizontalContentAlignment="Center" MaxLength="12"
+                     HorizontalContentAlignment="Center" MaxLength="13"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      TabIndex="8"/>
             <TextBlock Grid.Column="11" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="12" Text="{Binding EndJancd.Value}" Style="{StaticResource ContentText}" x:Name="EndJancdText"
-                     HorizontalContentAlignment="Center" MaxLength="12"
+                     HorizontalContentAlignment="Center" MaxLength="13"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      TabIndex="9"/>

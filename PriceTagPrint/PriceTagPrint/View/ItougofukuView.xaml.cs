@@ -54,6 +54,30 @@ namespace PriceTagPrint.View
         #endregion
 
         /// <summary>
+        /// 発行区分・値札区分テキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^1-2]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
+        private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            // 貼り付けの場合
+            if (e.Command == ApplicationCommands.Paste)
+            {
+                // 処理済みにします。
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
         /// 発行区分・値札区分テキストの空白LostFocus処理
         /// </summary>
         /// <param name="sender"></param>
@@ -63,7 +87,13 @@ namespace PriceTagPrint.View
             var txt = sender as TextBox;
             if (string.IsNullOrEmpty(txt.Text))
             {
-                if (txt.Name == "NefudaBangouText")
+                if (txt.Name == "HakkouTypeText")
+                {
+                    // 変更通知が飛ばないため一旦-1をセット
+                    ((ItougofukuViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
+                    ((ItougofukuViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
+                }
+                else if (txt.Name == "NefudaBangouText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット
                     ((ItougofukuViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
@@ -72,26 +102,12 @@ namespace PriceTagPrint.View
             }
         }
 
-        /// <summary>
-        /// 値札番号エンターで検索処理実行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                int nefudaBangou;
-                ((ItougofukuViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
-                ((ItougofukuViewModel)this.DataContext).CsvReadDisplay();
-            }
-        }
-
         public ItougofukuView()
         {
             InitializeComponent();
-            NefudaBangouText.Focus();
-            ((ItougofukuViewModel)this.DataContext).NefudaBangouTextBox = this.NefudaBangouText;
+            this.HakkouTypeText.Focus();
+            // ViewModelからも初期フォーカスをセットできるように発行区分テキストを渡す。
+            ((ItougofukuViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
         }
 
         /// <summary>
@@ -117,7 +133,7 @@ namespace PriceTagPrint.View
                 case "F5":
                     if (((ItougofukuViewModel)this.DataContext).InputCheck())
                     {
-                        ((ItougofukuViewModel)this.DataContext).CsvReadDisplay();
+                        ((ItougofukuViewModel)this.DataContext).NefudaDataDisplay();
                     }
                     break;
                 case "F10":
@@ -135,32 +151,23 @@ namespace PriceTagPrint.View
             }
         }
 
-        private void Act_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 値札番号エンターで検索処理実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            var button = (Button)sender;
-            if (button.Name == "btnFileSelect")
+            if (e.Key == Key.Return)
             {
-                using (var cofd = new CommonOpenFileDialog()
+                if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
                 {
-                    Title = "フォルダを選択してください",
-                    InitialDirectory = CommonStrings.ITO_SCV_DIR_PATH,
-                    // ファイル選択モードにする
-                    IsFolderPicker = false,
-                })
-                {
-                    if (cofd.ShowDialog() != CommonFileDialogResult.Ok)
+                    if (((ItougofukuViewModel)this.DataContext).InputCheck())
                     {
-                        return;
+                        int nefudaBangou;
+                        ((ItougofukuViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
+                        ((ItougofukuViewModel)this.DataContext).NefudaDataDisplay();
                     }
-
-                                ((ItougofukuViewModel)this.DataContext).FilePathText.Value = cofd.FileName;
-                }
-            }
-            else if (button.Name == "btnFileRead")
-            {
-                if (((ItougofukuViewModel)this.DataContext).InputCheck())
-                {
-                    ((ItougofukuViewModel)this.DataContext).CsvReadDisplay();
                 }
             }
         }

@@ -78,6 +78,8 @@ namespace PriceTagPrint.ViewModel
 
         #endregion
 
+        private readonly string _grpName = @"\7858_わたせい\【総額対応】わたせい_V5_RT308R";
+
         // 発行区分テキストボックス
         public TextBox HakkouTypeTextBox = null;
 
@@ -492,18 +494,18 @@ namespace PriceTagPrint.ViewModel
                     int endHincd;
                     int sttEdaban;
                     int endEdaban;
-                    int sttJancd;
-                    int endJancd;
+                    long sttJancd;
+                    long endJancd;
                     int scode;
-                    int jancd;
+                    long jancd;
 
                     wJyucyuList = wJyucyuList.Where(x =>
                                                 (int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.SCODE, out scode) ? scode >= sttHincd : true) &&
                                                 (int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.SCODE, out scode) ? scode <= endHincd : true) &&
                                                 (int.TryParse(this.SttEdaban.Value, out sttEdaban) ? x.SAIZUS >= sttEdaban : true) &&
                                                 (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.SAIZUS <= endEdaban : true) &&
-                                                (int.TryParse(this.SttJancd.Value, out sttJancd) && int.TryParse(x.JANCD, out jancd) ? jancd >= sttJancd : true) &&
-                                                (int.TryParse(this.EndJancd.Value, out endJancd) && int.TryParse(x.JANCD, out jancd) ? jancd <= endJancd : true))
+                                                (long.TryParse(this.SttJancd.Value, out sttJancd) && long.TryParse(x.JANCD, out jancd) ? jancd >= sttJancd : true) &&
+                                                (long.TryParse(this.EndJancd.Value, out endJancd) && long.TryParse(x.JANCD, out jancd) ? jancd <= endJancd : true))
                                         .ToList();
                 }
 
@@ -653,10 +655,9 @@ namespace PriceTagPrint.ViewModel
         private void NefudaOutput(string fname, bool isPreview)
         {
             // ※振分発行用ＰＧ
-            var grpName = @"\7858_わたせい\【総額対応】わたせい_V5_RT308R";
             var layName = NefudaBangouText.Value == 1 ? @"貼り札.mllayx" : "下札.mllayx";
 
-            var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + grpName + @"\" + layName;
+            var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + _grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
 
