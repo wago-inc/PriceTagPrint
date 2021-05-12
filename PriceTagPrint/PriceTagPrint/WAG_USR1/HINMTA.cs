@@ -12,11 +12,12 @@ namespace PriceTagPrint.WAG_USR1
     {
         public string HINCD { get; set; }
         public string JANCD { get; set; }
-
-        public HINMTA(string hincd, string jancd)
+        public string HINTKSID { get; set; }
+        public HINMTA(string hincd, string jancd, string hintksid)
         {
             this.HINCD = hincd;
             this.JANCD = jancd;
+            this.HINTKSID = hintksid;
         }
     }
 
@@ -47,7 +48,7 @@ namespace PriceTagPrint.WAG_USR1
                         {
                             results.Add(new HINMTA
                                 (
-                                    row.Field<string>("HINCD"), row.Field<string>("JANCD")
+                                    row.Field<string>("HINCD"), row.Field<string>("JANCD"), row.Field<string>("HINTKSID")
                                 ));
                         }
                     }

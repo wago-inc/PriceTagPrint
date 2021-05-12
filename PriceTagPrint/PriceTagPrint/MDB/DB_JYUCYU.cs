@@ -29,19 +29,19 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// ロケーション倉庫コード
         /// </summary>
-        public int LOCTANA_SOKO_CODE { get; set; }
+        public int? LOCTANA_SOKO_CODE { get; set; }
         /// <summary>
         /// ロケーションフロアNo
         /// </summary>
-        public int LOCTANA_FLOOR_NO { get; set; }
+        public int? LOCTANA_FLOOR_NO { get; set; }
         /// <summary>
         /// ロケーション棚No
         /// </summary>
-        public int LOCTANA_TANA_NO { get; set; }
+        public int? LOCTANA_TANA_NO { get; set; }
         /// <summary>
         /// ロケーションケースNo
         /// </summary>
-        public int LOCTANA_CASE_NO { get; set; }
+        public int? LOCTANA_CASE_NO { get; set; }
         /// <summary>
         /// 分類コード
         /// </summary>
@@ -120,8 +120,8 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DB_JYUCYU(int tcode, int nefuda_kbn, int hno, int tsu, int loctana_soko_code, int loctana_floor_no, int loctana_tana_no,
-                         int loctana_case_no, int bunrui, string scode, int saizus, string jancd, string hinmei, string saizun,
+        public DB_JYUCYU(int tcode, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, int? loctana_floor_no, int? loctana_tana_no,
+                         int? loctana_case_no, int bunrui, string scode, int saizus, string jancd, string hinmei, string saizun,
                          int stanka, int htanka, int jyodai, int bumon, int sku, int itemcd, int saizu, int color, int? jtblcd,
                          int hencd, int tkbn, string hinmein)
         {
@@ -181,8 +181,8 @@ namespace PriceTagPrint.MDB
                         results.Add(new DB_JYUCYU
                             (
                                 dr.Field<int>("TCODE"), dr.Field<int>("NEFUDA_KBN"), dr.Field<int>("HNO"),
-                                dr.Field<int>("TSU"), dr.Field<int>("LOCTANA_SOKO_CODE"), dr.Field<int>("LOCTANA_FLOOR_NO"),
-                                dr.Field<int>("LOCTANA_TANA_NO"), dr.Field<int>("LOCTANA_CASE_NO"), dr.Field<int>("BUNRUI"),
+                                dr.Field<int>("TSU"), dr.Field<int?>("LOCTANA_SOKO_CODE"), dr.Field<int?>("LOCTANA_FLOOR_NO"),
+                                dr.Field<int?>("LOCTANA_TANA_NO"), dr.Field<int?>("LOCTANA_CASE_NO"), dr.Field<int>("BUNRUI"),
                                 dr.Field<string>("SCODE"), dr.Field<int>("SAIZUS"), dr.Field<string>("JANCD"),
                                 dr.Field<string>("HINMEI"), dr.Field<string>("SAIZUN"), dr.Field<int>("STANKA"), dr.Field<int>("HTANKA"),
                                 dr.Field<int>("JYODAI"), dr.Field<int>("BUMON"), dr.Field<int>("SKU"), dr.Field<int>("ITEMCD"),

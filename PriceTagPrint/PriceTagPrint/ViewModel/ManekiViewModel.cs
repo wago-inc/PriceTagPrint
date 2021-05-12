@@ -16,6 +16,7 @@ using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
 using PriceTagPrint.View;
+using PriceTagPrint.WAG_USR1;
 using PriceTagPrint.WAGO2;
 using Reactive.Bindings;
 
@@ -84,6 +85,8 @@ namespace PriceTagPrint.ViewModel
         public TextBox HakkouTypeTextBox = null;
 
         private DB_JYUCYU_LIST dB_JYUCYU_LIST;
+        private HINMTA_LIST hINMTA_LIST;
+        private List<HINMTA> hinmtaList;
 
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
@@ -163,6 +166,23 @@ namespace PriceTagPrint.ViewModel
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
 
             HachuBangou.Subscribe(x => HachuBangouTextChanged(x));
+
+            ProcessingSplash ps = new ProcessingSplash("起動中", () =>
+            {
+                hINMTA_LIST = new HINMTA_LIST();
+                hinmtaList = hINMTA_LIST.QueryWhereAll();
+            });
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
+            }
+            else
+            {
+                //処理が失敗した
+            }
         }
 
         #endregion
@@ -568,10 +588,10 @@ namespace PriceTagPrint.ViewModel
                                  HTANKA = g.Key.HTANKA,
                                  HINMEIN = g.Key.HINMEIN,
                                  STANKA = g.Key.STANKA,
-                                 LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE,
-                                 LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO,
-                                 LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO,
-                                 LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO,
+                                 LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
+                                 LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
+                                 LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
+                                 LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
                                  BUNRUI = g.Key.BUNRUI,
                                  SCODE = g.Key.SCODE.TrimEnd(),
                                  SAIZUS = g.Key.SAIZUS.ToString("00"),
@@ -589,10 +609,17 @@ namespace PriceTagPrint.ViewModel
                          );
 
                     if (ManekiDatas.Any())
-                    {
+                    {                        
                         ManekiItems.Value = new ObservableCollection<ManekiItem>();
                         var ManekiModelList = new ManekiItemList();
                         ManekiItems.Value = new ObservableCollection<ManekiItem>(ManekiModelList.ConvertManekiDataToModel(ManekiDatas));
+                        ManekiItems.Value.ToList().ForEach(m =>
+                        {
+                            if (hinmtaList.Any(h => h.HINCD.TrimEnd() == m.メーカー品番.TrimEnd() && h.HINTKSID != "00"))
+                            {
+                                m.発行枚数 = 0;
+                            }
+                        });
                         TotalMaisu.Value = ManekiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
