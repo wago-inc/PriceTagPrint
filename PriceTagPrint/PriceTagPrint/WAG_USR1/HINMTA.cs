@@ -25,7 +25,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<HINMTA> QueryWhereAll()
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT HINCD, JANCD, HINTKSID " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.HINMTA ";
 

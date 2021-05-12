@@ -37,7 +37,7 @@ namespace PriceTagPrint.MDB
         private void Create()
         {
             var strSQL = "";
-            strSQL = strSQL + Environment.NewLine + "SELECT *";
+            strSQL = strSQL + Environment.NewLine + "SELECT CALL_KEY, KBN_KEY1, KBN_NAME1, KBN_NAME2, KBN_NAME3 ";
             strSQL = strSQL + Environment.NewLine + "FROM ";
             strSQL = strSQL + Environment.NewLine + " 0118_KUBUN " + "; ";
 

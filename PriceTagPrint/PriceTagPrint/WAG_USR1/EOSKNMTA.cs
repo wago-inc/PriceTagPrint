@@ -24,7 +24,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<EOSKNMTA> QueryWhereTcode(int tcode)
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT VRYOHNNM, VRYOHNCD " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.EOSKNMTA " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;

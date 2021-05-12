@@ -35,7 +35,7 @@ namespace PriceTagPrint.MDB
         private void Create()
         {
             var strSQL = "";
-            strSQL = strSQL + Environment.NewLine + "SELECT *";
+            strSQL = strSQL + Environment.NewLine + "SELECT HINBANCD, CYUBUNCD, HINBANNM, CYUBUNNM ";
             strSQL = strSQL + Environment.NewLine + "FROM ";
             strSQL = strSQL + Environment.NewLine + " 0118_HINBAN " + "; ";
 

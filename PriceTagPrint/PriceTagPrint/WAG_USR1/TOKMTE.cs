@@ -45,7 +45,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<TOKMTE> QueryWhereTcode(int tcode)
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT TOKCD, HINCD, EOSHINID, COLCD, SIZCD " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.TOKMTE " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;

@@ -30,7 +30,7 @@ namespace PriceTagPrint.WAGO
     {
         public List<TOKMSTPF> QueryWhereTcodeTenpo(int tcode, int tenpo = 9999)
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT TCODE, TENPO, TNAMEN, RYAKU, JISYA " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAGO.TOKMSTPF " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
