@@ -18,6 +18,9 @@
     <Compile Update="View\LayoutSelectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ManekiView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\MaruyoshiView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -51,6 +54,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\LayoutSelectView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\ManekiView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MaruyoshiView.xaml">

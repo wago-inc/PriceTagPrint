@@ -154,6 +154,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.MANEKI:
+                        {
+                            var view = new ManekiView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     default:break;
                 }
             }

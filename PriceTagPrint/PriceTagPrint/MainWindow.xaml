@@ -101,6 +101,7 @@
                             <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="5" />
                             <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="6" />
                             <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="7" />
+                            <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="8" />
                             
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd01" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd02" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource TitleButton}" Content="ヤマナカ" />
@@ -109,6 +110,7 @@
                             <Button Grid.Row="1" Grid.Column="3" x:Name="Cmd05" Command="{Binding SelectAutoCommand}" CommandParameter="7858" Style="{StaticResource TitleButton}" Content="わたせい" />
                             <Button Grid.Row="1" Grid.Column="5" x:Name="Cmd06" Command="{Binding SelectAutoCommand}" CommandParameter="0101" Style="{StaticResource TitleButton}" Content="キョーエイ" />
                             <Button Grid.Row="2" Grid.Column="1" x:Name="Cmd07" Command="{Binding SelectAutoCommand}" CommandParameter="7705" Style="{StaticResource TitleButton}" Content="イトウゴフク" />
+                            <Button Grid.Row="2" Grid.Column="3" x:Name="Cmd08" Command="{Binding SelectAutoCommand}" CommandParameter="2101" Style="{StaticResource TitleButton}" Content="マネキ" />
                         </Grid>
 
                         <Grid ShowGridLines="false" Visibility="{Binding InputMenuVisibility.Value}">
@@ -177,14 +179,14 @@
                             <Button Grid.Row="4" Grid.Column="5" x:Name="Cmd34" Command="{Binding SelectInputCommand}" CommandParameter="0121" Style="{StaticResource TitleButton}" Content="北海道三喜" />
                             <Button Grid.Row="5" Grid.Column="1" x:Name="Cmd35" Command="{Binding SelectInputCommand}" CommandParameter="8103" Style="{StaticResource TitleButton}" Content="本店タカハシ" />
                             <Button Grid.Row="5" Grid.Column="3" x:Name="Cmd36" Command="{Binding SelectInputCommand}" CommandParameter="0110" Style="{StaticResource TitleButton}" Content="マックスバリュ西日本" />
-                            <Button Grid.Row="5" Grid.Column="5" x:Name="Cmd37" Command="{Binding SelectInputCommand}" CommandParameter="0102" Style="{StaticResource TitleButton}" Content="マルヨシ" />
-                            <Button Grid.Row="6" Grid.Column="1" x:Name="Cmd38" Command="{Binding SelectInputCommand}" CommandParameter="8110" Style="{StaticResource TitleButton}" Content="マーブル" />
-                            <Button Grid.Row="6" Grid.Column="3" x:Name="Cmd39" Command="{Binding SelectInputCommand}" CommandParameter="8102" Style="{StaticResource TitleButton}" Content="ミヤマ" />
-                            <Button Grid.Row="6" Grid.Column="5" x:Name="Cmd40" Command="{Binding SelectInputCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
-                            <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd41" Command="{Binding SelectInputCommand}" CommandParameter="7840" Style="{StaticResource TitleButton}" Content="柳屋" />
-                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd42" Command="{Binding SelectInputCommand}" CommandParameter="7858" Style="{StaticResource TitleButton}" Content="わたせい" />
-                            <Button Grid.Row="7" Grid.Column="5" x:Name="Cmd43" Command="{Binding SelectInputCommand}" CommandParameter="7510" Style="{StaticResource TitleButton}" Content="ワークウェイ" />
-                            <Button Grid.Row="8" Grid.Column="1" x:Name="Cmd44" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
+                            <Button Grid.Row="5" Grid.Column="5" x:Name="Cmd37" Command="{Binding SelectInputCommand}" CommandParameter="2101" Style="{StaticResource TitleButton}" Content="マネキ" />
+                            <Button Grid.Row="6" Grid.Column="1" x:Name="Cmd38" Command="{Binding SelectInputCommand}" CommandParameter="0102" Style="{StaticResource TitleButton}" Content="マルヨシ" />
+                            <Button Grid.Row="6" Grid.Column="3" x:Name="Cmd39" Command="{Binding SelectInputCommand}" CommandParameter="8110" Style="{StaticResource TitleButton}" Content="マーブル" />
+                            <Button Grid.Row="6" Grid.Column="5" x:Name="Cmd40" Command="{Binding SelectInputCommand}" CommandParameter="8102" Style="{StaticResource TitleButton}" Content="ミヤマ" />
+                            <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd41" Command="{Binding SelectInputCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
+                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd42" Command="{Binding SelectInputCommand}" CommandParameter="7840" Style="{StaticResource TitleButton}" Content="柳屋" />
+                            <Button Grid.Row="7" Grid.Column="5" x:Name="Cmd43" Command="{Binding SelectInputCommand}" CommandParameter="7858" Style="{StaticResource TitleButton}" Content="わたせい" />
+                            <Button Grid.Row="8" Grid.Column="1" x:Name="Cmd44" Command="{Binding SelectInputCommand}" CommandParameter="7510" Style="{StaticResource TitleButton}" Content="ワークウェイ" />
                             <Button Grid.Row="8" Grid.Column="3" x:Name="Cmd45" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
                             <Button Grid.Row="8" Grid.Column="5" x:Name="Cmd46" Command="{Binding SelectInputCommand}" CommandParameter="    " Style="{StaticResource TitleButton}" Content="未使用" />
                         </Grid>

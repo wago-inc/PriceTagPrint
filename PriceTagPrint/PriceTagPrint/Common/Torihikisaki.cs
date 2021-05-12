@@ -48,6 +48,7 @@ namespace PriceTagPrint.Common
         public const int HONTENTAKAHASI = 8103;
         public const int MAXVALUE = 110;
         public const int MARBURU = 8110;
+        public const int MANEKI = 2101;
         public const int MIYAMA = 8102;
         public const int YANAGIYA = 7840;
         public const int WORKWAY = 7510;
@@ -79,6 +80,7 @@ namespace PriceTagPrint.Common
         public const string HONTENTAKAHASI = "8103";
         public const string MAXVALUE = "0110";
         public const string MARBURU = "8110";
+        public const string MANEKI = "2101";
         public const string MIYAMA = "8102";
         public const string YANAGIYA = "7840";
         public const string WORKWAY = "7510";
@@ -110,6 +112,7 @@ namespace PriceTagPrint.Common
         public const string HONTENTAKAHASI = "本店タカハシ";
         public const string MAXVALUE = "マックスバリュ西日本";
         public const string MARBURU = "マーブル";
+        public const string MANEKI = "マネキ";
         public const string MIYAMA = "ミヤマ";
         public const string YANAGIYA = "ヤスサキ";
         public const string WORKWAY = "ワークウェイ";
@@ -169,9 +172,10 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(22, Tid.HONTENTAKAHASI, Tnm.HONTENTAKAHASI, HakkouKind.Input, CreateDirList(TidNum.HONTENTAKAHASI)),
                 new Torihikisaki(23, Tid.MAXVALUE,       Tnm.MAXVALUE,       HakkouKind.Input, CreateDirList(TidNum.MAXVALUE)),
                 new Torihikisaki(24, Tid.MARBURU,        Tnm.MARBURU,        HakkouKind.Input, CreateDirList(TidNum.MARBURU)),
-                new Torihikisaki(25, Tid.MIYAMA,         Tnm.MIYAMA,         HakkouKind.Input, CreateDirList(TidNum.MIYAMA)),
-                new Torihikisaki(26, Tid.YANAGIYA,       Tnm.YANAGIYA,       HakkouKind.Input, CreateDirList(TidNum.YANAGIYA)),
-                new Torihikisaki(27, Tid.WORKWAY,        Tnm.WORKWAY,        HakkouKind.Input, CreateDirList(TidNum.WORKWAY)),
+                new Torihikisaki(25, Tid.MANEKI,         Tnm.MANEKI,         HakkouKind.Both,  CreateDirList(TidNum.MANEKI)),
+                new Torihikisaki(26, Tid.MIYAMA,         Tnm.MIYAMA,         HakkouKind.Input, CreateDirList(TidNum.MIYAMA)),
+                new Torihikisaki(27, Tid.YANAGIYA,       Tnm.YANAGIYA,       HakkouKind.Input, CreateDirList(TidNum.YANAGIYA)),
+                new Torihikisaki(28, Tid.WORKWAY,        Tnm.WORKWAY,        HakkouKind.Input, CreateDirList(TidNum.WORKWAY)),
             };
         }
 
@@ -275,6 +279,11 @@ namespace PriceTagPrint.Common
                     return new List<DirItem>()
                     {
                         new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\マーブル", false)
+                    };
+                case TidNum.MANEKI:
+                    return new List<DirItem>()
+                    {
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\2101_マネキ\【総額表示】_V5_ST308R", false)
                     };
                 case TidNum.MIYAMA:
                     return new List<DirItem>()

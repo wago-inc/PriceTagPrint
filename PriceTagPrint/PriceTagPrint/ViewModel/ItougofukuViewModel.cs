@@ -256,15 +256,29 @@ namespace PriceTagPrint.ViewModel
         {
             if (!string.IsNullOrEmpty(hno))
             {
-                if (dB_JYUCYU_LIST.QueryWhereHnoExists(hno))
+                ProcessingSplash ps = new ProcessingSplash("発注番号確認中...", () =>
                 {
-                    HnoResultString.Value = "登録済";
-                    HnoResultColor.Value = Brushes.Blue;
+                    if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.ITOGOFUKU, hno))
+                    {
+                        HnoResultString.Value = "登録済";
+                        HnoResultColor.Value = Brushes.Blue;
+                    }
+                    else
+                    {
+                        HnoResultString.Value = "※未登録";
+                        HnoResultColor.Value = Brushes.Red;
+                    }
+                });
+                //バックグラウンド処理が終わるまで表示して待つ
+                ps.ShowDialog();
+
+                if (ps.complete)
+                {
+                    //処理が成功した
                 }
                 else
                 {
-                    HnoResultString.Value = "※未登録";
-                    HnoResultColor.Value = Brushes.Red;
+                    //処理が失敗した
                 }
             }
             else
