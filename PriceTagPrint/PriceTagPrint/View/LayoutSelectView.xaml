@@ -10,7 +10,7 @@
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="レイアウト選択" Height="450" Width="800">
+        Title="レイアウト選択" Height="500" Width="800">
 
     <Window.DataContext>
         <vm:LayoutSelectViewModel/>
