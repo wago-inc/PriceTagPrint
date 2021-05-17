@@ -12,7 +12,7 @@ using static PriceTagPrint.Model.MainWindowModel;
 
 namespace PriceTagPrint.ViewModel
 {
-    public enum MenuKind { Auto, Ryohan, Ippan}
+    public enum MenuKind { Auto, Ryohan, Ippan, Other}
     class MainWindowViewModel : ViewModelsBase
     {
         public ReactiveProperty<MenuKind> SubMenuKind { get; set; } = new ReactiveProperty<MenuKind>(MenuKind.Auto);
@@ -24,6 +24,8 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<Visibility> RyohanMenuVisibility { get; set; } = new ReactiveProperty<Visibility>(Visibility.Hidden);
 
         public ReactiveProperty<Visibility> IppanMenuVisibility { get; set; } = new ReactiveProperty<Visibility>(Visibility.Hidden);
+
+        public ReactiveProperty<Visibility> OtherMenuVisibility { get; set; } = new ReactiveProperty<Visibility>(Visibility.Hidden);
 
         public Window window;
         public double Number { get; set; }
@@ -46,20 +48,34 @@ namespace PriceTagPrint.ViewModel
                 case MenuKind.Auto:
                     RyohanMenuVisibility.Value = Visibility.Collapsed;
                     IppanMenuVisibility.Value = Visibility.Collapsed;
-                    AutoMenuVisibility.Value = Visibility.Visible;                    
+                    OtherMenuVisibility.Value = Visibility.Collapsed;
+                    AutoMenuVisibility.Value = Visibility.Visible;
+                    
                     SubTitleText.Value = "自 動 発 行 メ ニ ュ ー";
                     break;
                 case MenuKind.Ryohan:
                     AutoMenuVisibility.Value = Visibility.Collapsed;
                     IppanMenuVisibility.Value = Visibility.Collapsed;
-                    RyohanMenuVisibility.Value = Visibility.Visible;                    
+                    OtherMenuVisibility.Value = Visibility.Collapsed;
+                    RyohanMenuVisibility.Value = Visibility.Visible;
+                    
                     SubTitleText.Value = "量 販 店 手 動 発 行 メ ニ ュ ー";
                     break;
                 case MenuKind.Ippan:
                     AutoMenuVisibility.Value = Visibility.Collapsed;
                     RyohanMenuVisibility.Value = Visibility.Collapsed;
+                    OtherMenuVisibility.Value = Visibility.Collapsed;
                     IppanMenuVisibility.Value = Visibility.Visible;
+                    
                     SubTitleText.Value = "一 般 店 手 動 発 行 メ ニ ュ ー";
+                    break;
+                case MenuKind.Other:
+                    AutoMenuVisibility.Value = Visibility.Collapsed;
+                    RyohanMenuVisibility.Value = Visibility.Collapsed;
+                    IppanMenuVisibility.Value = Visibility.Collapsed;
+                    OtherMenuVisibility.Value = Visibility.Visible;
+
+                    SubTitleText.Value = "そ の 他 手 動 発 行 メ ニ ュ ー";
                     break;
             }
         }
