@@ -10,7 +10,7 @@
         xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="【2101-マネキ】値札発行" Height="700" Width="1100">
+        Title="【2101-マネキ】値札発行" Height="715" Width="1100">
 
     <Window.DataContext>
         <vm:ManekiViewModel/>

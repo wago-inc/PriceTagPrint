@@ -158,33 +158,47 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public OkinawaSankiViewModel()
         {
-            dB_0118_EOS_HACHU_LIST = new DB_0118_EOS_HACHU_LIST();
-            dB_0118_HACHUSYO_LIST = new DB_0118_HACHUSYO_LIST();
-            dB_0118_KAITUKESYO_LIST = new DB_0118_KAITUKESYO_LIST();
-            tOKMSTPF_LIST = new TOKMSTPF_LIST();
-            wEB_TORIHIKISAKI_TANKA_LIST = new WEB_TORIHIKISAKI_TANKA_LIST();
+            ProcessingSplash ps = new ProcessingSplash("起動中", () =>
+            {
+                dB_0118_EOS_HACHU_LIST = new DB_0118_EOS_HACHU_LIST();
+                dB_0118_HACHUSYO_LIST = new DB_0118_HACHUSYO_LIST();
+                dB_0118_KAITUKESYO_LIST = new DB_0118_KAITUKESYO_LIST();
+                tOKMSTPF_LIST = new TOKMSTPF_LIST();
+                wEB_TORIHIKISAKI_TANKA_LIST = new WEB_TORIHIKISAKI_TANKA_LIST();
 
-            CreateComboItems();
-            
-            // コンボボックス初期値セット
-            HakkouTypeText = new ReactiveProperty<int>(1);
-            CenterText = new ReactiveProperty<string>("");
-            HinbanCodeText = new ReactiveProperty<string>("");
-            NefudaBangouText = new ReactiveProperty<int>(1);
+                CreateComboItems();
 
-            // SubScribe定義
-            HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
-            CenterText.Subscribe(x => CenterTextChanged(x));
-            HinbanCodeText.Subscribe(x => HinbanCodeTextChanged(x));
-            NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
-            SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
-            SelectedCenterIndex.Subscribe(x => SelectedCenterIndexChanged(x));
-            SelectedHinbanCodeIndex.Subscribe(x => SelectedHinbanCodeIndexChanged(x));
-            SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
+                // コンボボックス初期値セット
+                HakkouTypeText = new ReactiveProperty<int>(1);
+                CenterText = new ReactiveProperty<string>("");
+                HinbanCodeText = new ReactiveProperty<string>("");
+                NefudaBangouText = new ReactiveProperty<int>(1);
 
-            HachuBangou.Subscribe(x => HachuBangouTextChanged(x));
+                // SubScribe定義
+                HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
+                CenterText.Subscribe(x => CenterTextChanged(x));
+                HinbanCodeText.Subscribe(x => HinbanCodeTextChanged(x));
+                NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
+                SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
+                SelectedCenterIndex.Subscribe(x => SelectedCenterIndexChanged(x));
+                SelectedHinbanCodeIndex.Subscribe(x => SelectedHinbanCodeIndexChanged(x));
+                SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
 
-            SelectedCenterIndex.Value = CenterItems.Value.Select((item, index) => new { item, index }).FirstOrDefault(x => x.item.Id == "5").index;
+                HachuBangou.Subscribe(x => HachuBangouTextChanged(x));
+
+                SelectedCenterIndex.Value = CenterItems.Value.Select((item, index) => new { item, index }).FirstOrDefault(x => x.item.Id == "5").index;
+            });
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
+            }
+            else
+            {
+                //処理が失敗した
+            }
         }
 
         #endregion

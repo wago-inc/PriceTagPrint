@@ -52,6 +52,15 @@ namespace PriceTagPrint
             vm.window = this;
             this.DataContext = vm;
         }
+
+        public MainWindow(MenuKind menuKind)
+        {
+            InitializeComponent();
+            var vm = new MainWindowViewModel();
+            vm.window = this;            
+            this.DataContext = vm;
+            vm.SubMenuKind.Value = menuKind;
+        }
         private void ExecuteCommand(object sender, RoutedEventArgs e)
         {
             this.Close();

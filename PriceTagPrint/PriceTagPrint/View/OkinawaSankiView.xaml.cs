@@ -136,8 +136,7 @@ namespace PriceTagPrint.View
             {
                 case "Esc":
                     this.Close();
-                    var view = new MainWindow();
-                    view.Show();
+                    this.Owner.Show();
                     break;
                 case "F4":
                     ((OkinawaSankiViewModel)this.DataContext).Clear();

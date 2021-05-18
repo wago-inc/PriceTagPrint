@@ -73,8 +73,7 @@ namespace PriceTagPrint.View
             {
                 case "Esc":
                     this.Close();
-                    var view = new MainWindow();
-                    view.Show();
+                    this.Owner.Show();
                     break;
                 case "F12":
                     if (((LayoutSelectViewModel)this.DataContext).PrintCheck())
