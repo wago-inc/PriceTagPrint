@@ -250,7 +250,7 @@ namespace PriceTagPrint.ViewModel
                 {
                     if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.WATASEI, hno))
                     {
-                        HnoResultString.Value = "登録済";
+                        HnoResultString.Value = "登録済 " + Tid.WATASEI + "-" + Tnm.WATASEI;
                         HnoResultColor.Value = Brushes.Blue;
                     }
                     else

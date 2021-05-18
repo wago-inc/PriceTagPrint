@@ -98,5 +98,7 @@ namespace PriceTagPrint.Model
         /// 値札区分
         /// </summary>
         public int NEFUDA_KBN { get; set; }
+
+        public int LOCTANA_SYOHIN_CD { get; set; }
     }
 }

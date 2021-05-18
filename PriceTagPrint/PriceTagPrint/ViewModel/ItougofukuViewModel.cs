@@ -50,7 +50,7 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<ObservableCollection<CommonIdName>> NefudaBangouItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<CommonIdName>>();
         public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
-                = new ReactiveProperty<int>(0);
+                = new ReactiveProperty<int>(1);
 
         // 商品コード表示・非表示
         public ReactiveProperty<bool> HinEnabled { get; set; } = new ReactiveProperty<bool>(false);
@@ -158,7 +158,7 @@ namespace PriceTagPrint.ViewModel
             // コンボボックス初期値セット
             HakkouTypeText = new ReactiveProperty<int>(1);
             BunruiCodeText = new ReactiveProperty<string>("");
-            NefudaBangouText = new ReactiveProperty<int>(2);
+            NefudaBangouText = new ReactiveProperty<int>(3);
 
             // SubScribe定義
             HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
@@ -260,7 +260,7 @@ namespace PriceTagPrint.ViewModel
                 {
                     if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.ITOGOFUKU, hno))
                     {
-                        HnoResultString.Value = "登録済";
+                        HnoResultString.Value = "登録済 " + Tid.ITOGOFUKU + "-" + Tnm.ITOGOFUKU;
                         HnoResultColor.Value = Brushes.Blue;
                     }
                     else
@@ -379,7 +379,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                NefudaBangouText.Value = 2;
+                NefudaBangouText.Value = 3;
             }
         }
 
@@ -396,7 +396,7 @@ namespace PriceTagPrint.ViewModel
             HachuBangou.Value = "";
             HnoResultString.Value = "";
             HnoResultColor.Value = Brushes.Black;
-            SelectedNefudaBangouIndex.Value = 0;
+            SelectedNefudaBangouIndex.Value = 1;
             HinEnabled.Value = false;
             SttHincd.Value = "";
             EndHincd.Value = "";

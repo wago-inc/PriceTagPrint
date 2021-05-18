@@ -243,7 +243,7 @@ namespace PriceTagPrint.ViewModel
             {
                 if (dB_0112_EOS_HACHU_LIST.QueryWhereHnoExists(hno))
                 {
-                    HnoResultString.Value = "登録済";
+                    HnoResultString.Value = "登録済 " + Tid.YASUSAKI + "-" + Tnm.YASUSAKI;
                     HnoResultColor.Value = Brushes.Blue;
                 }
                 else

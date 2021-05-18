@@ -52,8 +52,8 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="1.25*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="0.5*"/>

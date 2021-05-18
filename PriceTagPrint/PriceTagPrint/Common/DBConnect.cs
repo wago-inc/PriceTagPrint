@@ -24,5 +24,8 @@ namespace PriceTagPrint.Common
         public const string MdbDataSource_ito = @"\\Server00\H\database\発注受付処理\イトウゴフク\Ac_SovI\ﾏｽﾀｰ.MDB";
         public static string MdbConnectionString_ito = "Driver={Microsoft Access Driver (*.mdb)};Dbq=" + MdbDataSource_ito;
 
+        public const string MdbDataSource_maneki = @"\\Server00\H\database\発注受付処理\マネキ\マネキ発注受付.mdb";
+        public static string MdbConnectionString_maneki = "Driver={Microsoft Access Driver (*.mdb)};Dbq=" + MdbDataSource_maneki;
+
     }
 }
