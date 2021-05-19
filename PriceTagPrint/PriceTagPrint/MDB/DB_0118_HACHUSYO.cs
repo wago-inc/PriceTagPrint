@@ -108,26 +108,40 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
                 {
-                    mdbConn.Open();
-
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        results.Add(new DB_0118_HACHUSYO
-                            (
-                                dr.Field<int>("HNO"), dr.Field<string>("KAITUKECD"), dr.Field<string>("TOKCD"),
-                                dr.Field<short>("TENCD"), dr.Field<string>("SYOHINCD"), dr.Field<int>("SEQNO"), 
-                                dr.Field<string>("CENTCD"), dr.Field<string>("HINBANCD"), dr.Field<string>("CYUBUNCD"),
-                                dr.Field<int>("BAIKA"), dr.Field<string>("HINCD"), dr.Field<short>("NSU"),
-                                dr.Field<int>("SAIZUS"), dr.Field<int>("BUNRUI"), dr.Field<string>("SCODE")
-                            ));
-                    }
-
-                    return results;
+                    results.Add(new DB_0118_HACHUSYO
+                        (
+                            dr.Field<int>("HNO"),
+                            dr.Field<string>("KAITUKECD"),
+                            dr.Field<string>("TOKCD"),
+                            dr.Field<short>("TENCD"),
+                            dr.Field<string>("SYOHINCD"),
+                            dr.Field<int>("SEQNO"),
+                            dr.Field<string>("CENTCD"),
+                            dr.Field<string>("HINBANCD"),
+                            dr.Field<string>("CYUBUNCD"),
+                            dr.Field<int>("BAIKA"),
+                            dr.Field<string>("HINCD"),
+                            dr.Field<short>("NSU"),
+                            dr.Field<int>("SAIZUS"),
+                            dr.Field<int>("BUNRUI"),
+                            dr.Field<string>("SCODE")
+                        ));
                 }
+
+                return results;
             }
             catch (Exception ex)
             {
@@ -138,7 +152,7 @@ namespace PriceTagPrint.MDB
 
         public bool QueryWhereHnoExists(string hno)
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT HNO " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " 0118_HACHUSYO " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
@@ -149,20 +163,21 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
 
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
 
-                    return mdbDt.Rows.Count > 0;
-                }
+                return mdbDt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                MessageBox.Show(ex.Message.ToString());
                 return false;
             }
         }

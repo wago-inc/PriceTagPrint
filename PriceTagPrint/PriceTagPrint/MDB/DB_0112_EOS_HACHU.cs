@@ -89,27 +89,43 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
                 {
-                    mdbConn.Open();
-
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        results.Add(new DB_0112_EOS_HACHU
-                            (
-                                dr.Field<int>("HNO"), dr.Field<string>("TOKCD"), dr.Field<short>("TENCD"),
-                                dr.Field<string>("DENPYONO"), dr.Field<int>("DENPYOGYO"), dr.Field<string>("SYOHINCD"),
-                                dr.Field<string>("JANCD"), dr.Field<DateTime>("HATYUBI"), dr.Field<short>("HSU"),
-                                dr.Field<short>("NSU"), dr.Field<int>("GENKA"), dr.Field<int>("BAIKA"),
-                                dr.Field<DateTime>("NOUHINBI"), dr.Field<string>("HINCD"), dr.Field<int>("BUNRUI"),
-                                dr.Field<string>("SCODE"), dr.Field<int>("SAIZUS"), dr.Field<string>("EOS_SYOHINNM")
-                            ));
-                    }
-
-                    return results;
+                    results.Add(new DB_0112_EOS_HACHU
+                        (
+                            dr.Field<int>("HNO"),
+                            dr.Field<string>("TOKCD"),
+                            dr.Field<short>("TENCD"),
+                            dr.Field<string>("DENPYONO"),
+                            dr.Field<int>("DENPYOGYO"),
+                            dr.Field<string>("SYOHINCD"),
+                            dr.Field<string>("JANCD"),
+                            dr.Field<DateTime>("HATYUBI"),
+                            dr.Field<short>("HSU"),
+                            dr.Field<short>("NSU"),
+                            dr.Field<int>("GENKA"),
+                            dr.Field<int>("BAIKA"),
+                            dr.Field<DateTime>("NOUHINBI"),
+                            dr.Field<string>("HINCD"),
+                            dr.Field<int>("BUNRUI"),
+                            dr.Field<string>("SCODE"),
+                            dr.Field<int>("SAIZUS"),
+                            dr.Field<string>("EOS_SYOHINNM")
+                        ));
                 }
+
+                return results;
             }
             catch (Exception ex)
             {
@@ -120,7 +136,7 @@ namespace PriceTagPrint.MDB
 
         public bool QueryWhereHnoExists(string hno)
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT HNO " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " 0112_EOS_HACHU " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
@@ -131,20 +147,21 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-                    
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
 
-                    return mdbDt.Rows.Count > 0;
-                }
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                return mdbDt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                MessageBox.Show(ex.Message.ToString());
                 return false;
             }
         }

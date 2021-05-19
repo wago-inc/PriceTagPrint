@@ -85,6 +85,7 @@ namespace PriceTagPrint.ViewModel
         public TextBox HakkouTypeTextBox = null;
 
         private DB_JYUCYU_LIST dB_JYUCYU_LIST;
+        private DB_2101_JYUCYU_LIST dB_2101_JYUCYU_LIST;
         private HINMTA_LIST hINMTA_LIST;
         private List<HINMTA> hinmtaList;
 
@@ -108,11 +109,15 @@ namespace PriceTagPrint.ViewModel
                     break;
                 case "F4":
                     Clear();
+                    this.HakkouTypeTextBox.Focus();
+                    this.HakkouTypeTextBox.SelectAll();
                     break;
                 case "F5":
                     if (InputCheck())
                     {
                         NefudaDataDisplay();
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
                 case "F10":
@@ -125,6 +130,8 @@ namespace PriceTagPrint.ViewModel
                     if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                     {
                         ExecPrint(true);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
                 case "F12":
@@ -137,6 +144,8 @@ namespace PriceTagPrint.ViewModel
                     if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                     {
                         ExecPrint(false);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
             }
@@ -150,6 +159,7 @@ namespace PriceTagPrint.ViewModel
         public ManekiViewModel()
         {
             dB_JYUCYU_LIST = new DB_JYUCYU_LIST();
+            dB_2101_JYUCYU_LIST = new DB_2101_JYUCYU_LIST();
             CreateComboItems();
 
             // コンボボックス初期値セット
@@ -268,7 +278,7 @@ namespace PriceTagPrint.ViewModel
             {
                 ProcessingSplash ps = new ProcessingSplash("発注番号確認中...", () =>
                 {
-                    if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.MANEKI, hno))
+                    if (dB_2101_JYUCYU_LIST.QueryWhereHnoExists(hno))
                     {
                         HnoResultString.Value = "登録済 " + Tid.MANEKI + "-" + Tnm.MANEKI;
                         HnoResultColor.Value = Brushes.Blue;
@@ -609,17 +619,64 @@ namespace PriceTagPrint.ViewModel
                          );
 
                     if (ManekiDatas.Any())
-                    {                        
+                    {
+                        var skuSortedItems = ManekiDatas.OrderBy(x => x.SKU).ToList();
+                        var sttSku = skuSortedItems.FirstOrDefault()?.SKU ?? 0;
+                        var endSku = skuSortedItems.LastOrDefault()?.SKU ?? 0;
+                        var manekiJuchuList = dB_2101_JYUCYU_LIST.QueryWhereHnoSkuBetween(HachuBangou.Value, sttSku.ToString(), endSku.ToString());
+
+                        ManekiDatas.ForEach(m =>
+                        {
+                            var mJuchu = manekiJuchuList.Where(x => x.SKU == m.SKU);
+                            var mTsu = mJuchu.Sum(x => x.TSU);
+                            var mJtbl = mJuchu.FirstOrDefault()?.JTBLCD.ToString() ?? "";
+                            // マネキ用のJYUCYUテーブルの発行枚数と条件テーブルで更新
+                            if (mTsu != m.TSU)
+                            {
+                                m.TSU = mTsu;
+                            }
+                            if (mJtbl != m.JTBLCD)
+                            {
+                                m.JTBLCD = mJtbl;
+                            }
+                            // グンゼ値付不要商品の発行枚数を0に更新
+                            var hinban = m.BUNRUI + "-" + m.SCODE;
+                            hinban += !string.IsNullOrEmpty(m.SAIZUS) ? "-" + m.SAIZUS.PadLeft(2, '0') : "";
+                            if (hinmtaList.Any(h => h.HINCD.TrimEnd() == hinban && h.HINTKSID != "00"))
+                            {
+                                m.TSU = 0;
+                            }
+                        });
+
                         ManekiItems.Value = new ObservableCollection<ManekiItem>();
                         var ManekiModelList = new ManekiItemList();
                         ManekiItems.Value = new ObservableCollection<ManekiItem>(ManekiModelList.ConvertManekiDataToModel(ManekiDatas));
-                        ManekiItems.Value.ToList().ForEach(m =>
-                        {
-                            if (hinmtaList.Any(h => h.HINCD.TrimEnd() == m.メーカー品番.TrimEnd() && h.HINTKSID != "00"))
-                            {
-                                m.発行枚数 = 0;
-                            }
-                        });
+
+                        //var skuSortedItems = ManekiItems.Value.OrderBy(x => x.管理番号).ToList();
+                        //var sttSku = skuSortedItems.FirstOrDefault()?.管理番号 ?? 0;
+                        //var endSku = skuSortedItems.LastOrDefault()?.管理番号 ?? 0;
+                        //var manekiJuchuList = dB_2101_JYUCYU_LIST.QueryWhereHnoSkuBetween(HachuBangou.Value, sttSku.ToString(), endSku.ToString());
+                        
+                        //ManekiItems.Value.ToList().ForEach(m =>
+                        //{
+                        //    var mJuchu = manekiJuchuList.Where(x => x.SKU == m.管理番号);
+                        //    var mTsu = mJuchu.Sum(x => x.TSU);
+                        //    var mJtbl = mJuchu.FirstOrDefault()?.JTBLCD.ToString() ?? "";
+                        //    // マネキ用のJYUCYUテーブルの発行枚数と条件テーブルで更新
+                        //    if (mTsu != m.発行枚数)
+                        //    {
+                        //        m.発行枚数 = mTsu;
+                        //    }
+                        //    if (mJtbl != m.条件テーブル)
+                        //    {
+                        //        m.条件テーブル = mJtbl;
+                        //    }
+                        //    // グンゼ値付不要商品の発行枚数を0に更新
+                        //    if (hinmtaList.Any(h => h.HINCD.TrimEnd() == m.メーカー品番.TrimEnd() && h.HINTKSID != "00"))
+                        //    {
+                        //        m.発行枚数 = 0;
+                        //    }
+                        //});
                         TotalMaisu.Value = ManekiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
@@ -631,7 +688,6 @@ namespace PriceTagPrint.ViewModel
                 {
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                this.HakkouTypeTextBox.Focus();
             });
             //バックグラウンド処理が終わるまで表示して待つ
             ps.ShowDialog();

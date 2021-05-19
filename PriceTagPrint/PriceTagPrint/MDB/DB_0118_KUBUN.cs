@@ -46,23 +46,26 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(strSQL, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(strSQL, mdbConn);
-                    adapter.Fill(mdbDt);
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        dB_0118_KUBUNs.Add(new DB_0118_KUBUN
-                            (
-                                dr.Field<short>("CALL_KEY"),
-                                dr.Field<string>("KBN_KEY1"),
-                                dr.Field<string>("KBN_NAME1"),
-                                dr.Field<string>("KBN_NAME2"),
-                                dr.Field<string>("KBN_NAME3")
-                            ));
-                    }
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
+                {
+                    dB_0118_KUBUNs.Add(new DB_0118_KUBUN
+                        (
+                            dr.Field<short>("CALL_KEY"),
+                            dr.Field<string>("KBN_KEY1"),
+                            dr.Field<string>("KBN_NAME1"),
+                            dr.Field<string>("KBN_NAME2"),
+                            dr.Field<string>("KBN_NAME3")
+                        ));
                 }
             }
             catch (Exception ex)

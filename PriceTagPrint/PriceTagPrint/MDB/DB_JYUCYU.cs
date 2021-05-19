@@ -170,49 +170,52 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                var jancd = "";
+                foreach (DataRow dr in mdbDt.Rows)
                 {
-                    mdbConn.Open();
-
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-                    var jancd = "";
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        jancd = dr.Field<string>("JANCD") ?? "";
-                        results.Add(new DB_JYUCYU
-                            (
-                                dr.Field<int>("TCODE"), 
-                                dr.Field<int>("NEFUDA_KBN"), 
-                                dr.Field<int>("HNO"),
-                                dr.Field<int>("TSU"), 
-                                dr.Field<int?>("LOCTANA_SOKO_CODE"), 
-                                dr.Field<int?>("LOCTANA_FLOOR_NO"),
-                                dr.Field<int?>("LOCTANA_TANA_NO"), 
-                                dr.Field<int?>("LOCTANA_CASE_NO"), 
-                                dr.Field<int>("BUNRUI"),
-                                dr.Field<string>("SCODE"), 
-                                dr.Field<int>("SAIZUS"), 
-                                jancd,
-                                dr.Field<string>("HINMEI"), 
-                                dr.Field<string>("SAIZUN"), 
-                                dr.Field<int>("STANKA"), 
-                                dr.Field<int>("HTANKA"),
-                                dr.Field<int>("JYODAI"), 
-                                dr.Field<int>("BUMON"), 
-                                dr.Field<int>("SKU"), 
-                                dr.Field<int>("ITEMCD"),
-                                dr.Field<int?>("SAIZU"), 
-                                dr.Field<int?>("COLOR"), 
-                                dr.Field<double?>("JTBLCD"), 
-                                dr.Field<int>("HENCD"),
-                                dr.Field<int>("TKBN"), 
-                                dr.Field<string>("HINMEIN")
-                            ));
-                    }
-
-                    return results;
+                    jancd = dr.Field<string>("JANCD") ?? "";
+                    results.Add(new DB_JYUCYU
+                        (
+                            dr.Field<int>("TCODE"),
+                            dr.Field<int>("NEFUDA_KBN"),
+                            dr.Field<int>("HNO"),
+                            dr.Field<int>("TSU"),
+                            dr.Field<int?>("LOCTANA_SOKO_CODE"),
+                            dr.Field<int?>("LOCTANA_FLOOR_NO"),
+                            dr.Field<int?>("LOCTANA_TANA_NO"),
+                            dr.Field<int?>("LOCTANA_CASE_NO"),
+                            dr.Field<int>("BUNRUI"),
+                            dr.Field<string>("SCODE"),
+                            dr.Field<int>("SAIZUS"),
+                            jancd,
+                            dr.Field<string>("HINMEI"),
+                            dr.Field<string>("SAIZUN"),
+                            dr.Field<int>("STANKA"),
+                            dr.Field<int>("HTANKA"),
+                            dr.Field<int>("JYODAI"),
+                            dr.Field<int>("BUMON"),
+                            dr.Field<int>("SKU"),
+                            dr.Field<int>("ITEMCD"),
+                            dr.Field<int?>("SAIZU"),
+                            dr.Field<int?>("COLOR"),
+                            dr.Field<double?>("JTBLCD"),
+                            dr.Field<int>("HENCD"),
+                            dr.Field<int>("TKBN"),
+                            dr.Field<string>("HINMEIN")
+                        ));
                 }
+
+                return results;
             }
             catch (Exception ex)
             {
@@ -234,16 +237,17 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
 
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
 
-                    return mdbDt.Rows.Count > 0;
-                }
+                return mdbDt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
@@ -266,16 +270,17 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
 
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
 
-                    return mdbDt.Rows.Count > 0;
-                }
+                return mdbDt.Rows.Count > 0;
             }
             catch (Exception ex)
             {

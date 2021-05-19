@@ -128,23 +128,31 @@ namespace PriceTagPrint.View
                     break;
                 case "F4":
                     ((ItougofukuViewModel)this.DataContext).Clear();
+                    this.HakkouTypeText.Focus();
+                    this.HakkouTypeText.SelectAll();
                     break;
                 case "F5":
                     if (((ItougofukuViewModel)this.DataContext).InputCheck())
                     {
                         ((ItougofukuViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F10":
                     if (((ItougofukuViewModel)this.DataContext).PrintCheck())
                     {
                         ((ItougofukuViewModel)this.DataContext).ExecPrint(true);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F12":
                     if (((ItougofukuViewModel)this.DataContext).PrintCheck())
                     {
                         ((ItougofukuViewModel)this.DataContext).ExecPrint(false);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
             }
@@ -166,6 +174,8 @@ namespace PriceTagPrint.View
                         int nefudaBangou;
                         ((ItougofukuViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
                         ((ItougofukuViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                 }
             }

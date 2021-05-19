@@ -26,6 +26,8 @@
         <Label x:Name="label_status"
                 Grid.Row="1"
                 HorizontalAlignment="Center"
+                FontFamily="Yu Gothic UI"
+                FontSize="14"
                 Content="{Binding}" />
     </Grid>
 </Window>

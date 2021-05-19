@@ -26,7 +26,9 @@ namespace PriceTagPrint.MDB
         public List<DB_T05007_SHOHIN_TEKIYO_DAICHO> QueryWhereAll()
         {
             var strSQL = "";
-            strSQL = strSQL + Environment.NewLine + "SELECT T05007_商品摘要台帳.*";
+            strSQL = strSQL + Environment.NewLine + "SELECT ";
+            strSQL = strSQL + Environment.NewLine + " T05007_商品摘要台帳.商品摘要コード, ";
+            strSQL = strSQL + Environment.NewLine + " T05007_商品摘要台帳.商品摘要名 ";
             strSQL = strSQL + Environment.NewLine + "FROM ";
             strSQL = strSQL + Environment.NewLine + " T05007_商品摘要台帳 ";
 
@@ -35,22 +37,26 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_ito))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_ito);
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(strSQL, mdbConn);
-                    adapter.Fill(mdbDt);
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        results.Add(new DB_T05007_SHOHIN_TEKIYO_DAICHO
-                            (
-                                dr.Field<short>("商品摘要コード"),
-                                dr.Field<string>("商品摘要名")
-                            ));
-                    }
-                    return results;
+                OdbcCommand sqlCommand = new OdbcCommand(strSQL, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
+                {
+                    results.Add(new DB_T05007_SHOHIN_TEKIYO_DAICHO
+                        (
+                            dr.Field<short>("商品摘要コード"),
+                            dr.Field<string>("商品摘要名")
+                        ));
                 }
+                return results;
             }
             catch (Exception ex)
             {

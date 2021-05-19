@@ -60,32 +60,36 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_ito))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_ito);
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(strSQL, mdbConn);
-                    adapter.Fill(mdbDt);
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        results.Add(new DB_T05001_SHOHIN_DAICHO
-                            (
-                                dr.Field<string>("バーコード"),
-                                dr.Field<string>("品番"),
-                                dr.Field<string>("仕入週"),
-                                dr.Field<string>("商品名"),
-                                dr.Field<byte?>("値札No"),
-                                dr.Field<short?>("商品区分コード"),
-                                dr.Field<short?>("商品摘要コード1"),
-                                dr.Field<short?>("商品摘要コード2"),
-                                dr.Field<short?>("商品摘要コード3"),
-                                dr.Field<short?>("分類2コード"),
-                                dr.Field<short?>("仕入先コード"),
-                                dr.Field<string>("画像名1")
-                            ));
-                    }
-                    return results;
+                OdbcCommand sqlCommand = new OdbcCommand(strSQL, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
+                {
+                    results.Add(new DB_T05001_SHOHIN_DAICHO
+                        (
+                            dr.Field<string>("バーコード"),
+                            dr.Field<string>("品番"),
+                            dr.Field<string>("仕入週"),
+                            dr.Field<string>("商品名"),
+                            dr.Field<byte?>("値札No"),
+                            dr.Field<short?>("商品区分コード"),
+                            dr.Field<short?>("商品摘要コード1"),
+                            dr.Field<short?>("商品摘要コード2"),
+                            dr.Field<short?>("商品摘要コード3"),
+                            dr.Field<short?>("分類2コード"),
+                            dr.Field<short?>("仕入先コード"),
+                            dr.Field<string>("画像名1")
+                        ));
                 }
+                return results;
             }
             catch (Exception ex)
             {

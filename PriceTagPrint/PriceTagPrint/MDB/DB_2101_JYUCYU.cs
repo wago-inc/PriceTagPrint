@@ -119,6 +119,14 @@ namespace PriceTagPrint.MDB
             this.HINMEIN = hinmein;
             this.LOCTANA_SYOHIN_CD = loctana_syohin_cd;
         }
+
+        public DB_2101_JYUCYU(int hno, int tsu, int sku, double? jtblcd)
+        {
+            this.HNO = hno;
+            this.TSU = tsu;
+            this.SKU = sku;
+            this.JTBLCD = jtblcd;
+        }
     }
 
     public class DB_2101_JYUCYU_LIST
@@ -137,48 +145,95 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki))
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki);
+
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
                 {
-                    mdbConn.Open();
-
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-                    var jancd = "";
-                    foreach (DataRow dr in mdbDt.Rows)
-                    {
-                        jancd = dr.Field<string>("JANCD") ?? "";
-                        results.Add(new DB_2101_JYUCYU
-                            (
-                                dr.Field<int>("TCODE"),
-                                dr.Field<int>("HNO"),
-                                dr.Field<int>("TSU"),
-                                dr.Field<int>("BUNRUI"),
-                                dr.Field<string>("SCODE"),
-                                dr.Field<int>("SAIZUS"),
-                                dr.Field<string>("HINMEI"),
-                                dr.Field<string>("SAIZUN"),
-                                dr.Field<int>("STANKA"),
-                                dr.Field<int>("HTANKA"),
-                                dr.Field<int>("JYODAI"),
-                                dr.Field<int>("BUMON"),
-                                dr.Field<int>("SKU"),
-                                dr.Field<int>("ITEMCD"),
-                                dr.Field<int?>("SAIZU"),
-                                dr.Field<int?>("COLOR"),
-                                dr.Field<double?>("JTBLCD"),
-                                dr.Field<int>("HENCD"),
-                                dr.Field<int>("TKBN"),
-                                dr.Field<string>("HINMEIN"),
-                                dr.Field<int?>("LOCTANA_SYOHIN_CD")
-                            ));
-                    }
-
-                    return results;
+                    results.Add(new DB_2101_JYUCYU
+                        (
+                            dr.Field<int>("TCODE"),
+                            dr.Field<int>("HNO"),
+                            dr.Field<int>("TSU"),
+                            dr.Field<int>("BUNRUI"),
+                            dr.Field<string>("SCODE"),
+                            dr.Field<int>("SAIZUS"),
+                            dr.Field<string>("HINMEI"),
+                            dr.Field<string>("SAIZUN"),
+                            dr.Field<int>("STANKA"),
+                            dr.Field<int>("HTANKA"),
+                            dr.Field<int>("JYODAI"),
+                            dr.Field<int>("BUMON"),
+                            dr.Field<int>("SKU"),
+                            dr.Field<int>("ITEMCD"),
+                            dr.Field<int?>("SAIZU"),
+                            dr.Field<int?>("COLOR"),
+                            dr.Field<double?>("JTBLCD"),
+                            dr.Field<int>("HENCD"),
+                            dr.Field<int>("TKBN"),
+                            dr.Field<string>("HINMEIN"),
+                            dr.Field<int?>("LOCTANA_SYOHIN_CD")
+                        ));
                 }
+
+                return results;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message.ToString());
+                return null;
+            }
+        }
+
+        public List<DB_2101_JYUCYU> QueryWhereHnoSkuBetween(string hno, string sttSku, string endSku)
+        {
+            var sql = "SELECT HNO, TSU, SKU, JTBLCD " + Environment.NewLine;
+            sql += "FROM " + Environment.NewLine;
+            sql += " JYUCYU " + Environment.NewLine;
+            sql += "WHERE " + Environment.NewLine;
+            sql += " HNO = " + hno + Environment.NewLine;
+            sql += " AND SKU BETWEEN " + sttSku + " AND " + endSku;
+
+            DataTable mdbDt = new DataTable();
+            var results = new List<DB_2101_JYUCYU>();
+            // 読み込み
+            try
+            {
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki);
+
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                foreach (DataRow dr in mdbDt.Rows)
+                {
+                    results.Add(new DB_2101_JYUCYU
+                        (
+                            dr.Field<int>("HNO"),
+                            dr.Field<int>("TSU"),
+                            dr.Field<int>("SKU"),
+                            dr.Field<double?>("JTBLCD")
+                        ));
+                }
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
                 return null;
             }
         }
@@ -196,52 +251,22 @@ namespace PriceTagPrint.MDB
             // 読み込み
             try
             {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki))
-                {
-                    mdbConn.Open();
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki);
 
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
 
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
 
-                    return mdbDt.Rows.Count > 0;
-                }
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                return mdbDt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
-                return false;
-            }
-        }
-
-        public bool QueryWhereTcodeHnoExists(int tcode, string hno)
-        {
-            var sql = "SELECT * " + Environment.NewLine;
-            sql += "FROM " + Environment.NewLine;
-            sql += " JYUCYU " + Environment.NewLine;
-            sql += "WHERE " + Environment.NewLine;
-            sql += " HNO = " + hno + " AND" + Environment.NewLine;
-            sql += " TCODE = " + tcode;
-
-            DataTable mdbDt = new DataTable();
-            var results = new List<DB_2101_JYUCYU>();
-            // 読み込み
-            try
-            {
-                using (OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString_maneki))
-                {
-                    mdbConn.Open();
-
-                    OdbcDataAdapter adapter = new OdbcDataAdapter(sql, mdbConn);
-                    adapter.Fill(mdbDt);
-
-
-                    return mdbDt.Rows.Count > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
+                MessageBox.Show(ex.Message.ToString());
                 return false;
             }
         }

@@ -97,11 +97,15 @@ namespace PriceTagPrint.ViewModel
                     break;
                 case "F4":
                     Clear();
+                    this.HakkouTypeTextBox.Focus();
+                    this.HakkouTypeTextBox.SelectAll();
                     break;
                 case "F5":
                     if (InputCheck())
                     {
                         NefudaDataDisplay();
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
                 case "F10":
@@ -114,6 +118,8 @@ namespace PriceTagPrint.ViewModel
                     if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                     {
                         ExecPrint(true);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
                 case "F12":
@@ -126,6 +132,8 @@ namespace PriceTagPrint.ViewModel
                     if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                     {
                         ExecPrint(false);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
                     }
                     break;
             }
@@ -563,8 +571,7 @@ namespace PriceTagPrint.ViewModel
                 else
                 {
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                this.HakkouTypeTextBox.Focus();
+                }                
             });
 
             //バックグラウンド処理が終わるまで表示して待つ

@@ -127,23 +127,31 @@ namespace PriceTagPrint.View
                     break;
                 case "F4":
                     ((MaruyoshiViewModel)this.DataContext).Clear();
+                    this.HakkouTypeText.Focus();
+                    this.HakkouTypeText.SelectAll();
                     break;
                 case "F5":
                     if (((MaruyoshiViewModel)this.DataContext).InputCheck())
                     {
                         ((MaruyoshiViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F10":
                     if (((MaruyoshiViewModel)this.DataContext).PrintCheck())
                     {
                         ((MaruyoshiViewModel)this.DataContext).ExecPrint(true);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F12":
                     if (((MaruyoshiViewModel)this.DataContext).PrintCheck())
                     {
                         ((MaruyoshiViewModel)this.DataContext).ExecPrint(false);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
             }
@@ -166,6 +174,8 @@ namespace PriceTagPrint.View
                         ((MaruyoshiViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
                         ((MaruyoshiViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
                         ((MaruyoshiViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                 }
             }
