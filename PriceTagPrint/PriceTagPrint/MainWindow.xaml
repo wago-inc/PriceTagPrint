@@ -267,19 +267,13 @@
                             <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="4" />
                             <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="5" />
                             <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="6" />
-                            <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="7" />
-                            <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="8" />
-                            <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="9" />
 
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd90" Command="{Binding SelectInputCommand}" CommandParameter="OT01" Style="{StaticResource TitleButton}" Content="インナー商品シール" />
-                            <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd91" Command="{Binding SelectInputCommand}" CommandParameter="OT02" Style="{StaticResource TitleButton}" Content="レッグプライスシール" />
-                            <Button Grid.Row="0" Grid.Column="5" x:Name="Cmd92" Command="{Binding SelectInputCommand}" CommandParameter="OT03" Style="{StaticResource TitleButton}" Content="和合ＪＡＮタグ" />
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd93" Command="{Binding SelectInputCommand}" CommandParameter="OT04" Style="{StaticResource TitleButton}" Content="品番･ｻｲｽﾞ･素材シール" />
-                            <Button Grid.Row="1" Grid.Column="3" x:Name="Cmd94" Command="{Binding SelectInputCommand}" CommandParameter="OT05" Style="{StaticResource TitleButton}" Content="社員シール" />
-                            <Button Grid.Row="1" Grid.Column="5" x:Name="Cmd95" Command="{Binding SelectInputCommand}" CommandParameter="OT06" Style="{StaticResource TitleButton}" Content="品質シール" />
-                            <Button Grid.Row="2" Grid.Column="1" x:Name="Cmd96" Command="{Binding SelectInputCommand}" CommandParameter="OT07" Style="{StaticResource TitleButton}" Content="商品バーコードシール" />
-                            <Button Grid.Row="2" Grid.Column="3" x:Name="Cmd97" Command="{Binding SelectInputCommand}" CommandParameter="OT08" Style="{StaticResource TitleButton}" Content="品番・カラーシール" />
-                            <Button Grid.Row="2" Grid.Column="5" x:Name="Cmd98" Command="{Binding SelectInputCommand}" CommandParameter="OT09" Style="{StaticResource TitleButton}" Content="祭事商材ラベル" />
+                            <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd91" Command="{Binding SelectInputCommand}" CommandParameter="OT02" Style="{StaticResource TitleButton}" Content="和合ＪＡＮタグ" />
+                            <Button Grid.Row="0" Grid.Column="5" x:Name="Cmd92" Command="{Binding SelectInputCommand}" CommandParameter="OT03" Style="{StaticResource TitleButton}" Content="品番･ｻｲｽﾞ･素材シール" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="Cmd93" Command="{Binding SelectInputCommand}" CommandParameter="OT04" Style="{StaticResource TitleButton}" Content="品質シール" />
+                            <Button Grid.Row="1" Grid.Column="3" x:Name="Cmd94" Command="{Binding SelectInputCommand}" CommandParameter="OT05" Style="{StaticResource TitleButton}" Content="品番・カラーシール" />
+                            <Button Grid.Row="1" Grid.Column="5" x:Name="Cmd95" Command="{Binding SelectInputCommand}" CommandParameter="OT06" Style="{StaticResource TitleButton}" Content="商材ラベル" />
                         </Grid>
                     </StackPanel>
                 </Border>
