@@ -55,19 +55,19 @@
                         BorderThickness="1"
                         Margin="1">
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <RadioButton Name="AutoBtn" GroupName="buttons" Content=" 自動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,15,0,5" 
+                        <RadioButton Name="AutoBtn" GroupName="buttons" Content=" 自動発行" FontSize="20" Style="{StaticResource RadioButtonStyle}" FontFamily="Yu Gothic Medium" Margin="20,15,0,5" 
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Auto, 
                                         Converter={StaticResource EnumConverter}}"/>
-                        <RadioButton Name="RyohanBtn" GroupName="buttons" Content=" 量販店" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
+                        <RadioButton Name="RyohanBtn" GroupName="buttons" Content=" 量販店" FontSize="20" Style="{StaticResource RadioButtonStyle}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Ryohan, 
                                         Converter={StaticResource EnumConverter}}"/>
-                        <RadioButton Name="IppanBtn" GroupName="buttons" Content=" 一般店" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
+                        <RadioButton Name="IppanBtn" GroupName="buttons" Content=" 一般店" FontSize="20" Style="{StaticResource RadioButtonStyle}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Ippan, 
                                         Converter={StaticResource EnumConverter}}"/>
-                        <RadioButton Name="OtherBtn" GroupName="buttons" Content=" その他" FontSize="20" Style="{StaticResource RadioButtonStyle}" Margin="20,10,0,5"
+                        <RadioButton Name="OtherBtn" GroupName="buttons" Content=" その他" FontSize="20" Style="{StaticResource RadioButtonStyle}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
                                      IsChecked="{Binding SubMenuKind.Value, 
                                         ConverterParameter=Other, 
                                         Converter={StaticResource EnumConverter}}"/>

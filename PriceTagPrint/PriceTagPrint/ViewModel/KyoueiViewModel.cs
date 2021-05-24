@@ -303,9 +303,9 @@ namespace PriceTagPrint.ViewModel
                                (eos, tok) => new
                                {
                                    HINCD = eos.HINCD,
-                                   SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }).TrimEnd() : "",
+                                   SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }) : "",
                                }).OrderBy(x => x.HINCD)
-                               .Where(x => x.SIZCD == "2")
+                               .Where(x => x.SIZCD.TrimEnd() == "2")
                                .Select(x => x.HINCD.TrimEnd())
                                .ToList();
 

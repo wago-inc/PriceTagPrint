@@ -72,7 +72,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="発行" Click="Act_Click" Tag="{Binding}" IsEnabled="{Binding Actionable}" 
-                                        Template="{StaticResource ButtonTemplate}" Background="YellowGreen" Foreground="White"
+                                        Template="{StaticResource ButtonTemplate}" Background="MediumPurple" Foreground="White"
                                         IsTabStop="False" Focusable="False" FontSize="16" FontWeight="ExtraBold"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -90,13 +90,13 @@
                     <!-- 右クリックによるコンテキストメニュー表示時、選択中セルの背景色/テキスト色が解除されないようにするためのコード-->
                     <DataGrid.Resources>
                         <!--選択中セルの背景色（フォーカス有りの時）-->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="DarkOrange"  />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Yellow"  />
                         <!--選択中セルの文字色（フォーカス有りの時）-->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"  />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"  />
                         <!--選択中セルの背景色（フォーカス無しの時）-->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="DarkOrange" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Yellow" />
                         <!--選択中セルの文字色（フォーカス無しの時）-->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="White" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="Black" />
                     </DataGrid.Resources>
                 </DataGrid>
             </Border>

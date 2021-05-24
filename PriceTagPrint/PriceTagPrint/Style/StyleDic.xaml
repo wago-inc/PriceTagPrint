@@ -8,7 +8,7 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Background" Value="LightSeaGreen"/>
+        <Setter Property="Background" Value="Indigo"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
     
@@ -16,6 +16,7 @@
     <Style x:Key="OtherText" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
@@ -25,6 +26,7 @@
         <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="Foreground" Value="Red"/>
         <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
@@ -55,7 +57,7 @@
 
     <!--通常ボタン-->
     <Style x:Key="NormalButton" TargetType="Button">
-        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Background" Value="Indigo" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="FontSize" Value="14"/>
@@ -66,9 +68,9 @@
     <Style x:Key="TitleButton" TargetType="Button">
         <!--<Setter Property="BorderThickness" Value="0,0,1,1"/>-->
         <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Background" Value="Indigo" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
+        <Setter Property="FontFamily" Value="Yu Gothic"/>
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Margin" Value="0,10,5,10"/>
@@ -78,7 +80,7 @@
     <Style x:Key="FkeyButton" TargetType="Button">
         <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Background" Value="Indigo" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
         <Setter Property="FontSize" Value="22"/>
@@ -107,8 +109,8 @@
     <!--データグリッド-->
     <Style x:Key="BasicDataGrid" TargetType="DataGrid">
         <Setter Property="AutoGenerateColumns" Value="False"/>
-        <Setter Property="RowBackground" Value="LightYellow"/>
-        <Setter Property="AlternatingRowBackground" Value="LightGreen"/>
+        <Setter Property="RowBackground" Value="GhostWhite"/>
+        <Setter Property="AlternatingRowBackground" Value="Lavender"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="SelectionUnit" Value="CellOrRowHeader"/>
@@ -124,7 +126,7 @@
     <Style x:Key="BasicDataGridColumnHeader" TargetType="DataGridColumnHeader">
         <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Background" Value="Indigo" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -143,8 +145,8 @@
     <!--ファイル名データグリッド-->
     <Style x:Key="FileDataGrid" TargetType="DataGrid">
         <Setter Property="AutoGenerateColumns" Value="False"/>
-        <Setter Property="RowBackground" Value="LightYellow"/>
-        <Setter Property="AlternatingRowBackground" Value="LightGreen"/>
+        <Setter Property="RowBackground" Value="GhostWhite"/>
+        <Setter Property="AlternatingRowBackground" Value="Lavender"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="IsReadOnly" Value="True"/>
@@ -160,7 +162,7 @@
     <Style x:Key="FileDataGridColumnHeader" TargetType="DataGridColumnHeader">
         <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Background" Value="LightSeaGreen" />
+        <Setter Property="Background" Value="Indigo" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -215,7 +217,7 @@
         <!--角の丸みを取りたいためGridを使用-->
         <Grid x:Name="MyButton" Background="{TemplateBinding Background}">
             <!--ボタンの枠線-->
-            <Border x:Name="MyBorder" BorderBrush="LightGoldenrodYellow" BorderThickness="1"/>
+            <Border x:Name="MyBorder" BorderBrush="Indigo" BorderThickness="1"/>
             <!--ボタン内のコンテンツ（テキストなど）-->
             <ContentPresenter x:Name="Presenter"
                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -233,11 +235,11 @@
                             <ColorAnimation Storyboard.TargetName="MyButton"
                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                        Duration="00:00:00.1"
-                                       To="GreenYellow" />
+                                       To="DarkOrchid" />
                             <ColorAnimation Storyboard.TargetName="Presenter"
                                        Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                        Duration="00:00:00.1"
-                                       To="LightGoldenrodYellow" />
+                                       To="LavenderBlush" />
                         </Storyboard>
                     </VisualState>
                     <!--ボタン押下時-->
@@ -246,7 +248,7 @@
                             <ColorAnimation Storyboard.TargetName="MyButton"
                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                        Duration="00:00:00.1"
-                                       To="DarkGreen" />
+                                       To="Indigo" />
                             <ColorAnimation Storyboard.TargetName="Presenter"
                                        Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                        Duration="00:00:00.1"
@@ -262,7 +264,7 @@
                         <Storyboard>
                             <ColorAnimation Storyboard.TargetName="MyBorder"
                                        Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
-                                       To="LightSeaGreen"/>
+                                       To="Indigo"/>
                             <ColorAnimation Storyboard.TargetName="Presenter"
                                        Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                        To="DarkGray"/>
