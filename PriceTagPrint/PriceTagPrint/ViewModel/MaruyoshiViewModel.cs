@@ -851,7 +851,7 @@ namespace PriceTagPrint.ViewModel
             {
                 x.サイズ = "";
                 x.カラー = "";
-                if (!string.IsNullOrEmpty(x.棚番))
+                if (!string.IsNullOrEmpty(x.棚番.TrimEnd()))
                 {
                     x.品番 = x.棚番;
                 }

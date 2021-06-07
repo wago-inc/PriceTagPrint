@@ -89,4 +89,3 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.g.resources
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.dll
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.pdb
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.csprojAssemblyReference.cache
