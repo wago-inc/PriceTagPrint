@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KTJPCy65vHfVpftrD0xZE4nFOCjqRzWXZ+3DVQd8DuIRZBpFu1J13gw46MInuxPwY6uuvbxwuvSxfKW4y/yqUg==",
+  "dgSpecHash": "T7iPfZg/8Wbke9EZBY3uAz9MV2BZIzs0nIzaOuFB7ATuulQiCAv6FQsz/50NFB6oLn9Z5vbCNWciRQSgwpfQoA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\wago99.WAGO\\Source\\Repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
+  "projectFilePath": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\livetcask.core\\3.2.3.2\\livetcask.core.3.2.3.2.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",

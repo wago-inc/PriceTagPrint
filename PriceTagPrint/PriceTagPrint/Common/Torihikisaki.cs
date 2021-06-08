@@ -291,7 +291,7 @@ namespace PriceTagPrint.Common
                 case TidNum.TAIFUKUTOKYO:
                     return new List<DirItem>()
                     {
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\タイフク東京", false)
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\7846_タイフク東京\2020年総額表示_V5_ST308R", false)
                     };
                 case TidNum.TENMAYA:
                     return new List<DirItem>()

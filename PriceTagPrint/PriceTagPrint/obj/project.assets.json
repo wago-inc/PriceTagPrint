@@ -1515,11 +1515,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\wago99.WAGO\\Source\\Repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
+      "projectUniqueName": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
       "projectName": "PriceTagPrint",
-      "projectPath": "C:\\Users\\wago99.WAGO\\Source\\Repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
+      "projectPath": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
       "packagesPath": "C:\\Users\\wago99.WAGO\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\wago99.WAGO\\Source\\Repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\obj\\",
+      "outputPath": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wago99.WAGO\\AppData\\Roaming\\NuGet\\NuGet.Config",
