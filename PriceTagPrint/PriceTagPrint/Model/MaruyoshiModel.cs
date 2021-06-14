@@ -24,7 +24,7 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string VNOHINDT { get; set; }
         /// <summary>
-        /// 分類コード
+        /// 分類コード（EOSJUTRA.VBUNCD）
         /// </summary>
         public string VBUNCD { get; set; }
         /// <summary>
@@ -36,11 +36,11 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string VROWNO { get; set; }
         /// <summary>
-        /// クラスコード
+        /// クラスコード（EOSJUTRA.VHINCDの先頭４桁）
         /// </summary>
         public string NEFCMA { get; set; }
         /// <summary>
-        /// 当社品番
+        /// 当社品番（EOSJUTRA.VCYOBI7）
         /// </summary>
         public string NEFCMB { get; set; }
         /// <summary>
@@ -48,63 +48,63 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string NEFCMB2 { get; set; }
         /// <summary>
-        /// 品名
+        /// 品名（EOSJUTRA.VHINNMA）
         /// </summary>
         public string NEFCMC { get; set; }
         /// <summary>
-        /// カラーコード + カラー名
+        /// カラーコード + カラー名（EOSJUTRA.VCOLNM）
         /// </summary>
         public string NEFCMD { get; set; }
         /// <summary>
-        /// カラーコード
+        /// カラーコード（EOSJUTRA.VCOLNMの下２桁）
         /// </summary>
         public string NEFCMD2 { get; set; }
         /// <summary>
-        /// 
+        /// ｻｲｽﾞｺｰﾄﾞ（EOSJUTRA.VSIZNMの下２桁）
         /// </summary>
         public string NEFCME { get; set; }
         /// <summary>
-        /// サイズ名
+        /// サイズ名（EOSJUTRA.VSIZNMの先頭５桁）
         /// </summary>
         public string NEFCMF { get; set; }
         /// <summary>
-        /// 単品コード
+        /// 単品コード（EOSJUTRA.VHINCDの６桁目から４桁取得）
         /// </summary>
         public string NEFCMG { get; set; }
         /// <summary>
-        /// 組
+        /// 組（EOSJUTRA.VHINCDの下２桁）
         /// </summary>
         public string NEFCMH { get; set; }
         /// <summary>
-        /// FLG（8 or 2）
+        /// FLG（8 or 2）（ＤＢ登録なし 値札発行には特に必要ない項目）
         /// </summary>
         public string NEFCMI { get; set; }
         /// <summary>
-        /// 追加（T or Y or X）
+        /// 追加（T or Y or X）（ＤＢ登録なし 値札発行には特に必要ない項目）
         /// </summary>
         public string NEFCMJ { get; set; }
         /// <summary>
-        /// タグ
+        /// タグ（ＤＢ登録なし ※値札発行に必要な項目）
         /// </summary>
         public string NEFCMK { get; set; }
         /// <summary>
-        /// 
+        /// 消し売価（ＤＢ登録なし 値札発行には特に必要ない項目）
         /// </summary>
         public decimal NEFTKA { get; set; }
         /// <summary>
-        /// 売価
+        /// 売価（EOSJUTRA.VURITK）
         /// </summary>
         public decimal NEFTKB { get; set; }
         /// <summary>
-        /// 
+        /// 売価と同じものがセットされている※CSVにはこちらを渡す（EOSJUTRA.VURITK）
         /// </summary>
         public decimal NEFTKB2 { get; set; }
         /// <summary>
-        /// 
+        /// 発行枚数（EOSJUTRA.VSURYO）
         /// </summary>
         public decimal NEFSUA { get; set; }
         /// <summary>
-        /// 
+        /// シーズンコード（EOSJUTRA.VHINNMAの下２桁）
         /// </summary>
         public string NEFSEZ { get; set; }
         /// <summary>
