@@ -41,6 +41,18 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string VHINCD { get; set; }
         /// <summary>
+        /// カラーコード
+        /// </summary>
+        public string VCOLCD { get; set; }
+        /// <summary>
+        /// サイズコード
+        /// </summary>
+        public string VSIZCD { get; set; }
+        /// <summary>
+        /// サイズ名
+        /// </summary>
+        public string VSIZNM { get; set; }
+        /// <summary>
         /// 商品名
         /// </summary>
         public string VHINNMA { get; set; }
@@ -48,6 +60,10 @@ namespace PriceTagPrint.WAG_USR1
         /// 発行枚数
         /// </summary>
         public decimal VSURYO { get; set; }
+        /// <summary>
+        /// 本体原価
+        /// </summary>
+        public decimal VGNKTK { get; set; }
         /// <summary>
         /// 本体売価
         /// </summary>
@@ -74,14 +90,18 @@ namespace PriceTagPrint.WAG_USR1
         /// <param name="qoltorid"></param>
         /// <param name="vnohindt"></param>
         /// <param name="vhincd"></param>
+        /// <param name="vcolcd"></param>
+        /// <param name="vsizcd"></param>
+        /// <param name="vsiznm"></param>
         /// <param name="vhinnma"></param>
         /// <param name="vsuryo"></param>
+        /// <param name="vgnktk"></param>
         /// <param name="vuritk"></param>
         /// <param name="hincd"></param>
         /// <param name="vcyobi7"></param>
         public EOSJUTRA(string vryohncd, string vrcvdt, string vbuncd, string qoltorid, string vnohindt,
-                        string vhincd, string vhinnma, decimal vsuryo, decimal vuritk, string hincd, string vcyobi7,
-                        string vhead1, string vbody1)
+                        string vhincd, string vcolcd, string vsizcd, string vsiznm, string vhinnma, decimal vsuryo,
+                        decimal vgnktk, decimal vuritk, string hincd, string vcyobi7, string vhead1, string vbody1)
         {
             this.VRYOHNCD = vryohncd;
             this.VRCVDT = vrcvdt;
@@ -89,9 +109,13 @@ namespace PriceTagPrint.WAG_USR1
             this.QOLTORID = qoltorid;
             this.VNOHINDT = vnohindt;
             this.VHINCD = vhincd;
+            this.VCOLCD = vcolcd;
+            this.VSIZCD = vsizcd;
+            this.VSIZNM = vsiznm;
             this.VHINNMA = vhinnma;
             this.VSURYO = vsuryo;
             this.VURITK = vuritk;
+            this.VGNKTK = vgnktk;
             this.HINCD = hincd;
             this.VCYOBI7 = vcyobi7;
             this.VHEAD1 = vhead1;
@@ -103,7 +127,24 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<EOSJUTRA> QueryWhereTcodeAndDates(int tcode, DateTime jusin, DateTime nouhin, string bunrui = "", string sttHin = "", string endHin = "")
         {
-            var sql = "SELECT * " + Environment.NewLine;
+            var sql = "SELECT " + Environment.NewLine;
+            sql += "	VRYOHNCD, " + Environment.NewLine;
+            sql += "	VRCVDT, " + Environment.NewLine;
+            sql += "	VBUNCD, " + Environment.NewLine;
+            sql += "	QOLTORID, " + Environment.NewLine;
+            sql += "	VNOHINDT, " + Environment.NewLine;
+            sql += "	VHINCD, " + Environment.NewLine;
+            sql += "	VCOLCD, " + Environment.NewLine;
+            sql += "	VSIZCD, " + Environment.NewLine;
+            sql += "	VSIZNM, " + Environment.NewLine;
+            sql += "	VHINNMA, " + Environment.NewLine;
+            sql += "	VSURYO, " + Environment.NewLine;
+            sql += "	VGNKTK, " + Environment.NewLine;
+            sql += "	VURITK, " + Environment.NewLine;
+            sql += "	HINCD, " + Environment.NewLine;
+            sql += "	VCYOBI7, " + Environment.NewLine;
+            sql += "	VHEAD1, " + Environment.NewLine;
+            sql += "	VBODY1 " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.EOSJUTRA " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
@@ -145,10 +186,11 @@ namespace PriceTagPrint.WAG_USR1
                             results.Add(new EOSJUTRA
                                 (
                                     row.Field<string>("VRYOHNCD"), row.Field<string>("VRCVDT"), row.Field<string>("VBUNCD"),
-                                    row.Field<string>("QOLTORID"), row.Field<string>("VNOHINDT"), row.Field<string>("VHINCD"),
-                                    row.Field<string>("VHINNMA"), row.Field<decimal>("VSURYO"), row.Field<decimal>("VURITK"),
-                                    row.Field<string>("HINCD"), row.Field<string>("VCYOBI7"), row.Field<string>("VHEAD1"),
-                                    row.Field<string>("VBODY1")
+                                    row.Field<string>("QOLTORID"), row.Field<string>("VNOHINDT"), row.Field<string>("VHINCD"), 
+                                    row.Field<string>("VCOLCD"), row.Field<string>("VSIZCD"), row.Field<string>("VSIZNM"),
+                                    row.Field<string>("VHINNMA"), row.Field<decimal>("VSURYO"), row.Field<decimal>("VGNKTK"),
+                                    row.Field<decimal>("VURITK"), row.Field<string>("HINCD"), row.Field<string>("VCYOBI7"),
+                                    row.Field<string>("VHEAD1"), row.Field<string>("VBODY1")
                                 ));
                         }
                     }

@@ -54,6 +54,30 @@ namespace PriceTagPrint.View
         #endregion
 
         /// <summary>
+        /// 発行区分・値札区分テキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^1-2]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
+        private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            // 貼り付けの場合
+            if (e.Command == ApplicationCommands.Paste)
+            {
+                // 処理済みにします。
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
         /// 発行区分・値札区分テキストの空白LostFocus処理
         /// </summary>
         /// <param name="sender"></param>
@@ -63,38 +87,34 @@ namespace PriceTagPrint.View
             var txt = sender as TextBox;
             if (string.IsNullOrEmpty(txt.Text))
             {
-                if (txt.Name == "NefudaBangouText")
+                if (txt.Name == "HakkouTypeText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット
-                    ((KyoueiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
-                    ((KyoueiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
+                    ((MaruyoshiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
+                    ((MaruyoshiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
                 }
-            }
-        }
-
-        /// <summary>
-        /// 値札番号エンターで検索処理実行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                int nefudaBangou;
-                ((KyoueiViewModel)this.DataContext).NefudaBangouText.Value = int.TryParse(this.NefudaBangouText.Text, out nefudaBangou) ? nefudaBangou : 0;
-                ((KyoueiViewModel)this.DataContext).CsvReadDisplay();
+                else if (txt.Name == "BunruiCodeText")
+                {
+                    // 変更通知が飛ばないため一旦-1をセット
+                    ((MaruyoshiViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = -1;
+                    ((MaruyoshiViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = 0;
+                }
+                else if (txt.Name == "NefudaBangouText")
+                {
+                    // 変更通知が飛ばないため一旦-1をセット
+                    ((MaruyoshiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
+                    ((MaruyoshiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
+                }
             }
         }
 
         public KyoueiView()
         {
             InitializeComponent();
-            NefudaBangouText.Focus();
-            ((KyoueiViewModel)this.DataContext).NefudaBangouTextBox = this.NefudaBangouText;
+            this.HakkouTypeText.Focus();
+            ((KyoueiViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
             ((KyoueiViewModel)this.DataContext).JusinDatePicker = this.JusinbiDatePicker;
             ((KyoueiViewModel)this.DataContext).NouhinDatePicker = this.NouhinbiDatePicker;
-            this.JusinbiDatePicker.Focus();
         }
 
         /// <summary>
@@ -115,25 +135,57 @@ namespace PriceTagPrint.View
                     break;
                 case "F4":
                     ((KyoueiViewModel)this.DataContext).Clear();
+                    this.HakkouTypeText.Focus();
+                    this.HakkouTypeText.SelectAll();
                     break;
                 case "F5":
                     if (((KyoueiViewModel)this.DataContext).InputCheck())
                     {
-                        ((KyoueiViewModel)this.DataContext).CsvReadDisplay();
+                        ((KyoueiViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F10":
                     if (((KyoueiViewModel)this.DataContext).PrintCheck())
                     {
                         ((KyoueiViewModel)this.DataContext).ExecPrint(true);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F12":
                     if (((KyoueiViewModel)this.DataContext).PrintCheck())
                     {
                         ((KyoueiViewModel)this.DataContext).ExecPrint(false);
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
                     }
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 値札番号エンターで検索処理実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
+                {
+                    if (((KyoueiViewModel)this.DataContext).InputCheck())
+                    {
+                        // 何故か変更通知が飛ばないので検索処理直前にセット
+                        ((KyoueiViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
+                        ((KyoueiViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
+                        ((KyoueiViewModel)this.DataContext).NefudaDataDisplay();
+                        this.HakkouTypeText.Focus();
+                        this.HakkouTypeText.SelectAll();
+                    }
+                }
             }
         }
 
@@ -181,36 +233,6 @@ namespace PriceTagPrint.View
 
                 // DatePicker用のDateTimeをセット
                 picker.SelectedDate = convDt;
-            }
-        }
-
-        private void Act_Click(object sender, RoutedEventArgs e)
-        {
-            var button = (Button)sender;
-            if (button.Name == "btnFileSelect")
-            {
-                using (var cofd = new CommonOpenFileDialog()
-                {
-                    Title = "フォルダを選択してください",
-                    InitialDirectory = System.IO.Path.GetDirectoryName(CommonStrings.KYOEI_SCV_PATH),
-                    // ファイル選択モードにする
-                    IsFolderPicker = false,
-                })
-                {
-                    if (cofd.ShowDialog() != CommonFileDialogResult.Ok)
-                    {
-                        return;
-                    }
-                    ((KyoueiViewModel)this.DataContext).FilePathText.Value = cofd.FileName;
-                    this.JusinbiDatePicker.Focus();
-                }
-            }
-            else if (button.Name == "btnFileRead")
-            {
-                if (((KyoueiViewModel)this.DataContext).InputCheck())
-                {
-                    ((KyoueiViewModel)this.DataContext).CsvReadDisplay();
-                }
             }
         }
     }

@@ -194,7 +194,7 @@ namespace PriceTagPrint.ViewModel
         }
 
         /// <summary>
-        /// 発行区分Items生成
+        /// 分類コードItems生成
         /// </summary>
         /// <returns></returns>
         public List<CommonIdName> CreateBunruiCodeItems()
