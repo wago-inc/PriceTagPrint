@@ -687,7 +687,8 @@ namespace PriceTagPrint.ViewModel
                                            {
                                                HNO = eos.HNO,
                                                TOKCD = eos.TOKCD,
-                                               NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ? "1" : tanka.NEFUDA_KBN,
+                                               NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ||
+                                                            (!string.IsNullOrEmpty(tanka.NEFUDA_KBN) && tanka.NEFUDA_KBN != "2") ? "1" : tanka.NEFUDA_KBN,
                                                CENTCD = eos.CENTCD,
                                                HINBANCD = eos.HINBANCD,
                                                CYUBUNCD = eos.CYUBUNCD,
@@ -777,7 +778,8 @@ namespace PriceTagPrint.ViewModel
                                            {
                                                HNO = eos.HNO,
                                                TOKCD = eos.TOKCD,
-                                               NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ? "1" : tanka.NEFUDA_KBN,
+                                               NEFUDA_KBN = string.IsNullOrEmpty(tanka.NEFUDA_KBN) ||
+                                                            (!string.IsNullOrEmpty(tanka.NEFUDA_KBN) && tanka.NEFUDA_KBN != "2") ? "1" : tanka.NEFUDA_KBN,
                                                CENTCD = eos.CENTCD,
                                                HINBANCD = eos.HINBANCD,
                                                CYUBUNCD = eos.CYUBUNCD,
