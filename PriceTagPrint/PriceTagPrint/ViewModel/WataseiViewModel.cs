@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -592,7 +594,22 @@ namespace PriceTagPrint.ViewModel
                     {
                         WataseiItems.Value = new ObservableCollection<WataseiItem>();
                         var wataseiModelList = new WataseiItemList();
-                        WataseiItems.Value = new ObservableCollection<WataseiItem>(wataseiModelList.ConvertWataseiDataToModel(WataseiDatas));
+                        var addItems = new ObservableCollection<WataseiItem>(wataseiModelList.ConvertWataseiDataToModel(WataseiDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<WataseiItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = WataseiItems.Value.Sum(x => x.発行枚数).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        WataseiItems.Value = new ObservableCollection<WataseiItem>(setItems);
                         TotalMaisu.Value = WataseiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
@@ -698,8 +715,29 @@ namespace PriceTagPrint.ViewModel
     /// データグリッド表示プロパティ
     /// CSVの出力にも流用
     /// </summary>
-    public class WataseiItem
+    public class WataseiItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private int _発行枚数;
+        public int 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public int 発注No { get; set; }
         public string 取引先CD { get; set; }
         public string 値札No { get; set; }
@@ -714,7 +752,6 @@ namespace PriceTagPrint.ViewModel
         public string 品番 { get; set; }  // CSV
         public string サイズ { get; set; }    // CSV
         public int 本体価格 { get; set; }  // CSV
-        public int 発行枚数 { get; set; }   // CSV
 
         public WataseiItem(int 発注No, string 取引先CD, string 値札No, string 商品コード, string JANコード, int 市価,
                            int 売価, string サイズ名, string カラー名, string 商品名, string 部門, int 分類, string 品番,

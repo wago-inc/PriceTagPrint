@@ -7,8 +7,10 @@ using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -560,7 +562,22 @@ namespace PriceTagPrint.ViewModel
                     {
                         YamanakaItems.Value = new ObservableCollection<YamanakaItem>();
                         var yamanakaModelList = new YamanakaItemList();
-                        YamanakaItems.Value = new ObservableCollection<YamanakaItem>(yamanakaModelList.ConvertYamanakaDataToModel(YamanakaDatas));
+                        var addItems = new ObservableCollection<YamanakaItem>(yamanakaModelList.ConvertYamanakaDataToModel(YamanakaDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<YamanakaItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                      // 発行枚数に変更があったら合計発行枚数も変更する
+                                      TotalMaisu.Value = YamanakaItems.Value.Sum(x => x.発行枚数).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        YamanakaItems.Value = new ObservableCollection<YamanakaItem>(setItems);
                         TotalMaisu.Value = YamanakaItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
@@ -712,8 +729,29 @@ namespace PriceTagPrint.ViewModel
         #endregion
     }
 
-    public class YamanakaItem
+    public class YamanakaItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private decimal _発行枚数;
+        public decimal 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public string 発注No { get; set; }
         public string 得意先CD { get; set; }
         public string 値札No { get; set; }
@@ -731,7 +769,6 @@ namespace PriceTagPrint.ViewModel
         public string 当社品番 { get; set; }
         public string 商品コード { get; set; }
         public string 商品名 { get; set; }
-        public decimal 発行枚数 { get; set; }
 
         public YamanakaItem(string 発注No, string 得意先CD, string 値札No, string 受信日, string 納品日,
                             string 取引先コード, string デプトクラスコード, string フェイス番号, string 品番, 

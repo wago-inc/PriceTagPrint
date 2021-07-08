@@ -97,6 +97,14 @@
           }
         }
       },
+      "Prism.Core/8.1.97": {
+        "runtime": {
+          "lib/netstandard2.0/Prism.dll": {
+            "assemblyVersion": "8.1.97.5141",
+            "fileVersion": "8.1.97.5141"
+          }
+        }
+      },
       "ReactiveProperty/7.8.0": {
         "dependencies": {
           "ReactiveProperty.Core": "7.8.0",
@@ -518,6 +526,13 @@
       "sha512": "sha512-SJM0qRVz6a7xMJtPPHAObq7MEzo42T+6+MImuuUK7ZCTXc2BIXbc9cenN7006FcOuX8x4OeTpPbFfQTVlhk9bw==",
       "path": "oracle.manageddataaccess.core/3.21.1",
       "hashPath": "oracle.manageddataaccess.core.3.21.1.nupkg.sha512"
+    },
+    "Prism.Core/8.1.97": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EP5zrvWddw3eSq25Y7hHnDYdmLZEC2Z/gMrvmHzUuLbitmA1UaS7wQUlSwNr9Km8lzJNCvytFnaGBEFukHgoHg==",
+      "path": "prism.core/8.1.97",
+      "hashPath": "prism.core.8.1.97.nupkg.sha512"
     },
     "ReactiveProperty/7.8.0": {
       "type": "package",

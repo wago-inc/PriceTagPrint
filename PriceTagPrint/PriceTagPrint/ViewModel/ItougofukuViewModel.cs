@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -709,7 +711,22 @@ namespace PriceTagPrint.ViewModel
                     {
                         ItougofukuItems.Value = new ObservableCollection<ItougofukuItem>();
                         var ItougofukuModelList = new ItougofukuItemList();
-                        ItougofukuItems.Value = new ObservableCollection<ItougofukuItem>(ItougofukuModelList.ConvertItougofukuDataToModel(ItougofukuDatas));
+                        var addItems = new ObservableCollection<ItougofukuItem>(ItougofukuModelList.ConvertItougofukuDataToModel(ItougofukuDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<ItougofukuItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = ItougofukuItems.Value.Sum(x => x.数量計).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        ItougofukuItems.Value = new ObservableCollection<ItougofukuItem>(setItems);
                         TotalMaisu.Value = ItougofukuItems.Value.Sum(x => x.数量計).ToString();
                     }
                     else
@@ -801,8 +818,29 @@ namespace PriceTagPrint.ViewModel
         #endregion
     }
 
-    public class ItougofukuItem
+    public class ItougofukuItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private int _数量計;
+        public int 数量計
+        {
+            get { return _数量計; }
+            set
+            {
+                if (value != this._数量計)
+                {
+                    this._数量計 = value;
+                    this.OnPropertyChanged("数量計");
+                }
+            }
+        }
         public string 帳票種別 { get; set; }
         public string 仕入先 { get; set; }
         public string 仕入先名 { get; set; }
@@ -823,7 +861,6 @@ namespace PriceTagPrint.ViewModel
         public string コメント { get; set; }
         public string 商品区分 { get; set; }
         public string シーズン { get; set; }
-        public int 数量計 { get; set; }
 
         public ItougofukuItem(string 帳票種別, string 仕入先, string 仕入先名, string 商品コード, string 発注日, string 納入日, string 販売開始, string メーカーコード,
                               string クラス, string クラス名, string ユニット, string 商品名, string サイズ, string カラー, string 原単価, string 売単価, string 税込売価,

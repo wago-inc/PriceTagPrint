@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "T7iPfZg/8Wbke9EZBY3uAz9MV2BZIzs0nIzaOuFB7ATuulQiCAv6FQsz/50NFB6oLn9Z5vbCNWciRQSgwpfQoA==",
+  "dgSpecHash": "2dL41pApvwNYQTGaRw+Uxbn/iPJG4yOU4MXEKWF89/GPl8LegZZP16qrPQtuxdibEYxC7YDe9PHHNJMwjkkaiA==",
   "success": true,
   "projectFilePath": "C:\\Users\\wago99.WAGO\\source\\repos\\wago-inc-system\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint\\PriceTagPrint.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.windowsapicodepack-shell\\1.1.0\\microsoft.windowsapicodepack-shell.1.1.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.31\\microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\oracle.manageddataaccess.core\\3.21.1\\oracle.manageddataaccess.core.3.21.1.nupkg.sha512",
+    "C:\\Users\\wago99.WAGO\\.nuget\\packages\\prism.core\\8.1.97\\prism.core.8.1.97.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\reactiveproperty\\7.8.0\\reactiveproperty.7.8.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\reactiveproperty.core\\7.8.0\\reactiveproperty.core.7.8.0.nupkg.sha512",
     "C:\\Users\\wago99.WAGO\\.nuget\\packages\\refractored.mvvmhelpers\\1.6.2\\refractored.mvvmhelpers.1.6.2.nupkg.sha512",

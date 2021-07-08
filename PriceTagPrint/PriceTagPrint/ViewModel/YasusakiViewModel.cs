@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -587,7 +589,22 @@ namespace PriceTagPrint.ViewModel
                     {
                         YasusakiItems.Value = new ObservableCollection<YasusakiItem>();
                         var yasusakiModelList = new YasusakiItemList();
-                        YasusakiItems.Value = new ObservableCollection<YasusakiItem>(yasusakiModelList.ConvertYasusakiDataToModel(YasusakiDatas));
+                        var addItems = new ObservableCollection<YasusakiItem>(yasusakiModelList.ConvertYasusakiDataToModel(YasusakiDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<YasusakiItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = YasusakiItems.Value.Sum(x => x.発行枚数).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        YasusakiItems.Value = new ObservableCollection<YasusakiItem>(setItems);
                         TotalMaisu.Value = YasusakiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
@@ -688,8 +705,30 @@ namespace PriceTagPrint.ViewModel
     /// データグリッド表示プロパティ
     /// CSVの出力にも流用
     /// </summary>
-    public class YasusakiItem
+    public class YasusakiItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private int _発行枚数;
+        public int 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public int 発注No { get; set; }
         public string 取引先CD { get; set; }
         public string 値札No { get; set; }
@@ -704,7 +743,6 @@ namespace PriceTagPrint.ViewModel
         public string JAN { get; set; }
         public int 本体価格 { get; set; }
         public string 商品コード { get; set; }
-        public int 発行枚数 { get; set; }
         public string 商品名 { get; set; }
         public int 単価 { get; set; }
         public string 和合商品コード { get; set; }

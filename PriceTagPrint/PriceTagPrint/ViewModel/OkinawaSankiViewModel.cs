@@ -19,6 +19,8 @@ using PriceTagPrint.WAGO2;
 using PriceTagPrint.WAGO;
 using Reactive.Bindings;
 using PriceTagPrint.View;
+using System.ComponentModel;
+using System.Reactive.Linq;
 
 namespace PriceTagPrint.ViewModel
 {
@@ -741,7 +743,22 @@ namespace PriceTagPrint.ViewModel
                             {
                                 OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>();
                                 var OkinawaSankiModelList = new OkinawaSankiItemList();
-                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
+                                var addItems = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas)).ToList();
+                                // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                                var setItems = new List<OkinawaSankiItem>();
+                                addItems.ForEach(item =>
+                                {
+                                    Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                          h => item.PropertyChanged += h,
+                                          h => item.PropertyChanged -= h)
+                                          .Subscribe(e =>
+                                          {
+                                              // 発行枚数に変更があったら合計発行枚数も変更する
+                                              TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                                          });
+                                    setItems.Add(item);
+                                });
+                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(setItems);
                                 TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
                             }
                             else
@@ -832,7 +849,22 @@ namespace PriceTagPrint.ViewModel
                             {
                                 OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>();
                                 var OkinawaSankiModelList = new OkinawaSankiItemList();
-                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
+                                var addItems = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas)).ToList();
+                                // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                                var setItems = new List<OkinawaSankiItem>();
+                                addItems.ForEach(item =>
+                                {
+                                    Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                          h => item.PropertyChanged += h,
+                                          h => item.PropertyChanged -= h)
+                                          .Subscribe(e =>
+                                          {
+                                              // 発行枚数に変更があったら合計発行枚数も変更する
+                                              TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                                          });
+                                    setItems.Add(item);
+                                });
+                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(setItems);
                                 TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
                             }
                             else
@@ -908,7 +940,22 @@ namespace PriceTagPrint.ViewModel
                             {
                                 OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>();
                                 var OkinawaSankiModelList = new OkinawaSankiItemList();
-                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas));
+                                var addItems = new ObservableCollection<OkinawaSankiItem>(OkinawaSankiModelList.ConvertOkinawaSankiDataToModel(OkinawaSankiDatas)).ToList();
+                                // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                                var setItems = new List<OkinawaSankiItem>();
+                                addItems.ForEach(item =>
+                                {
+                                    Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                          h => item.PropertyChanged += h,
+                                          h => item.PropertyChanged -= h)
+                                          .Subscribe(e =>
+                                          {
+                                              // 発行枚数に変更があったら合計発行枚数も変更する
+                                              TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
+                                          });
+                                    setItems.Add(item);
+                                });
+                                OkinawaSankiItems.Value = new ObservableCollection<OkinawaSankiItem>(setItems);
                                 TotalMaisu.Value = OkinawaSankiItems.Value.Sum(x => x.発行枚数).ToString();
                             }
                             else
@@ -1007,8 +1054,29 @@ namespace PriceTagPrint.ViewModel
     /// データグリッド表示プロパティ
     /// CSVの出力にも流用
     /// </summary>
-    public class OkinawaSankiItem
+    public class OkinawaSankiItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private int _発行枚数;
+        public int 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public int 発注No { get; set; }
         public string 取引先CD { get; set; }
         public string 値札No { get; set; }
@@ -1023,7 +1091,6 @@ namespace PriceTagPrint.ViewModel
         public string サイズ { get; set; }
         public string カラー { get; set; }
         public string 商品コード { get; set; }
-        public int 発行枚数 { get; set; }
         public string センター { get; set; }
 
         public OkinawaSankiItem(int 発注No, string 取引先CD, string 値札No, string EOS, string 業者コード, string 部門,

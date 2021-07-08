@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -491,7 +493,22 @@ namespace PriceTagPrint.ViewModel
                     {
                         KyoeiItems.Value = new ObservableCollection<KyoeiItem>();
                         var KyoeiModelList = new KyoeiItemList();
-                        KyoeiItems.Value = new ObservableCollection<KyoeiItem>(KyoeiModelList.ConvertKyoeiDataToModel(KyoeiDatas));
+                        var addItems = new ObservableCollection<KyoeiItem>(KyoeiModelList.ConvertKyoeiDataToModel(KyoeiDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<KyoeiItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = KyoeiItems.Value.Sum(x => x.数量).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        KyoeiItems.Value = new ObservableCollection<KyoeiItem>(setItems);
                         TotalMaisu.Value = KyoeiItems.Value.Sum(x => x.数量).ToString();
                     }
                     else
@@ -583,8 +600,29 @@ namespace PriceTagPrint.ViewModel
         #endregion
     }
 
-    public class KyoeiItem
+    public class KyoeiItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private decimal _数量;
+        public decimal 数量
+        {
+            get { return _数量; }
+            set
+            {
+                if (value != this._数量)
+                {
+                    this._数量 = value;
+                    this.OnPropertyChanged("数量");
+                }
+            }
+        }
         public string 分類コード { get; set; }
         public string 伝票番号 { get; set; }       // 空で渡す
         public string 行番号 { get; set; }         // 空で渡す
@@ -594,7 +632,6 @@ namespace PriceTagPrint.ViewModel
         public string 品名 { get; set; }
         public string 規格 { get; set; }           // 空で渡す
         public string 文字予備７ { get; set; }   　// 空で渡す
-        public decimal 数量 { get; set; }
         public decimal 原単価 { get; set; }
         public decimal 売単価 { get; set; }
 

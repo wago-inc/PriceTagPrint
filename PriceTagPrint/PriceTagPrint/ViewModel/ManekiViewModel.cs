@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -650,33 +652,22 @@ namespace PriceTagPrint.ViewModel
 
                         ManekiItems.Value = new ObservableCollection<ManekiItem>();
                         var ManekiModelList = new ManekiItemList();
-                        ManekiItems.Value = new ObservableCollection<ManekiItem>(ManekiModelList.ConvertManekiDataToModel(ManekiDatas));
-
-                        //var skuSortedItems = ManekiItems.Value.OrderBy(x => x.管理番号).ToList();
-                        //var sttSku = skuSortedItems.FirstOrDefault()?.管理番号 ?? 0;
-                        //var endSku = skuSortedItems.LastOrDefault()?.管理番号 ?? 0;
-                        //var manekiJuchuList = dB_2101_JYUCYU_LIST.QueryWhereHnoSkuBetween(HachuBangou.Value, sttSku.ToString(), endSku.ToString());
-                        
-                        //ManekiItems.Value.ToList().ForEach(m =>
-                        //{
-                        //    var mJuchu = manekiJuchuList.Where(x => x.SKU == m.管理番号);
-                        //    var mTsu = mJuchu.Sum(x => x.TSU);
-                        //    var mJtbl = mJuchu.FirstOrDefault()?.JTBLCD.ToString() ?? "";
-                        //    // マネキ用のJYUCYUテーブルの発行枚数と条件テーブルで更新
-                        //    if (mTsu != m.発行枚数)
-                        //    {
-                        //        m.発行枚数 = mTsu;
-                        //    }
-                        //    if (mJtbl != m.条件テーブル)
-                        //    {
-                        //        m.条件テーブル = mJtbl;
-                        //    }
-                        //    // グンゼ値付不要商品の発行枚数を0に更新
-                        //    if (hinmtaList.Any(h => h.HINCD.TrimEnd() == m.メーカー品番.TrimEnd() && h.HINTKSID != "00"))
-                        //    {
-                        //        m.発行枚数 = 0;
-                        //    }
-                        //});
+                        var addItems = new ObservableCollection<ManekiItem>(ManekiModelList.ConvertManekiDataToModel(ManekiDatas)).ToList();
+                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                        var setItems = new List<ManekiItem>();
+                        addItems.ForEach(item =>
+                        {
+                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                  h => item.PropertyChanged += h,
+                                  h => item.PropertyChanged -= h)
+                                  .Subscribe(e =>
+                                  {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = ManekiItems.Value.Sum(x => x.発行枚数).ToString();
+                                  });
+                            setItems.Add(item);
+                        });
+                        ManekiItems.Value = new ObservableCollection<ManekiItem>(setItems);
                         TotalMaisu.Value = ManekiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
@@ -776,8 +767,29 @@ namespace PriceTagPrint.ViewModel
     /// データグリッド表示プロパティ
     /// CSVの出力にも流用
     /// </summary>
-    public class ManekiItem
+    public class ManekiItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private int _発行枚数;
+        public int 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public string 納品月 { get; set; }    // CSV
         public string 上中下旬CD { get; set; } // CSV
         public int アイテムCD { get; set; }    // CSV
@@ -793,7 +805,6 @@ namespace PriceTagPrint.ViewModel
         public int 下代変換CD { get; set; }  // CSV        
         public int 上代 { get; set; } // CSV 上代
         public int BER上代 { get; set; }  // CSV BER上代
-        public int 発行枚数 { get; set; }   // CSV        
         public int 下代 { get; set; }        
         public string 商品名 { get; set; }
         public int 値札No { get; set; }

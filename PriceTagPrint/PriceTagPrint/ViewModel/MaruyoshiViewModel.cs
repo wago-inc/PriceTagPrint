@@ -3,12 +3,15 @@ using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
 using PriceTagPrint.View;
 using PriceTagPrint.WAG_USR1;
+using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -618,7 +621,22 @@ namespace PriceTagPrint.ViewModel
                         {
                             MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>();
                             var maruyoshiModelList = new MaruyoshiItemList();
-                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>(maruyoshiModelList.ConvertMaruyoshiDataToModel(MaruyoshiDatas));
+                            var addItems = new ObservableCollection<MaruyoshiItem>(maruyoshiModelList.ConvertMaruyoshiDataToModel(MaruyoshiDatas)).ToList();
+                            // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                            var setItems = new List<MaruyoshiItem>();
+                            addItems.ForEach(item =>
+                            {
+                                Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                      h => item.PropertyChanged += h,
+                                      h => item.PropertyChanged -= h)
+                                      .Subscribe(e =>
+                                      {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
+                                      });
+                                setItems.Add(item);
+                            });
+                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>(setItems);
                             TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
                         }
                         else
@@ -895,9 +913,29 @@ namespace PriceTagPrint.ViewModel
         #endregion
     }
 
-    public class MaruyoshiItem
+    public class MaruyoshiItem : INotifyPropertyChanged
     {
-        public decimal 発行枚数 { get; set; }   //csv
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private decimal _発行枚数;
+        public decimal 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public string カラー { get; set; }
         public string サイズ { get; set; }
         public string シーズンコード { get; set; } //csv
