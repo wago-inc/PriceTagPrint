@@ -12,6 +12,7 @@
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\Microsoft.WindowsAPICodePack.ShellExtensions.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\Microsoft.Xaml.Behaviors.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\Oracle.ManagedDataAccess.dll
+\\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\Prism.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\ReactiveProperty.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\ReactiveProperty.Core.dll
 \\server00\WAGOSYS\システム開発＆修正関連\値札関連\ClickOnce\Publish\MvvmHelpers.dll

@@ -33,7 +33,11 @@ namespace PriceTagPrint.MDB
         public List<DB_0112_URITUKI> dB_0112_URITUKIs = new List<DB_0112_URITUKI>();
         public DB_0112_URITUKI_LIST()
         {
-            SelectQueryByNendo(2016);
+            SelectQueryByNendo(DateTime.Today.Year);
+        }
+        public DB_0112_URITUKI_LIST(int nendo)
+        {
+            SelectQueryByNendo(nendo);
         }
         private void SelectQueryByNendo(int nendo)
         {
@@ -102,8 +106,8 @@ namespace PriceTagPrint.MDB
             {
                 return wk_TUKI.ToString("00");                           // ※売切月＝納品月
             }
-
-            var dB_0112_URITUKI = dB_0112_URITUKIs.FirstOrDefault(x => x.NENDO == 2016 && x.TUKI == wk_TUKI);
+            decimal cnvNendo = decimal.TryParse(wk_NENDO.ToString(), out cnvNendo) ? cnvNendo : 0;
+            var dB_0112_URITUKI = dB_0112_URITUKIs.FirstOrDefault(x => x.NENDO == cnvNendo && x.TUKI == wk_TUKI);
 
             if(dB_0112_URITUKI == null)
             {

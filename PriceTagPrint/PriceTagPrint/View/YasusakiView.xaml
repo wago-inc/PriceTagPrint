@@ -196,7 +196,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="売切月" Binding="{Binding Path=売切月}" Width="1*"
+                    <DataGridTextColumn Header="仕入月" Binding="{Binding Path=売切月}" Width="1*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

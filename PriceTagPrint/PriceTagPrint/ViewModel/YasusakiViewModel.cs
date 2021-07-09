@@ -783,7 +783,8 @@ namespace PriceTagPrint.ViewModel
         public IEnumerable<YasusakiItem> ConvertYasusakiDataToModel(List<YasusakiData> datas)
         {
             var result = new List<YasusakiItem>();
-            var uritukiList = new DB_0112_URITUKI_LIST();
+            var nendo = datas.FirstOrDefault()?.NOUHINBI.Year ?? DateTime.Today.Year;
+            var uritukiList = new DB_0112_URITUKI_LIST(nendo);
             var urituki = "";
             var beforeNouhinbi = DateTime.MinValue;
             var beforeSkbn = "";
