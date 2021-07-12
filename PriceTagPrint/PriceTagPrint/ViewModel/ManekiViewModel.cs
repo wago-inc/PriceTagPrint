@@ -729,7 +729,26 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = ManekiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "納品月",
+                "上中下旬CD",
+                "アイテムCD",
+                "定番区分",
+                "メーカー品番",
+                "条件テーブル",
+                "サイズ",
+                "カラー",
+                "部門CD",
+                "参考上代",
+                "クラスCD",
+                "管理番号",
+                "下代変換CD",
+                "上代",
+                "BER上代",
+                "発行枚数"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("下代");
             datas.Columns.Remove("商品名");
@@ -777,19 +796,7 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private int _発行枚数;
-        public int 発行枚数
-        {
-            get { return _発行枚数; }
-            set
-            {
-                if (value != this._発行枚数)
-                {
-                    this._発行枚数 = value;
-                    this.OnPropertyChanged("発行枚数");
-                }
-            }
-        }
+        
         public string 納品月 { get; set; }    // CSV
         public string 上中下旬CD { get; set; } // CSV
         public int アイテムCD { get; set; }    // CSV
@@ -805,6 +812,20 @@ namespace PriceTagPrint.ViewModel
         public int 下代変換CD { get; set; }  // CSV        
         public int 上代 { get; set; } // CSV 上代
         public int BER上代 { get; set; }  // CSV BER上代
+
+        private int _発行枚数;
+        public int 発行枚数 // CSV
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public int 下代 { get; set; }        
         public string 商品名 { get; set; }
         public int 値札No { get; set; }

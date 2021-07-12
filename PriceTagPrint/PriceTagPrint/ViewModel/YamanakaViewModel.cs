@@ -696,7 +696,26 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = YamanakaItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "発注No",
+                "得意先CD",
+                "値札No",
+                "受信日",
+                "納品日",
+                "取引先コード",
+                "デプトクラスコード",
+                "フェイス番号",
+                "品番",
+                "ＭＣコード",
+                "JAN13桁",
+                "本体売価",
+                "販促文字2",
+                "当社品番",
+                "商品コード",
+                "発行枚数"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("販促文字表示名");
             datas.Columns.Remove("商品名");
@@ -739,8 +758,25 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        public string 発注No { get; set; } //CSV
+        public string 得意先CD { get; set; } //CSV
+        public string 値札No { get; set; } //CSV
+        public string 受信日 { get; set; } //CSV
+        public string 納品日 { get; set; } //CSV
+        public string 取引先コード { get; set; } //CSV
+        public string デプトクラスコード { get; set; } //CSV
+        public string フェイス番号 { get; set; } //CSV
+        public string 品番 { get; set; } //CSV
+        public string ＭＣコード { get; set; } //CSV
+        public string JAN13桁 { get; set; } //CSV
+        public decimal 本体売価 { get; set; } //CSV
+        public string 販促文字2 { get; set; } //CSV
+        public string 当社品番 { get; set; } //CSV
+        public string 商品コード { get; set; } //CSV
+
         private decimal _発行枚数;
-        public decimal 発行枚数
+        public decimal 発行枚数 //CSV
         {
             get { return _発行枚数; }
             set
@@ -752,22 +788,7 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public string 発注No { get; set; }
-        public string 得意先CD { get; set; }
-        public string 値札No { get; set; }
-        public string 受信日 { get; set; }
-        public string 納品日 { get; set; }
-        public string 取引先コード { get; set; }
-        public string デプトクラスコード { get; set; }
-        public string フェイス番号 { get; set; }
-        public string 品番 { get; set; }
-        public string ＭＣコード { get; set; }
-        public string JAN13桁 { get; set; }
-        public decimal 本体売価 { get; set; }
-        public string 販促文字2 { get; set; }
         public string 販促文字表示名 { get; set; }
-        public string 当社品番 { get; set; }
-        public string 商品コード { get; set; }
         public string 商品名 { get; set; }
 
         public YamanakaItem(string 発注No, string 得意先CD, string 値札No, string 受信日, string 納品日,

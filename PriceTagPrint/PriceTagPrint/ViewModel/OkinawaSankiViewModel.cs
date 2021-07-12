@@ -1018,7 +1018,25 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = OkinawaSankiItems.Value.Where(x => x.発行枚数 > 0).OrderBy(x => x.JANフリー).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "発注No",
+                "取引先CD",
+                "値札No",
+                "EOS",
+                "業者コード",
+                "部門",
+                "EOSコード2桁",
+                "EOS5",
+                "販売価格",
+                "JANフリー",
+                "メッセージ",
+                "サイズ",
+                "カラー",
+                "商品コード",
+                "発行枚数"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("センター");
             new CsvUtility().Write(datas, fullName, true);
@@ -1064,8 +1082,24 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        public int 発注No { get; set; }   //CSV
+        public string 取引先CD { get; set; }   //CSV
+        public string 値札No { get; set; }   //CSV
+        public string EOS { get; set; }   //CSV
+        public string 業者コード { get; set; }   //CSV
+        public string 部門 { get; set; }   //CSV
+        public string EOSコード2桁 { get; set; }   //CSV
+        public string EOS5 { get; set; }   //CSV
+        public int 販売価格 { get; set; }   //CSV
+        public string JANフリー { get; set; }   //CSV
+        public string メッセージ { get; set; }   //CSV
+        public string サイズ { get; set; }   //CSV
+        public string カラー { get; set; }   //CSV
+        public string 商品コード { get; set; }   //CSV
+
         private int _発行枚数;
-        public int 発行枚数
+        public int 発行枚数   //CSV
         {
             get { return _発行枚数; }
             set
@@ -1077,20 +1111,6 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public int 発注No { get; set; }
-        public string 取引先CD { get; set; }
-        public string 値札No { get; set; }
-        public string EOS { get; set; }
-        public string 業者コード { get; set; }
-        public string 部門 { get; set; }
-        public string EOSコード2桁 { get; set; }
-        public string EOS5 { get; set; }
-        public int 販売価格 { get; set; }
-        public string JANフリー { get; set; }
-        public string メッセージ { get; set; }
-        public string サイズ { get; set; }
-        public string カラー { get; set; }
-        public string 商品コード { get; set; }
         public string センター { get; set; }
 
         public OkinawaSankiItem(int 発注No, string 取引先CD, string 値札No, string EOS, string 業者コード, string 部門,

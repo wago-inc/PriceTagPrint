@@ -666,7 +666,25 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = YasusakiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "発注No",
+                "取引先CD",
+                "値札No",
+                "発注日",
+                "納品日",
+                "ｸﾗｽｺｰﾄﾞ",
+                "品番",
+                "枝番",
+                "ｻｲｽﾞｺｰﾄﾞ",
+                "規格表現文字",
+                "売切月",
+                "JAN",
+                "本体価格",
+                "商品コード",
+                "発行枚数"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("商品名");
             datas.Columns.Remove("単価");
@@ -715,20 +733,7 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-        private int _発行枚数;
-        public int 発行枚数
-        {
-            get { return _発行枚数; }
-            set
-            {
-                if (value != this._発行枚数)
-                {
-                    this._発行枚数 = value;
-                    this.OnPropertyChanged("発行枚数");
-                }
-            }
-        }
+        
         public int 発注No { get; set; }
         public string 取引先CD { get; set; }
         public string 値札No { get; set; }
@@ -743,6 +748,19 @@ namespace PriceTagPrint.ViewModel
         public string JAN { get; set; }
         public int 本体価格 { get; set; }
         public string 商品コード { get; set; }
+        private int _発行枚数;
+        public int 発行枚数
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
         public string 商品名 { get; set; }
         public int 単価 { get; set; }
         public string 和合商品コード { get; set; }

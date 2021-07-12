@@ -671,7 +671,16 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = WataseiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "部門",
+                "分類",
+                "品番",
+                "サイズ",
+                "本体価格",
+                "発行枚数"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("発注No");
             datas.Columns.Remove("取引先CD");
@@ -725,8 +734,14 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        public string 部門 { get; set; }  // CSV
+        public int 分類 { get; set; } // CSV
+        public string 品番 { get; set; }  // CSV
+        public string サイズ { get; set; }    // CSV
+        public int 本体価格 { get; set; }  // CSV
+
         private int _発行枚数;
-        public int 発行枚数
+        public int 発行枚数 // CSV
         {
             get { return _発行枚数; }
             set
@@ -746,12 +761,7 @@ namespace PriceTagPrint.ViewModel
         public int 市価 { get; set; }        
         public string サイズ名 { get; set; }
         public string カラー名 { get; set; }
-        public string 商品名 { get; set; }
-        public string 部門 { get; set; }  // CSV
-        public int 分類 { get; set; } // CSV
-        public string 品番 { get; set; }  // CSV
-        public string サイズ { get; set; }    // CSV
-        public int 本体価格 { get; set; }  // CSV
+        public string 商品名 { get; set; }        
 
         public WataseiItem(int 発注No, string 取引先CD, string 値札No, string 商品コード, string JANコード, int 市価,
                            int 売価, string サイズ名, string カラー名, string 商品名, string 部門, int 分類, string 品番,

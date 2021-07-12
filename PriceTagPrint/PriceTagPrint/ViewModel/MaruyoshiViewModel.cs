@@ -145,7 +145,7 @@ namespace PriceTagPrint.ViewModel
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
             eOSKNMTA_LIST = new EOSKNMTA_LIST();
-            
+
             dB_0127_HANSOKU_LIST = new DB_0127_HANSOKU_BAIKA_CONV_LIST();
 
             CreateComboItems();
@@ -874,8 +874,20 @@ namespace PriceTagPrint.ViewModel
                     x.品番 = x.棚番;
                 }
             });
-
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "発行枚数",
+                "カラー",
+                "サイズ",
+                "シーズンコード",
+                "クラスCD",
+                "追加",
+                "税込売価",
+                "品番",
+                "単品",
+                "JANコード"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("棚番");
             datas.Columns.Remove("品名");
@@ -924,7 +936,7 @@ namespace PriceTagPrint.ViewModel
             }
         }
         private decimal _発行枚数;
-        public decimal 発行枚数
+        public decimal 発行枚数 //csv
         {
             get { return _発行枚数; }
             set
@@ -936,8 +948,8 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public string カラー { get; set; }
-        public string サイズ { get; set; }
+        public string カラー { get; set; }     //csv
+        public string サイズ { get; set; }     //csv
         public string シーズンコード { get; set; } //csv
         public string クラスCD { get; set; }   //csv
         public string 追加 { get; set; }  //csv

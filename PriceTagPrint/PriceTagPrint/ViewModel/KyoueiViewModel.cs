@@ -569,9 +569,23 @@ namespace PriceTagPrint.ViewModel
         /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {
-            var list = KyoeiItems.Value.Where(x => x.数量 > 0).ToList();            
-
-            var datas = DataUtility.ToDataTable(list);
+            var list = KyoeiItems.Value.Where(x => x.数量 > 0).ToList();
+            var csvColSort = new string[]
+            {
+                "分類コード",
+                "伝票番号",
+                "行番号",
+                "京屋商品コード",
+                "商品コード",
+                "マーク",
+                "品名",
+                "規格",
+                "文字予備７",
+                "数量",
+                "原単価",
+                "売単価"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             new CsvUtility().Write(datas, fullName, true);
         }
 
@@ -610,6 +624,17 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        public string 分類コード { get; set; }
+        public string 伝票番号 { get; set; }       // 空で渡す
+        public string 行番号 { get; set; }         // 空で渡す
+        public string 京屋商品コード { get; set; }
+        public string 商品コード { get; set; }
+        public string マーク { get; set; }         // 空で渡す
+        public string 品名 { get; set; }
+        public string 規格 { get; set; }           // 空で渡す
+        public string 文字予備７ { get; set; }   　// 空で渡す
+
         private decimal _数量;
         public decimal 数量
         {
@@ -623,15 +648,6 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public string 分類コード { get; set; }
-        public string 伝票番号 { get; set; }       // 空で渡す
-        public string 行番号 { get; set; }         // 空で渡す
-        public string 京屋商品コード { get; set; }
-        public string 商品コード { get; set; }
-        public string マーク { get; set; }         // 空で渡す
-        public string 品名 { get; set; }
-        public string 規格 { get; set; }           // 空で渡す
-        public string 文字予備７ { get; set; }   　// 空で渡す
         public decimal 原単価 { get; set; }
         public decimal 売単価 { get; set; }
 

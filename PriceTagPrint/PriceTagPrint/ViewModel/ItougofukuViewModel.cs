@@ -788,7 +788,31 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = ItougofukuItems.Value.Where(x => x.数量計 > 0).ToList();
-            var datas = DataUtility.ToDataTable(list);
+            var csvColSort = new string[]
+            {
+                "帳票種別",
+                "仕入先",
+                "仕入先名",
+                "商品コード",
+                "発注日",
+                "納入日",
+                "販売開始",
+                "メーカーコード",
+                "クラス",
+                "クラス名",
+                "ユニット",
+                "商品名",
+                "サイズ",
+                "カラー",
+                "原単価",
+                "売単価",
+                "税込売価",
+                "コメント",
+                "商品区分",
+                "シーズン",
+                "数量計"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
             new CsvUtility().Write(datas, fullName, true);
         }
 
@@ -828,19 +852,7 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private int _数量計;
-        public int 数量計
-        {
-            get { return _数量計; }
-            set
-            {
-                if (value != this._数量計)
-                {
-                    this._数量計 = value;
-                    this.OnPropertyChanged("数量計");
-                }
-            }
-        }
+        
         public string 帳票種別 { get; set; }
         public string 仕入先 { get; set; }
         public string 仕入先名 { get; set; }
@@ -861,6 +873,20 @@ namespace PriceTagPrint.ViewModel
         public string コメント { get; set; }
         public string 商品区分 { get; set; }
         public string シーズン { get; set; }
+
+        private int _数量計;
+        public int 数量計
+        {
+            get { return _数量計; }
+            set
+            {
+                if (value != this._数量計)
+                {
+                    this._数量計 = value;
+                    this.OnPropertyChanged("数量計");
+                }
+            }
+        }
 
         public ItougofukuItem(string 帳票種別, string 仕入先, string 仕入先名, string 商品コード, string 発注日, string 納入日, string 販売開始, string メーカーコード,
                               string クラス, string クラス名, string ユニット, string 商品名, string サイズ, string カラー, string 原単価, string 売単価, string 税込売価,
