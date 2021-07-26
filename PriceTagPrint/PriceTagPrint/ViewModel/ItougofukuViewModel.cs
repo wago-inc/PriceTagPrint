@@ -89,6 +89,7 @@ namespace PriceTagPrint.ViewModel
         private DB_JYUCYU_LIST dB_JYUCYU_LIST;
         private DB_T05001_SHOHIN_DAICHO_LIST dB_T05001_SHOHIN_DAICHO;
         private DB_T05007_SHOHIN_TEKIYO_DAICHO_LIST dB_T05007_SHOHIN_TEKIYO_DAICHO;
+        private DB_T05005_SHOHIN_BUNRUI2_DAICHO_LIST dB_T05005_SHOHIN_BUNRUI2_DAICHO;
 
         private static double _zeiritsu = 1.1;
         #region コマンドの実装
@@ -163,6 +164,7 @@ namespace PriceTagPrint.ViewModel
             dB_JYUCYU_LIST = new DB_JYUCYU_LIST();
             dB_T05001_SHOHIN_DAICHO = new DB_T05001_SHOHIN_DAICHO_LIST();
             dB_T05007_SHOHIN_TEKIYO_DAICHO = new DB_T05007_SHOHIN_TEKIYO_DAICHO_LIST();
+            dB_T05005_SHOHIN_BUNRUI2_DAICHO = new DB_T05005_SHOHIN_BUNRUI2_DAICHO_LIST();
             CreateComboItems();
 
             // コンボボックス初期値セット
@@ -555,7 +557,7 @@ namespace PriceTagPrint.ViewModel
                 if (wJyucyuList.Any() && shohinDaicho.Any())
                 {
                     var shohinTekiyoDicho = dB_T05007_SHOHIN_TEKIYO_DAICHO.QueryWhereAll();
-
+                    var shohinBunrui2Dicho = dB_T05005_SHOHIN_BUNRUI2_DAICHO.QueryWhereAll();
                     ItougofukuDatas.Clear();
                     ItougofukuDatas.AddRange(
                         wJyucyuList
@@ -583,7 +585,8 @@ namespace PriceTagPrint.ViewModel
                                        JYODAI = juc.JYODAI,
                                        TEKIYOCD1 = hin.Any() ? hin.FirstOrDefault().商品摘要コード1 : 0,
                                        TEKIYOCD2 = hin.Any() ? hin.FirstOrDefault().商品摘要コード2 : 0,
-                                       BUNRUI2CD = hin.Any() ? hin.FirstOrDefault().分類2コード : 0,
+                                       BUMONCD = hin.Any() ? hin.FirstOrDefault().グループコード : 0,
+                                       BUNRUI2CD = hin.Any() ? hin.FirstOrDefault().分類2コード : 0,                                       
                                        HINNM = hin.Any() ? hin.FirstOrDefault().商品名.TrimEnd() : "",
                                        HNO = juc.HNO,
                                        LOCTANA_SOKO_CODE = juc.LOCTANA_SOKO_CODE,
@@ -595,117 +598,164 @@ namespace PriceTagPrint.ViewModel
                                        SAIZUS = juc.SAIZUS,
                                        UNITCD = hin.Any() ? hin.FirstOrDefault()?.画像名1 ?? "" : "",
                                        SIRECD = hin.Any() ? hin.FirstOrDefault().仕入先コード : 0,
-                                   })
-                                .GroupJoin(
-                                        shohinTekiyoDicho,
-                                        a => new
-                                        {
-                                            TEKIYO = a.TEKIYOCD3,
-                                        },
-                                        t => new
-                                        {
-                                            TEKIYO = t.商品摘要コード,
-                                        },
-                                        (atbl, tekiyo) => new
-                                        {
-                                            TCODE = atbl.TCODE,
-                                            NEFUDANO = atbl.NEFUDANO,
-                                            SIRESYU = atbl.SIRESYU,
-                                            TSU = atbl.TSU,
-                                            TEKIYOCD3 = atbl.TEKIYOCD3,
-                                            SHOHINTEKYONM = tekiyo.Any() ? tekiyo.FirstOrDefault().商品摘要名.TrimEnd() : "",
-                                            HINBAN = atbl.HINBAN,
-                                            JANCD = atbl.JANCD,
-                                            STANKA = atbl.STANKA,
-                                            HTANKA = atbl.HTANKA,
-                                            ZTANKA = Math.Floor(atbl.HTANKA * _zeiritsu),
-                                            JYODAI = atbl.JYODAI,
-                                            TEKIYOCD1 = atbl.TEKIYOCD1,
-                                            TEKIYOCD2 = atbl.TEKIYOCD2,
-                                            BUNRUI2CD = atbl.BUNRUI2CD,
-                                            HINNM = atbl.HINNM,
-                                            HNO = atbl.HNO,
-                                            LOCTANA_SOKO_CODE = atbl.LOCTANA_SOKO_CODE,
-                                            LOCTANA_FLOOR_NO = atbl.LOCTANA_FLOOR_NO,
-                                            LOCTANA_TANA_NO = atbl.LOCTANA_TANA_NO,
-                                            LOCTANA_CASE_NO = atbl.LOCTANA_CASE_NO,
-                                            BUNRUI = atbl.BUNRUI,
-                                            SCODE = atbl.SCODE,
-                                            SAIZUS = atbl.SAIZUS,
-                                            UNITCD = atbl.UNITCD,
-                                            SIRECD = atbl.SIRECD,
-                                        }
-                                )
-                                .GroupBy(a => new
-                                {
-                                    TCODE = a.TCODE,
-                                    NEFUDANO = a.NEFUDANO,
-                                    SIRESYU = a.SIRESYU,
-                                    TEKIYOCD3 = a.TEKIYOCD3,
-                                    SHOHINTEKYONM = a.SHOHINTEKYONM,
-                                    HINBAN = a.HINBAN,
-                                    JANCD = a.JANCD,
-                                    STANKA = a.STANKA,
-                                    HTANKA = a.HTANKA,
-                                    ZTANKA = a.ZTANKA,
-                                    JYODAI = a.JYODAI,
-                                    TEKIYOCD1 = a.TEKIYOCD1,
-                                    TEKIYOCD2 = a.TEKIYOCD2,
-                                    BUNRUI2CD = a.BUNRUI2CD,
-                                    HINNM = a.HINNM,
-                                    HNO = a.HNO,
-                                    LOCTANA_SOKO_CODE = a.LOCTANA_SOKO_CODE,
-                                    LOCTANA_FLOOR_NO = a.LOCTANA_FLOOR_NO,
-                                    LOCTANA_TANA_NO = a.LOCTANA_TANA_NO,
-                                    LOCTANA_CASE_NO = a.LOCTANA_CASE_NO,
-                                    BUNRUI = a.BUNRUI,
-                                    SCODE = a.SCODE,
-                                    SAIZUS = a.SAIZUS,
-                                    UNITCD = a.UNITCD,
-                                    SIRECD = a.SIRECD,
-                                })
-                             .Select(g => new ItougofukuData
-                             {
-                                 TCODE = g.Key.TCODE,
-                                 NEFUDANO = g.Key.NEFUDANO ?? 0,
-                                 SIRESYU = g.Key.SIRESYU,
-                                 TEKIYOCD3 = g.Key.TEKIYOCD3,
-                                 SHOHINTEKYONM = g.Key.SHOHINTEKYONM,
-                                 HINBAN = g.Key.HINBAN,
-                                 JANCD = g.Key.JANCD,
-                                 STANKA = g.Key.STANKA,
-                                 HTANKA = g.Key.HTANKA,
-                                 ZTANKA = g.Key.ZTANKA,
-                                 JYODAI = g.Key.JYODAI,
-                                 TEKIYOCD1 = g.Key.TEKIYOCD1 ?? 0,
-                                 TEKIYONM1 = shohinTekiyoDicho.FirstOrDefault(x => x.商品摘要コード == (g.Key.TEKIYOCD1 ?? 0))?.商品摘要名 ?? "",
-                                 TEKIYOCD2 = g.Key.TEKIYOCD2 ?? 0,
-                                 TEKIYONM2 = shohinTekiyoDicho.FirstOrDefault(x => x.商品摘要コード == (g.Key.TEKIYOCD2 ?? 0))?.商品摘要名 ?? "",
-                                 BUNRUI2CD = g.Key.BUNRUI2CD ?? 0,
-                                 HINNM = g.Key.HINNM,
-                                 HNO = g.Key.HNO,                                 
-                                 LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
-                                 LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
-                                 LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
-                                 LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
-                                 BUNRUI = g.Key.BUNRUI,
-                                 SCODE = g.Key.SCODE,
-                                 SAIZUS = g.Key.SAIZUS,
-                                 UNITCD = g.Key.UNITCD,
-                                 SIRECD = g.Key?.SIRECD.ToString() ?? "",
-                                 TSU = g.Sum(y => y.TSU),
-                             })
-                             .Where(x => x.TSU > 0 &&
-                                         x.NEFUDANO == NefudaBangouText.Value &&
-                                         (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
-                             .OrderBy(g => g.BUNRUI)
-                             .ThenBy(g => g.LOCTANA_SOKO_CODE)
-                             .ThenBy(g => g.LOCTANA_FLOOR_NO)
-                             .ThenBy(g => g.LOCTANA_TANA_NO)
-                             .ThenBy(g => g.LOCTANA_CASE_NO)
-                             .ThenBy(g => g.SCODE)
-                             .ThenBy(g => g.SAIZUS)
-                         );
+                                   })                            
+                            .GroupJoin(
+                                    shohinTekiyoDicho,
+                                    a => new
+                                    {
+                                        TEKIYO = a.TEKIYOCD3,
+                                    },
+                                    t => new
+                                    {
+                                        TEKIYO = t.商品摘要コード,
+                                    },
+                                    (atbl, tekiyo) => new
+                                    {
+                                        TCODE = atbl.TCODE,
+                                        NEFUDANO = atbl.NEFUDANO,
+                                        SIRESYU = atbl.SIRESYU,
+                                        TSU = atbl.TSU,
+                                        TEKIYOCD3 = atbl.TEKIYOCD3,
+                                        SHOHINTEKYONM = tekiyo.Any() ? tekiyo.FirstOrDefault().商品摘要名.TrimEnd() : "",
+                                        HINBAN = atbl.HINBAN,
+                                        JANCD = atbl.JANCD,
+                                        STANKA = atbl.STANKA,
+                                        HTANKA = atbl.HTANKA,
+                                        ZTANKA = Math.Floor(atbl.HTANKA * _zeiritsu),
+                                        JYODAI = atbl.JYODAI,
+                                        TEKIYOCD1 = atbl.TEKIYOCD1,
+                                        TEKIYOCD2 = atbl.TEKIYOCD2,
+                                        BUMONCD = atbl.BUMONCD,
+                                        BUNRUI2CD = atbl.BUNRUI2CD,
+                                        HINNM = atbl.HINNM,
+                                        HNO = atbl.HNO,
+                                        LOCTANA_SOKO_CODE = atbl.LOCTANA_SOKO_CODE,
+                                        LOCTANA_FLOOR_NO = atbl.LOCTANA_FLOOR_NO,
+                                        LOCTANA_TANA_NO = atbl.LOCTANA_TANA_NO,
+                                        LOCTANA_CASE_NO = atbl.LOCTANA_CASE_NO,
+                                        BUNRUI = atbl.BUNRUI,
+                                        SCODE = atbl.SCODE,
+                                        SAIZUS = atbl.SAIZUS,
+                                        UNITCD = atbl.UNITCD,
+                                        SIRECD = atbl.SIRECD,
+                                    }
+                            )
+                            .GroupJoin(
+                                    shohinBunrui2Dicho,
+                                    a => new
+                                    {
+                                        BUNRUI2 = a.BUNRUI2CD.ToString() ?? "",
+                                    },
+                                    b => new
+                                    {
+                                        BUNRUI2 = b.商品分類2コード.ToString(),
+                                    },
+                                    (atbl, bunrui) => new
+                                    {
+                                        TCODE = atbl.TCODE,
+                                        NEFUDANO = atbl.NEFUDANO,
+                                        SIRESYU = atbl.SIRESYU,
+                                        TSU = atbl.TSU,
+                                        TEKIYOCD3 = atbl.TEKIYOCD3,
+                                        SHOHINTEKYONM = atbl.SHOHINTEKYONM,
+                                        HINBAN = atbl.HINBAN,
+                                        JANCD = atbl.JANCD,
+                                        STANKA = atbl.STANKA,
+                                        HTANKA = atbl.HTANKA,
+                                        ZTANKA = Math.Floor(atbl.HTANKA * _zeiritsu),
+                                        JYODAI = atbl.JYODAI,
+                                        TEKIYOCD1 = atbl.TEKIYOCD1,
+                                        TEKIYOCD2 = atbl.TEKIYOCD2,
+                                        BUMONCD = atbl.BUMONCD,
+                                        BUNRUI2CD = atbl.BUNRUI2CD,
+                                        BUNRUI2NM = bunrui.Any() ? bunrui.FirstOrDefault().商品分類2名.TrimEnd() : "",
+                                        HINNM = atbl.HINNM,
+                                        HNO = atbl.HNO,
+                                        LOCTANA_SOKO_CODE = atbl.LOCTANA_SOKO_CODE,
+                                        LOCTANA_FLOOR_NO = atbl.LOCTANA_FLOOR_NO,
+                                        LOCTANA_TANA_NO = atbl.LOCTANA_TANA_NO,
+                                        LOCTANA_CASE_NO = atbl.LOCTANA_CASE_NO,
+                                        BUNRUI = atbl.BUNRUI,
+                                        SCODE = atbl.SCODE,
+                                        SAIZUS = atbl.SAIZUS,
+                                        UNITCD = atbl.UNITCD,
+                                        SIRECD = atbl.SIRECD,
+                                    }
+                            )
+                            .GroupBy(a => new
+                            {
+                                TCODE = a.TCODE,
+                                NEFUDANO = a.NEFUDANO,
+                                SIRESYU = a.SIRESYU,
+                                TEKIYOCD3 = a.TEKIYOCD3,
+                                SHOHINTEKYONM = a.SHOHINTEKYONM,
+                                HINBAN = a.HINBAN,
+                                JANCD = a.JANCD,
+                                STANKA = a.STANKA,
+                                HTANKA = a.HTANKA,
+                                ZTANKA = a.ZTANKA,
+                                JYODAI = a.JYODAI,
+                                TEKIYOCD1 = a.TEKIYOCD1,
+                                TEKIYOCD2 = a.TEKIYOCD2,
+                                BUMONCD = a.BUMONCD,
+                                BUNRUI2CD = a.BUNRUI2CD,
+                                BUNRUI2NM = a.BUNRUI2NM,
+                                HINNM = a.HINNM,
+                                HNO = a.HNO,
+                                LOCTANA_SOKO_CODE = a.LOCTANA_SOKO_CODE,
+                                LOCTANA_FLOOR_NO = a.LOCTANA_FLOOR_NO,
+                                LOCTANA_TANA_NO = a.LOCTANA_TANA_NO,
+                                LOCTANA_CASE_NO = a.LOCTANA_CASE_NO,
+                                BUNRUI = a.BUNRUI,
+                                SCODE = a.SCODE,
+                                SAIZUS = a.SAIZUS,
+                                UNITCD = a.UNITCD,
+                                SIRECD = a.SIRECD,
+                            })
+                        .Select(g => new ItougofukuData
+                        {
+                            TCODE = g.Key.TCODE,
+                            NEFUDANO = g.Key.NEFUDANO ?? 0,
+                            SIRESYU = g.Key.SIRESYU,
+                            TEKIYOCD3 = g.Key.TEKIYOCD3,
+                            SHOHINTEKYONM = g.Key.SHOHINTEKYONM,
+                            HINBAN = g.Key.HINBAN,
+                            JANCD = g.Key.JANCD,
+                            STANKA = g.Key.STANKA,
+                            HTANKA = g.Key.HTANKA,
+                            ZTANKA = g.Key.ZTANKA,
+                            JYODAI = g.Key.JYODAI,
+                            TEKIYOCD1 = g.Key.TEKIYOCD1 ?? 0,
+                            TEKIYONM1 = shohinTekiyoDicho.FirstOrDefault(x => x.商品摘要コード == (g.Key.TEKIYOCD1 ?? 0))?.商品摘要名 ?? "",
+                            TEKIYOCD2 = g.Key.TEKIYOCD2 ?? 0,
+                            TEKIYONM2 = shohinTekiyoDicho.FirstOrDefault(x => x.商品摘要コード == (g.Key.TEKIYOCD2 ?? 0))?.商品摘要名 ?? "",
+                            BUMONCD = g.Key.BUMONCD ?? 0,
+                            BUNRUI2CD = g.Key.BUNRUI2CD ?? 0,
+                            BUNRUI2NM = g.Key.BUNRUI2NM,
+                            HINNM = g.Key.HINNM,
+                            HNO = g.Key.HNO,                                 
+                            LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
+                            LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
+                            LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
+                            LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
+                            BUNRUI = g.Key.BUNRUI,
+                            SCODE = g.Key.SCODE,
+                            SAIZUS = g.Key.SAIZUS,
+                            UNITCD = g.Key.UNITCD,
+                            SIRECD = g.Key?.SIRECD.ToString() ?? "",
+                            TSU = g.Sum(y => y.TSU),
+                        })
+                        .Where(x => x.TSU > 0 &&
+                                    x.NEFUDANO == NefudaBangouText.Value &&
+                                    (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
+                        .OrderBy(g => g.BUNRUI)
+                        .ThenBy(g => g.LOCTANA_SOKO_CODE)
+                        .ThenBy(g => g.LOCTANA_FLOOR_NO)
+                        .ThenBy(g => g.LOCTANA_TANA_NO)
+                        .ThenBy(g => g.LOCTANA_CASE_NO)
+                        .ThenBy(g => g.SCODE)
+                        .ThenBy(g => g.SAIZUS)
+                    );
 
                     if (ItougofukuDatas.Any())
                     {
@@ -810,7 +860,8 @@ namespace PriceTagPrint.ViewModel
                 "コメント",
                 "商品区分",
                 "シーズン",
-                "数量計"
+                "数量計",
+                "部門コード"
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
             new CsvUtility().Write(datas, fullName, true);
@@ -887,10 +938,11 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
+        public string 部門コード { get; set; }
 
         public ItougofukuItem(string 帳票種別, string 仕入先, string 仕入先名, string 商品コード, string 発注日, string 納入日, string 販売開始, string メーカーコード,
                               string クラス, string クラス名, string ユニット, string 商品名, string サイズ, string カラー, string 原単価, string 売単価, string 税込売価,
-                              string コメント, string 商品区分, string シーズン, string 数量計)
+                              string コメント, string 商品区分, string シーズン, string 数量計, string 部門コード)
         {
             int conv;
             this.帳票種別 = 帳票種別;
@@ -914,6 +966,7 @@ namespace PriceTagPrint.ViewModel
             this.商品区分 = 商品区分;
             this.シーズン = シーズン;
             this.数量計 = int.TryParse(数量計, out conv) ? conv : 0;
+            this.部門コード = 部門コード;
         }
     }
 
@@ -926,8 +979,8 @@ namespace PriceTagPrint.ViewModel
             {
                 result.Add(
                     new ItougofukuItem("", data.SIRECD, "", data.JANCD, data.HDATE, data.NDATE, "", data.HINBAN,
-                                    data.BUNRUI2CD.ToString(), "",data.UNITCD, data.HINNM, data.TEKIYONM1, data.TEKIYONM2,
-                                    data.STANKA.ToString(), data.HTANKA.ToString(), data.ZTANKA.ToString(), "", "", "", data.TSU.ToString()));
+                                    data.BUNRUI2CD.ToString(), data.BUNRUI2NM, data.UNITCD, data.HINNM, data.TEKIYONM1, data.TEKIYONM2,
+                                    data.STANKA.ToString(), data.HTANKA.ToString(), data.ZTANKA.ToString(), "", "", "", data.TSU.ToString(), data.BUMONCD.ToString()));
             });
             return result;
         }

@@ -20,11 +20,12 @@ namespace PriceTagPrint.MDB
         public short? 商品摘要コード1 { get; set; }
         public short? 商品摘要コード2 { get; set; }
         public short? 商品摘要コード3 { get; set; }
+        public short? グループコード { get; set; }
         public short? 分類2コード { get; set; }
         public short? 仕入先コード { get; set; }
         public string 画像名1 { get; set; }
         public DB_T05001_SHOHIN_DAICHO(string バーコード, string 品番, string 仕入週, string 商品名, byte? 値札No, short? 商品区分コード, short? 商品摘要コード1,
-                                       short? 商品摘要コード2, short? 商品摘要コード3, short? 分類2コード, short? 仕入先コード, string 画像名1)
+                                       short? 商品摘要コード2, short? 商品摘要コード3, short? グループコード, short? 分類2コード, short? 仕入先コード, string 画像名1)
         {
             this.バーコード = バーコード;
             this.品番 = 品番;
@@ -35,6 +36,7 @@ namespace PriceTagPrint.MDB
             this.商品摘要コード1 = 商品摘要コード1;
             this.商品摘要コード2 = 商品摘要コード2;
             this.商品摘要コード3 = 商品摘要コード3;
+            this.グループコード = グループコード;
             this.分類2コード = 分類2コード;
             this.仕入先コード = 仕入先コード;
             this.画像名1 = 画像名1;
@@ -84,6 +86,7 @@ namespace PriceTagPrint.MDB
                             dr.Field<short?>("商品摘要コード1"),
                             dr.Field<short?>("商品摘要コード2"),
                             dr.Field<short?>("商品摘要コード3"),
+                            dr.Field<short?>("グループコード"),
                             dr.Field<short?>("分類2コード"),
                             dr.Field<short?>("仕入先コード"),
                             dr.Field<string>("画像名1")

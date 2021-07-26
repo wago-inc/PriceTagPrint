@@ -67,9 +67,17 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string TEKIYONM2 { get; set; }
         /// <summary>
+        /// グループコード（TO5001_商品台帳.グループコード）※部門コード
+        /// </summary>
+        public short BUMONCD { get; set; }
+        /// <summary>
         /// クラスコード（T05001_商品台帳.分類2コード）
         /// </summary>
         public short BUNRUI2CD { get; set; }
+        /// <summary>
+        /// クラスコード（T05005_商品分類2台帳.商品分類2名）
+        /// </summary>
+        public string BUNRUI2NM { get; set; }
         /// <summary>
         /// 商品名（T05001_商品台帳.商品名）
         /// </summary>
