@@ -9,6 +9,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\HokaidoSankiView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\ItougofukuView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -45,6 +48,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Style\StyleDic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\HokaidoSankiView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\ItougofukuView.xaml">

@@ -11,11 +11,13 @@ namespace PriceTagPrint.WAG_USR1
     public class HINMTA
     {
         public string HINCD { get; set; }
+        public string HINNMA { get; set; }
         public string JANCD { get; set; }
         public string HINTKSID { get; set; }
-        public HINMTA(string hincd, string jancd, string hintksid)
+        public HINMTA(string hincd, string hinnma, string jancd, string hintksid)
         {
             this.HINCD = hincd;
+            this.HINNMA = hinnma;
             this.JANCD = jancd;
             this.HINTKSID = hintksid;
         }
@@ -25,7 +27,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<HINMTA> QueryWhereAll()
         {
-            var sql = "SELECT HINCD, JANCD, HINTKSID " + Environment.NewLine;
+            var sql = "SELECT HINCD, HINNMA, JANCD, HINTKSID " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.HINMTA ";
 
@@ -48,7 +50,10 @@ namespace PriceTagPrint.WAG_USR1
                         {
                             results.Add(new HINMTA
                                 (
-                                    row.Field<string>("HINCD"), row.Field<string>("JANCD"), row.Field<string>("HINTKSID")
+                                    row.Field<string>("HINCD"),
+                                    row.Field<string>("HINNMA"),
+                                    row.Field<string>("JANCD"), 
+                                    row.Field<string>("HINTKSID")
                                 ));
                         }
                     }

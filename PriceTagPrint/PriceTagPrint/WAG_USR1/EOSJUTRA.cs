@@ -23,11 +23,13 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string VRCVDT { get; set; }
         /// <summary>
+        /// 行番号
+        /// </summary>
+        public string VROWNO { get; set; }
+        /// <summary>
         /// 分類コード
         /// </summary>
-        public string VBUNCD { get; set; }
-
-        public string VROWNO { get; set; }
+        public string VBUNCD { get; set; }        
         /// <summary>
         /// 取引先コード
         /// </summary>
@@ -73,6 +75,10 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string HINCD { get; set; }
         /// <summary>
+        /// 北海道三喜 大中分類
+        /// </summary>
+        public string VCYOBI3 { get; set; }
+        /// <summary>
         /// JAN13桁
         /// </summary>
         public string VCYOBI7 { get; set; }
@@ -99,13 +105,16 @@ namespace PriceTagPrint.WAG_USR1
         /// <param name="vuritk"></param>
         /// <param name="hincd"></param>
         /// <param name="vcyobi7"></param>
-        public EOSJUTRA(string vryohncd, string vrcvdt, string vbuncd, string qoltorid, string vnohindt,
-                        string vhincd, string vcolcd, string vsizcd, string vsiznm, string vhinnma, decimal vsuryo,
-                        decimal vgnktk, decimal vuritk, string hincd, string vcyobi7, string vhead1, string vbody1)
+        public EOSJUTRA(string datno, string vryohncd, string vrcvdt, string vrowno, string vbuncd, 
+                        string qoltorid, string vnohindt, string vhincd, string vcolcd, string vsizcd,
+                        string vsiznm, string vhinnma, decimal vsuryo, decimal vgnktk, decimal vuritk,
+                        string hincd, string vcyobi3, string vcyobi7, string vhead1, string vbody1)
         {
+            this.DATNO = datno;
             this.VRYOHNCD = vryohncd;
             this.VRCVDT = vrcvdt;
-            this.VBUNCD = vbuncd;
+            this.VROWNO = vrowno;
+            this.VBUNCD = vbuncd;            
             this.QOLTORID = qoltorid;
             this.VNOHINDT = vnohindt;
             this.VHINCD = vhincd;
@@ -117,6 +126,7 @@ namespace PriceTagPrint.WAG_USR1
             this.VURITK = vuritk;
             this.VGNKTK = vgnktk;
             this.HINCD = hincd;
+            this.VCYOBI3 = vcyobi3;
             this.VCYOBI7 = vcyobi7;
             this.VHEAD1 = vhead1;
             this.VBODY1 = vbody1;
@@ -128,8 +138,10 @@ namespace PriceTagPrint.WAG_USR1
         public List<EOSJUTRA> QueryWhereTcodeAndDates(int tcode, DateTime jusin, DateTime nouhin, string bunrui = "", string sttHin = "", string endHin = "")
         {
             var sql = "SELECT " + Environment.NewLine;
+            sql += "	DATNO, " + Environment.NewLine;
             sql += "	VRYOHNCD, " + Environment.NewLine;
             sql += "	VRCVDT, " + Environment.NewLine;
+            sql += "	VROWNO, " + Environment.NewLine;
             sql += "	VBUNCD, " + Environment.NewLine;
             sql += "	QOLTORID, " + Environment.NewLine;
             sql += "	VNOHINDT, " + Environment.NewLine;
@@ -142,6 +154,7 @@ namespace PriceTagPrint.WAG_USR1
             sql += "	VGNKTK, " + Environment.NewLine;
             sql += "	VURITK, " + Environment.NewLine;
             sql += "	HINCD, " + Environment.NewLine;
+            sql += "	VCYOBI3, " + Environment.NewLine;
             sql += "	VCYOBI7, " + Environment.NewLine;
             sql += "	VHEAD1, " + Environment.NewLine;
             sql += "	VBODY1 " + Environment.NewLine;
@@ -185,12 +198,26 @@ namespace PriceTagPrint.WAG_USR1
                         {
                             results.Add(new EOSJUTRA
                                 (
-                                    row.Field<string>("VRYOHNCD"), row.Field<string>("VRCVDT"), row.Field<string>("VBUNCD"),
-                                    row.Field<string>("QOLTORID"), row.Field<string>("VNOHINDT"), row.Field<string>("VHINCD"), 
-                                    row.Field<string>("VCOLCD"), row.Field<string>("VSIZCD"), row.Field<string>("VSIZNM"),
-                                    row.Field<string>("VHINNMA"), row.Field<decimal>("VSURYO"), row.Field<decimal>("VGNKTK"),
-                                    row.Field<decimal>("VURITK"), row.Field<string>("HINCD"), row.Field<string>("VCYOBI7"),
-                                    row.Field<string>("VHEAD1"), row.Field<string>("VBODY1")
+                                    row.Field<string>("DATNO"),
+                                    row.Field<string>("VRYOHNCD"), 
+                                    row.Field<string>("VRCVDT"),
+                                    row.Field<string>("VROWNO"),
+                                    row.Field<string>("VBUNCD"),
+                                    row.Field<string>("QOLTORID"), 
+                                    row.Field<string>("VNOHINDT"), 
+                                    row.Field<string>("VHINCD"), 
+                                    row.Field<string>("VCOLCD"), 
+                                    row.Field<string>("VSIZCD"), 
+                                    row.Field<string>("VSIZNM"),
+                                    row.Field<string>("VHINNMA"), 
+                                    row.Field<decimal>("VSURYO"), 
+                                    row.Field<decimal>("VGNKTK"),
+                                    row.Field<decimal>("VURITK"), 
+                                    row.Field<string>("HINCD"), 
+                                    row.Field<string>("VCYOBI3"),
+                                    row.Field<string>("VCYOBI7"), 
+                                    row.Field<string>("VHEAD1"), 
+                                    row.Field<string>("VBODY1")
                                 ));
                         }
                     }
