@@ -74,6 +74,8 @@ namespace PriceTagPrint.ViewModel
         private HINMTA_LIST hINMTA_LIST;
         private DB_0127_HANSOKU_BAIKA_CONV_LIST dB_0127_HANSOKU_LIST;
         private List<HINMTA> hinmtaList;
+
+        private string _webEdi切替日 = "20210901";
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -204,9 +206,13 @@ namespace PriceTagPrint.ViewModel
         {
             var list = new List<CommonIdName>();
             var item = new CommonIdName();
-            item.Id = 3;
-            item.Name = "3：インナー";
+            item.Id = 1;
+            item.Name = "1：衣料品";
             list.Add(item);
+            var item1 = new CommonIdName();
+            item1.Id = 3;
+            item1.Name = "3：インナー";
+            list.Add(item1);
             var item2 = new CommonIdName();
             item2.Id = 6;
             item2.Name = "6：インナー";
@@ -292,7 +298,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                BunruiCodeText.Value = 3;
+                BunruiCodeText.Value = 1;
             }
         }
 
@@ -457,11 +463,18 @@ namespace PriceTagPrint.ViewModel
                                        VNOHINDT = eosj.VNOHINDT,
                                        VBUNCD = eosj.VBUNCD,
                                        DATNO = eosj.DATNO,
-                                       VROWNO = eosj.VROWNO,
-                                       VHEAD1 = eosj.VHEAD1,
-                                       VBODY1 = eosj.VBODY1,
+                                       VROWNO = eosj.VROWNO,                                       
                                        VHINCD = eosj.VHINCD,
                                        HINCD = eosj.HINCD,
+                                       VHINNMA = eosj.VHINNMA,
+                                       VCOLNM = eosj.VCOLNM,
+                                       VSIZNM = eosj.VSIZNM,
+                                       VURITK = eosj.VURITK,
+                                       VSURYO = eosj.VSURYO,
+                                       VCYOBI7 = eosj.VCYOBI7,
+                                       VTOKKB =eosj.VTOKKB,
+                                       VHEAD1 = eosj.VHEAD1,
+                                       VBODY1 = eosj.VBODY1,
                                    })
                             .OrderBy(x => x.VRYOHNCD)
                                     .ThenBy(x => x.VRCVDT)
@@ -498,36 +511,91 @@ namespace PriceTagPrint.ViewModel
                                                VRYOHNNM = a.VRYOHNNM,
                                                VRCVDT = a.VRCVDT,
                                                VNOHINDT = a.VNOHINDT,
-                                               VBUNCD = !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
+                                               // 分類コード
+                                               VBUNCD = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VBUNCD) ? "0" + a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) : " "
+                                                        : !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
                                                DATNO = a.DATNO,
                                                VROWNO = a.VROWNO,
-                                               NEFCMA = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
-                                               NEFCMB = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
+                                               // クラスコード
+                                               NEFCMA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(0, 4) : " "   
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
+                                               // 当社品番
+                                               NEFCMB = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VCYOBI7) ? a.VCYOBI7.TrimEnd() : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
                                                NEFCMB2 = " ",
-                                               NEFCMC = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
-                                               NEFCMD = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
-                                               NEFCMD2 = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
-                                               NEFCME = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
-                                               NEFCMF = !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
-                                               NEFCMG = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
-                                               NEFCMH = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
-                                               NEFCMI = !string.IsNullOrEmpty(a.VBODY1) ?
+                                               // 商品名称
+                                               NEFCMC = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd() : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
+                                               // カラーコード + カラー名
+                                               NEFCMD = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) + " " + a.VCOLNM.TrimEnd().Substring(0, 5) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
+                                               // カラーコード
+                                               NEFCMD2 = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                         ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) : " "
+                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
+                                               // サイズコード
+                                               NEFCME = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) + a.VSIZNM.TrimEnd().Substring(a.VSIZNM.TrimEnd().Length - 2) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
+                                               // サイズ名
+                                               NEFCMF = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VSIZNM.TrimEnd().Substring(0, 5) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
+                                               // 単品コード
+                                               NEFCMG = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().IndexOf("-") + 1, 4) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
+                                               // 組
+                                               NEFCMH = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().Length - 2) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
+                                               // FLG
+                                               NEFCMI = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VTOKKB) ?
+                                                            a.VTOKKB.TrimEnd() == "1" ? "2" :
+                                                            a.VTOKKB.TrimEnd() == "0" ? "8" : " " : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ?
                                                             a.VBODY1.Substring(118, 1) == "1" ? "8" :
                                                             a.VBODY1.Substring(118, 1) == "2" ? "2" : " " : " ",
-                                               NEFCMJ = !string.IsNullOrEmpty(a.VBODY1) ?
+                                               // 追加区分
+                                               NEFCMJ = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ?
                                                             a.VBODY1.Substring(126, 1) == "1" ? "T" :
                                                             a.VBODY1.Substring(126, 1) == "2" ? "Y" :
                                                             a.VBODY1.Substring(126, 1) == "3" ? "X" : " " : " ",
-                                               NEFCMK = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
-                                               NEFTKA = !string.IsNullOrEmpty(a.VBODY1) &&
+                                               // タグ区分
+                                               NEFCMK = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? "5"
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
+                                               // 消売価
+                                               NEFTKA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? 0
+                                                        : !string.IsNullOrEmpty(a.VBODY1) &&
                                                             (a.VBODY1.Substring(119, 1) == "2" ||
                                                              a.VBODY1.Substring(119, 1) == "4" ||
                                                              a.VBODY1.Substring(119, 1) == "6") && decimal.TryParse(a.VBODY1.Substring(120, 6), out convdec) ? convdec : 0,
-                                               NEFTKB = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
-                                               NEFSUA = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
-                                               //NEFTKB2 = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? Math.Floor(convdec * 1.1m) : 0, 
-                                               NEFTKB2 = !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
-                                               NEFSEZ = !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
+                                               // 売価
+                                               NEFTKB = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? Math.Ceiling(a.VURITK)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
+                                               // 発行枚数
+                                               NEFSUA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? Math.Ceiling(a.VSURYO)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
+                                               // 売価(なぜか二つ売価があるがそのままコンバートする)
+                                               NEFTKB2 = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? Math.Ceiling(a.VURITK)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
+                                               // シーズンコード
+                                               NEFSEZ = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd().Substring(a.VHINNMA.TrimEnd().Length - 2) : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
                                                VHINCD = a.VHINCD,
                                                HINCD = a.HINCD,
                                                JANCD = hin.Any() ? hin.FirstOrDefault().JANCD : "",

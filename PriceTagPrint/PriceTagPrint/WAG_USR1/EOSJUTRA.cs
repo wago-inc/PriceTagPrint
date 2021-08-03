@@ -47,6 +47,10 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string VCOLCD { get; set; }
         /// <summary>
+        /// カラー名
+        /// </summary>
+        public string VCOLNM { get; set; }
+        /// <summary>
         /// サイズコード
         /// </summary>
         public string VSIZCD { get; set; }
@@ -82,7 +86,10 @@ namespace PriceTagPrint.WAG_USR1
         /// JAN13桁
         /// </summary>
         public string VCYOBI7 { get; set; }
-
+        /// <summary>
+        /// 用途区分(FLG)
+        /// </summary>
+        public string VTOKKB { get; set; }
         public string VHEAD1 { get; set; }
 
         public string VBODY1 { get; set; }
@@ -106,9 +113,10 @@ namespace PriceTagPrint.WAG_USR1
         /// <param name="hincd"></param>
         /// <param name="vcyobi7"></param>
         public EOSJUTRA(string datno, string vryohncd, string vrcvdt, string vrowno, string vbuncd, 
-                        string qoltorid, string vnohindt, string vhincd, string vcolcd, string vsizcd,
-                        string vsiznm, string vhinnma, decimal vsuryo, decimal vgnktk, decimal vuritk,
-                        string hincd, string vcyobi3, string vcyobi7, string vhead1, string vbody1)
+                        string qoltorid, string vnohindt, string vhincd, string vcolcd, string vcolnm,
+                        string vsizcd, string vsiznm, string vhinnma, decimal vsuryo, decimal vgnktk,
+                        decimal vuritk, string hincd, string vcyobi3, string vcyobi7, string vtokkb,
+                        string vhead1, string vbody1)
         {
             this.DATNO = datno;
             this.VRYOHNCD = vryohncd;
@@ -119,6 +127,7 @@ namespace PriceTagPrint.WAG_USR1
             this.VNOHINDT = vnohindt;
             this.VHINCD = vhincd;
             this.VCOLCD = vcolcd;
+            this.VCOLNM = vcolnm;
             this.VSIZCD = vsizcd;
             this.VSIZNM = vsiznm;
             this.VHINNMA = vhinnma;
@@ -128,6 +137,7 @@ namespace PriceTagPrint.WAG_USR1
             this.HINCD = hincd;
             this.VCYOBI3 = vcyobi3;
             this.VCYOBI7 = vcyobi7;
+            this.VTOKKB = vtokkb;
             this.VHEAD1 = vhead1;
             this.VBODY1 = vbody1;
         }
@@ -147,6 +157,7 @@ namespace PriceTagPrint.WAG_USR1
             sql += "	VNOHINDT, " + Environment.NewLine;
             sql += "	VHINCD, " + Environment.NewLine;
             sql += "	VCOLCD, " + Environment.NewLine;
+            sql += "	VCOLNM, " + Environment.NewLine;
             sql += "	VSIZCD, " + Environment.NewLine;
             sql += "	VSIZNM, " + Environment.NewLine;
             sql += "	VHINNMA, " + Environment.NewLine;
@@ -156,6 +167,7 @@ namespace PriceTagPrint.WAG_USR1
             sql += "	HINCD, " + Environment.NewLine;
             sql += "	VCYOBI3, " + Environment.NewLine;
             sql += "	VCYOBI7, " + Environment.NewLine;
+            sql += "	VTOKKB, " + Environment.NewLine;
             sql += "	VHEAD1, " + Environment.NewLine;
             sql += "	VBODY1 " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
@@ -206,7 +218,8 @@ namespace PriceTagPrint.WAG_USR1
                                     row.Field<string>("QOLTORID"), 
                                     row.Field<string>("VNOHINDT"), 
                                     row.Field<string>("VHINCD"), 
-                                    row.Field<string>("VCOLCD"), 
+                                    row.Field<string>("VCOLCD"),
+                                    row.Field<string>("VCOLNM"),
                                     row.Field<string>("VSIZCD"), 
                                     row.Field<string>("VSIZNM"),
                                     row.Field<string>("VHINNMA"), 
@@ -215,7 +228,8 @@ namespace PriceTagPrint.WAG_USR1
                                     row.Field<decimal>("VURITK"), 
                                     row.Field<string>("HINCD"), 
                                     row.Field<string>("VCYOBI3"),
-                                    row.Field<string>("VCYOBI7"), 
+                                    row.Field<string>("VCYOBI7"),
+                                    row.Field<string>("VTOKKB"),
                                     row.Field<string>("VHEAD1"), 
                                     row.Field<string>("VBODY1")
                                 ));
