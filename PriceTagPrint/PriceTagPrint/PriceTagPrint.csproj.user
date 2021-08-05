@@ -33,6 +33,9 @@
     <Compile Update="View\ProcessingSplash.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\TenmayaView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\WataseiView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -72,6 +75,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\ProcessingSplash.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\TenmayaView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\WataseiView.xaml">

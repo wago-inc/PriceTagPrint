@@ -196,6 +196,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.TENMAYA:
+                        {
+                            var view = new TenmayaView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     default:break;
                 }
             }

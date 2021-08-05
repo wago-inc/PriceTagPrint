@@ -45,7 +45,7 @@ namespace PriceTagPrint.Model
         /// <summary>
         /// 税込売価（HTANKA * 1.1 切り捨てで算出）
         /// </summary>
-        public double ZTANKA { get; set; }
+        public decimal ZTANKA { get; set; }
         /// <summary>
         /// 上代（JYUCYU.JYODAI）
         /// </summary>

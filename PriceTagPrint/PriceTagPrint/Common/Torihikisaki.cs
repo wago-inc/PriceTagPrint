@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PriceTagPrint.Common
@@ -208,12 +209,12 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(13, Tid.COSMOMATUOKA,   Tnm.COSMOMATUOKA,   HakkouKind.Input, CreateDirList(TidNum.COSMOMATUOKA)),
                 new Torihikisaki(14, Tid.SANEI,          Tnm.SANEI,          HakkouKind.Input, CreateDirList(TidNum.SANEI)),
                 new Torihikisaki(15, Tid.TAIFUKUTOKYO,   Tnm.TAIFUKUTOKYO,   HakkouKind.Input, CreateDirList(TidNum.TAIFUKUTOKYO)),
-                new Torihikisaki(16, Tid.TENMAYA,        Tnm.TENMAYA,        HakkouKind.Input, CreateDirList(TidNum.TENMAYA)),
+                new Torihikisaki(16, Tid.TENMAYA,        Tnm.TENMAYA,        HakkouKind.Both,  CreateDirList(TidNum.TENMAYA)),
                 new Torihikisaki(17, Tid.DOMMY,          Tnm.DOMMY,          HakkouKind.Input, CreateDirList(TidNum.DOMMY)),
                 new Torihikisaki(18, Tid.BIGA,           Tnm.BIGA,           HakkouKind.Input, CreateDirList(TidNum.BIGA)),
                 new Torihikisaki(19, Tid.FUJI,           Tnm.FUJI,           HakkouKind.Input, CreateDirList(TidNum.FUJI)),
                 new Torihikisaki(20, Tid.FUJIYA,         Tnm.FUJIYA,         HakkouKind.Input, CreateDirList(TidNum.FUJIYA)),
-                new Torihikisaki(21, Tid.HOKKAIDO_SANKI, Tnm.HOKKAIDO_SANKI, HakkouKind.Both, CreateDirList(TidNum.HOKKAIDO_SANKI)),
+                new Torihikisaki(21, Tid.HOKKAIDO_SANKI, Tnm.HOKKAIDO_SANKI, HakkouKind.Both,  CreateDirList(TidNum.HOKKAIDO_SANKI)),
                 new Torihikisaki(22, Tid.HONTENTAKAHASI, Tnm.HONTENTAKAHASI, HakkouKind.Input, CreateDirList(TidNum.HONTENTAKAHASI)),
                 new Torihikisaki(23, Tid.MAXVALUE,       Tnm.MAXVALUE,       HakkouKind.Input, CreateDirList(TidNum.MAXVALUE)),
                 new Torihikisaki(24, Tid.MARBURU,        Tnm.MARBURU,        HakkouKind.Input, CreateDirList(TidNum.MARBURU)),
@@ -241,7 +242,7 @@ namespace PriceTagPrint.Common
         private List<DirItem> CreateDirList(int tcode)
         {
             switch (tcode)
-            {                
+            {
                 case TidNum.AJU:
                     return new List<DirItem>()
                     {
@@ -452,6 +453,201 @@ namespace PriceTagPrint.Common
                     };
             }
             return null;
+        }
+    }
+
+    public class TenmayaHenkan
+    {
+        public string 変換値 { get; set; }
+        public string 変換A { get; set; }
+
+        public TenmayaHenkan(string 変換値, string 変換A)
+        {
+            this.変換値 = 変換値;
+            this.変換A = 変換A;
+        }
+    }
+    public class TenmayaHenkanList
+    {
+        public List<TenmayaHenkan> sList;
+        public List<TenmayaHenkan> cList;
+
+        public TenmayaHenkanList()
+        {
+            Create();
+        }
+
+        private void Create()
+        {
+            sList = new List<TenmayaHenkan>()
+            {
+                new TenmayaHenkan("0001", "48*48"),
+                new TenmayaHenkan("0002", "ΦΦΦ"),
+                new TenmayaHenkan("0003", "16cm"),
+                new TenmayaHenkan("0004", "ﾑｼﾃｲ"),
+                new TenmayaHenkan("0010", "176X261"),
+                new TenmayaHenkan("0011", "261X261"),
+                new TenmayaHenkan("0012", "261X352"),
+                new TenmayaHenkan("0013", "352X352"),
+                new TenmayaHenkan("0014", "352X440"),
+                new TenmayaHenkan("0015", "191X286"),
+                new TenmayaHenkan("0016", "286X286"),
+                new TenmayaHenkan("0017", "286X382"),
+                new TenmayaHenkan("0018", "382X382"),
+                new TenmayaHenkan("0020", "130A"),
+                new TenmayaHenkan("0021", "140A"),
+                new TenmayaHenkan("0022", "150A"),
+                new TenmayaHenkan("0023", "160A"),
+                new TenmayaHenkan("0024", "170A"),
+                new TenmayaHenkan("0058", "58cm"),
+                new TenmayaHenkan("0059", "60cm"),
+                new TenmayaHenkan("0060", "63cm"),
+                new TenmayaHenkan("0061", "65cm"),
+                new TenmayaHenkan("0062", "68cm"),
+                new TenmayaHenkan("0063", "70cm"),
+                new TenmayaHenkan("0064", "72cm"),
+                new TenmayaHenkan("0065", "74cm"),
+                new TenmayaHenkan("0066", "76cm"),
+                new TenmayaHenkan("0067", "78cm"),
+                new TenmayaHenkan("0068", "80cm"),
+                new TenmayaHenkan("0069", "82cm"),
+                new TenmayaHenkan("0070", "84cm"),
+                new TenmayaHenkan("0071", "86cm"),
+                new TenmayaHenkan("0072", "88cm"),
+                new TenmayaHenkan("0073", "90cm"),
+                new TenmayaHenkan("0074", "91cm"),
+                new TenmayaHenkan("0080", "100cm"),
+                new TenmayaHenkan("0081", "110cm"),
+                new TenmayaHenkan("0082", "120cm"),
+                new TenmayaHenkan("0083", "130cm"),
+                new TenmayaHenkan("0084", "140cm"),
+                new TenmayaHenkan("0085", "150cm"),
+                new TenmayaHenkan("0086", "160cm"),
+                new TenmayaHenkan("0087", "170cm"),
+                new TenmayaHenkan("0088", "180cm"),
+                new TenmayaHenkan("0089", "190cm"),
+                new TenmayaHenkan("0508", "7号"),
+                new TenmayaHenkan("0509", "9号"),
+                new TenmayaHenkan("0511", "11号"),
+                new TenmayaHenkan("0513", "13号"),
+                new TenmayaHenkan("0515", "15号"),
+                new TenmayaHenkan("0517", "17号"),
+                new TenmayaHenkan("0519", "19号"),
+                new TenmayaHenkan("0521", "21号"),
+                new TenmayaHenkan("0523", "23号"),
+                new TenmayaHenkan("9901", "3S"),
+                new TenmayaHenkan("9902", "SS"),
+                new TenmayaHenkan("9903", "S"),
+                new TenmayaHenkan("9904", "M"),
+                new TenmayaHenkan("9905", "L"),
+                new TenmayaHenkan("9906", "LL"),
+                new TenmayaHenkan("9907", "3L"),
+                new TenmayaHenkan("9908", "4L"),
+                new TenmayaHenkan("9909", "O"),
+                new TenmayaHenkan("9910", "OM"),
+                new TenmayaHenkan("9911", "OL"),
+                new TenmayaHenkan("9912", "EL"),
+                new TenmayaHenkan("9913", "ﾌﾘｰｻｲｽﾞ"),
+                new TenmayaHenkan("9914", "70cm"),
+                new TenmayaHenkan("9915", "80cm"),
+                new TenmayaHenkan("9916", "85cm"),
+                new TenmayaHenkan("9917", "90cm"),
+                new TenmayaHenkan("9918", "95cm"),
+                new TenmayaHenkan("9930", "27ｲﾝﾁ"),
+                new TenmayaHenkan("9931", "28ｲﾝﾁ"),
+                new TenmayaHenkan("9932", "29ｲﾝﾁ"),
+                new TenmayaHenkan("9933", "30ｲﾝﾁ"),
+                new TenmayaHenkan("9934", "31ｲﾝﾁ"),
+                new TenmayaHenkan("9935", "32ｲﾝﾁ"),
+                new TenmayaHenkan("9936", "33ｲﾝﾁ"),
+                new TenmayaHenkan("9937", "34ｲﾝﾁ"),
+                new TenmayaHenkan("5000", "16-18cm"),
+                new TenmayaHenkan("5001", "19-21cm"),
+                new TenmayaHenkan("5002", "20-22cm"),
+                new TenmayaHenkan("5003", "22-24cm"),
+                new TenmayaHenkan("5004", "24-26cm"),
+
+            };
+            cList = new List<TenmayaHenkan>()
+            {
+                new TenmayaHenkan("01", "ｸﾛ"),
+                new TenmayaHenkan("02", "ｼﾛ"),
+                new TenmayaHenkan("10", "ﾀﾞｰｸｸﾞﾚｰ"),
+                new TenmayaHenkan("11", "ﾐﾄﾞﾙｸﾞﾚｰ"),
+                new TenmayaHenkan("12", "ﾗｲﾄｸﾞﾚｰ"),
+                new TenmayaHenkan("19", "ｸﾞﾚｰｹｲ"),
+                new TenmayaHenkan("20", "ﾊﾟｰﾌﾟﾙ"),
+                new TenmayaHenkan("21", "ｳﾞｧｨｵﾚｯﾄ"),
+                new TenmayaHenkan("22", "ﾗｲﾗｯｸ"),
+                new TenmayaHenkan("29", "ﾊﾟｰﾌﾟﾙｹｲ"),
+                new TenmayaHenkan("30", "ｱｶ"),
+                new TenmayaHenkan("31", "ﾛｰｽﾞﾋﾟﾝｸ"),
+                new TenmayaHenkan("32", "ﾋﾟﾝｸ"),
+                new TenmayaHenkan("39", "ﾚｯﾄﾞｹｲ"),
+                new TenmayaHenkan("40", "ｴﾝｼﾞ"),
+                new TenmayaHenkan("41", "ｵﾚﾝｼﾞ"),
+                new TenmayaHenkan("42", "ｻｰﾓﾝｵﾚﾝｼﾞ"),
+                new TenmayaHenkan("49", "ｵﾚﾝｼﾞｹｲ"),
+                new TenmayaHenkan("50", "ｸﾘｰﾑｲｴﾛｰ"),
+                new TenmayaHenkan("51", "ﾚﾓﾝｲｴﾛｰ"),
+                new TenmayaHenkan("52", "ｱｲﾎﾞﾘｰ"),
+                new TenmayaHenkan("59", "ｲｴﾛｰｹｲ"),
+                new TenmayaHenkan("60", "ﾓｽｸﾞﾘｰﾝ"),
+                new TenmayaHenkan("61", "ｸﾞﾘｰﾝ"),
+                new TenmayaHenkan("62", "ﾗｲﾄｸﾞﾘｰﾝ"),
+                new TenmayaHenkan("69", "ｸﾞﾘｰﾝｹｲ"),
+                new TenmayaHenkan("70", "ｺﾝ"),
+                new TenmayaHenkan("71", "ﾌﾞﾙｰ"),
+                new TenmayaHenkan("72", "ｻｯｸｽ"),
+                new TenmayaHenkan("79", "ﾌﾞﾙｰｹｲ"),
+                new TenmayaHenkan("80", "ﾀﾞｰｸﾌﾞﾗｳﾝ"),
+                new TenmayaHenkan("81", "ｷｬﾒﾙ"),
+                new TenmayaHenkan("82", "ﾍﾞｰｼﾞｭ"),
+                new TenmayaHenkan("89", "ﾌﾞﾗｳﾝｹｲ"),
+                new TenmayaHenkan("90", "ｺﾞｰﾙﾄﾞ"),
+                new TenmayaHenkan("91", "ｼﾙﾊﾞｰ"),
+                new TenmayaHenkan("92", "ｺﾊﾟｰ")
+            };
+        }
+
+        public TenmayaHenkan GetSizeHenkanchiByName(string name, TenmayaHenkan defVal = null)
+        {
+            var result = defVal;
+            var list = sList.Where(x => x.変換A.ToUpperInvariant().StartsWith(name.ToUpperInvariant())).OrderBy(x => x.変換値);
+            if(list.Any())
+            {
+                if(list.Count() == 1)
+                {
+                    result = list.First();
+                }
+                else
+                {
+                    var ci = System.Globalization.CultureInfo.CurrentCulture.CompareInfo;
+                    result = list.FirstOrDefault(item =>
+                        ci.Compare(item.変換A.ToUpperInvariant(), name.ToUpperInvariant(), System.Globalization.CompareOptions.IgnoreWidth) == 0);
+                }
+            }
+            return result;
+        }
+
+        public TenmayaHenkan GetColorHenkanchiByName(string name, TenmayaHenkan defVal = null)
+        {
+            var result = defVal;
+            var list = cList.Where(x => x.変換A.ToUpperInvariant().StartsWith(name.ToUpperInvariant())).OrderBy(x => x.変換値);
+            if (list.Any())
+            {
+                if (list.Count() == 1)
+                {
+                    result = list.First();
+                }
+                else
+                {
+                    var ci = System.Globalization.CultureInfo.CurrentCulture.CompareInfo;
+                    result = list.FirstOrDefault(item =>
+                        ci.Compare(item.変換A.ToUpperInvariant(), name.ToUpperInvariant(), System.Globalization.CompareOptions.IgnoreWidth) == 0);
+                }
+            }
+            return result;
         }
     }
 }

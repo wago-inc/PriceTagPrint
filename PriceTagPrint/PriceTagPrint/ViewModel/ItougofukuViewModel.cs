@@ -91,7 +91,6 @@ namespace PriceTagPrint.ViewModel
         private DB_T05007_SHOHIN_TEKIYO_DAICHO_LIST dB_T05007_SHOHIN_TEKIYO_DAICHO;
         private DB_T05005_SHOHIN_BUNRUI2_DAICHO_LIST dB_T05005_SHOHIN_BUNRUI2_DAICHO;
 
-        private static double _zeiritsu = 1.1;
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -556,6 +555,7 @@ namespace PriceTagPrint.ViewModel
                 
                 if (wJyucyuList.Any() && shohinDaicho.Any())
                 {
+                    var zeiritsu = Zeiritsu.items.FirstOrDefault(x => x.SttDate <= DateTime.Today && DateTime.Today <= x.EndDate)?.Kakeritsu ?? 1;
                     var shohinTekiyoDicho = dB_T05007_SHOHIN_TEKIYO_DAICHO.QueryWhereAll();
                     var shohinBunrui2Dicho = dB_T05005_SHOHIN_BUNRUI2_DAICHO.QueryWhereAll();
                     ItougofukuDatas.Clear();
@@ -621,7 +621,7 @@ namespace PriceTagPrint.ViewModel
                                         JANCD = atbl.JANCD,
                                         STANKA = atbl.STANKA,
                                         HTANKA = atbl.HTANKA,
-                                        ZTANKA = Math.Floor(atbl.HTANKA * _zeiritsu),
+                                        ZTANKA = Math.Floor(atbl.HTANKA * zeiritsu),
                                         JYODAI = atbl.JYODAI,
                                         TEKIYOCD1 = atbl.TEKIYOCD1,
                                         TEKIYOCD2 = atbl.TEKIYOCD2,
@@ -662,7 +662,7 @@ namespace PriceTagPrint.ViewModel
                                         JANCD = atbl.JANCD,
                                         STANKA = atbl.STANKA,
                                         HTANKA = atbl.HTANKA,
-                                        ZTANKA = Math.Floor(atbl.HTANKA * _zeiritsu),
+                                        ZTANKA = Math.Floor(atbl.HTANKA * zeiritsu),
                                         JYODAI = atbl.JYODAI,
                                         TEKIYOCD1 = atbl.TEKIYOCD1,
                                         TEKIYOCD2 = atbl.TEKIYOCD2,
