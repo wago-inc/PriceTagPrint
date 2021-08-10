@@ -23,6 +23,14 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string EOSHINID { get; set; }
         /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string EOSHINNA { get; set; }
+        /// <summary>
+        /// 商品規格名
+        /// </summary>
+        public string EOSHINNB { get; set; }        
+        /// <summary>
         /// デプトクラスコード
         /// </summary>
         public string COLCD { get; set; }
@@ -30,14 +38,22 @@ namespace PriceTagPrint.WAG_USR1
         /// デプトクラスコード
         /// </summary>
         public string SIZCD { get; set; }
+        /// <summary>
+        /// EOS売価単価
+        /// </summary>
+        public decimal EOSURITK { get; set; }
 
-        public TOKMTE(string tokcd, string hincd, string eoshinid, string colcd, string sizcd)
+        public TOKMTE(string tokcd, string hincd, string eoshinid, string eoshinna, string eoshinnb, string colcd, 
+                      string sizcd, decimal eosuritk)
         {            
             this.TOKCD = tokcd;
             this.HINCD = hincd;
             this.EOSHINID = eoshinid;
+            this.EOSHINNA = eoshinna;
+            this.EOSHINNB = eoshinnb;
             this.COLCD = colcd;
             this.SIZCD = sizcd;
+            this.EOSURITK = eosuritk;
         }
     }
 
@@ -45,7 +61,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<TOKMTE> QueryWhereTcode(int tcode)
         {
-            var sql = "SELECT TOKCD, HINCD, EOSHINID, COLCD, SIZCD " + Environment.NewLine;
+            var sql = "SELECT TOKCD, HINCD, EOSHINID, EOSHINNA, EOSHINNB, COLCD, SIZCD, EOSURITK " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.TOKMTE " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
@@ -71,7 +87,8 @@ namespace PriceTagPrint.WAG_USR1
                             results.Add(new TOKMTE
                                 (
                                     row.Field<string>("TOKCD"), row.Field<string>("HINCD"), row.Field<string>("EOSHINID"),
-                                    row.Field<string>("COLCD"), row.Field<string>("SIZCD")
+                                    row.Field<string>("EOSHINNA"), row.Field<string>("EOSHINNB"), row.Field<string>("COLCD"),
+                                    row.Field<string>("SIZCD"), row.Field<decimal>("EOSURITK")
                                 ));
                         }
                     }

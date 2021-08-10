@@ -112,6 +112,7 @@
                             <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="8" />
                             <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="9" />
                             <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="10" />
+                            <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="11" />
                             
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd01" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd02" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource TitleButton}" Content="ヤマナカ" />
@@ -123,6 +124,7 @@
                             <Button Grid.Row="2" Grid.Column="3" x:Name="Cmd08" Command="{Binding SelectAutoCommand}" CommandParameter="2101" Style="{StaticResource TitleButton}" Content="マネキ" />
                             <Button Grid.Row="2" Grid.Column="5" x:Name="Cmd09" Command="{Binding SelectAutoCommand}" CommandParameter="0121" Style="{StaticResource TitleButton}" Content="北海道三喜" />
                             <Button Grid.Row="3" Grid.Column="1" x:Name="Cmd10" Command="{Binding SelectAutoCommand}" CommandParameter="0109" Style="{StaticResource TitleButton}" Content="天満屋" />
+                            <Button Grid.Row="3" Grid.Column="3" x:Name="Cmd11" Command="{Binding SelectAutoCommand}" CommandParameter="0117" Style="{StaticResource TitleButton}" Content="サンエー" />
                         </Grid>
 
                         <Grid ShowGridLines="false" Visibility="{Binding RyohanMenuVisibility.Value}">

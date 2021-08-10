@@ -67,6 +67,10 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string VCYOBI7 { get; set; }
         /// <summary>
+        /// 表示用商品コード（リスト表示名称）
+        /// </summary>
+        public string VHINNMA { get; set; }
+        /// <summary>
         /// 表示用商品コード
         /// </summary>
         public string HINNM { get; set; }

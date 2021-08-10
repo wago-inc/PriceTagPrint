@@ -63,6 +63,10 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string VHINNMA { get; set; }
         /// <summary>
+        /// 入数
+        /// </summary>
+        public decimal VIRISU { get; set; }
+        /// <summary>
         /// 発行枚数
         /// </summary>
         public decimal VSURYO { get; set; }
@@ -114,9 +118,9 @@ namespace PriceTagPrint.WAG_USR1
         /// <param name="vcyobi7"></param>
         public EOSJUTRA(string datno, string vryohncd, string vrcvdt, string vrowno, string vbuncd, 
                         string qoltorid, string vnohindt, string vhincd, string vcolcd, string vcolnm,
-                        string vsizcd, string vsiznm, string vhinnma, decimal vsuryo, decimal vgnktk,
-                        decimal vuritk, string hincd, string vcyobi3, string vcyobi7, string vtokkb,
-                        string vhead1, string vbody1)
+                        string vsizcd, string vsiznm, string vhinnma, decimal virisu, decimal vsuryo,
+                        decimal vgnktk, decimal vuritk, string hincd, string vcyobi3, string vcyobi7,
+                        string vtokkb, string vhead1, string vbody1)
         {
             this.DATNO = datno;
             this.VRYOHNCD = vryohncd;
@@ -131,6 +135,7 @@ namespace PriceTagPrint.WAG_USR1
             this.VSIZCD = vsizcd;
             this.VSIZNM = vsiznm;
             this.VHINNMA = vhinnma;
+            this.VIRISU = virisu;
             this.VSURYO = vsuryo;
             this.VURITK = vuritk;
             this.VGNKTK = vgnktk;
@@ -161,6 +166,7 @@ namespace PriceTagPrint.WAG_USR1
             sql += "	VSIZCD, " + Environment.NewLine;
             sql += "	VSIZNM, " + Environment.NewLine;
             sql += "	VHINNMA, " + Environment.NewLine;
+            sql += "	VIRISU, " + Environment.NewLine;
             sql += "	VSURYO, " + Environment.NewLine;
             sql += "	VGNKTK, " + Environment.NewLine;
             sql += "	VURITK, " + Environment.NewLine;
@@ -222,7 +228,8 @@ namespace PriceTagPrint.WAG_USR1
                                     row.Field<string>("VCOLNM"),
                                     row.Field<string>("VSIZCD"), 
                                     row.Field<string>("VSIZNM"),
-                                    row.Field<string>("VHINNMA"), 
+                                    row.Field<string>("VHINNMA"),
+                                    row.Field<decimal>("VIRISU"),
                                     row.Field<decimal>("VSURYO"), 
                                     row.Field<decimal>("VGNKTK"),
                                     row.Field<decimal>("VURITK"), 

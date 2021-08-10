@@ -19,7 +19,7 @@ using System.Windows.Media;
 
 namespace PriceTagPrint.ViewModel
 {
-    public class TenmayaViewModel : ViewModelsBase
+    public class SaneiViewModel : ViewModelsBase
     {
         #region プロパティ
         // 発行区分
@@ -36,7 +36,11 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<DateTime> NouhinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today.AddDays(1));
 
         // 分類コード
-        public ReactiveProperty<string> VbunCdText { get; set; }
+        public ReactiveProperty<int> VbunCdText { get; set; }
+        public ReactiveProperty<ObservableCollection<CommonIdName>> VbunCdItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
+        public ReactiveProperty<int> SelectedVbunCdIndex { get; set; }
+                = new ReactiveProperty<int>(0);
 
         // 和合分類コード
         public ReactiveProperty<string> BunruiCodeText { get; set; }
@@ -60,14 +64,14 @@ namespace PriceTagPrint.ViewModel
         //発行枚数計
         public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
 
-        private List<TenmayaData> TenmayaDatas { get; set; } = new List<TenmayaData>();
+        private List<SaneiData> SaneiDatas { get; set; } = new List<SaneiData>();
         // DataGrid Items
-        public ReactiveProperty<ObservableCollection<TenmayaItem>> TenmayaItems { get; set; }
-                = new ReactiveProperty<ObservableCollection<TenmayaItem>>();
+        public ReactiveProperty<ObservableCollection<SaneiItem>> SaneiItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<SaneiItem>>();
 
         #endregion
 
-        private readonly string _grpName = @"\天満屋ストア値札発行_V5_ST308R";
+        private readonly string _grpName = @"\【総額】サンエー_V5_RT308R";
 
         // 発行区分テキストボックス
         public TextBox HakkouTypeTextBox = null;
@@ -75,7 +79,7 @@ namespace PriceTagPrint.ViewModel
         public DatePicker NouhinDatePicker = null;
 
         private EOSJUTRA_LIST eOSJUTRA_LIST;
-        private EOSKNMTA_LIST eOSKNMTA_LIST;
+        private TOKMTE_LIST tOKMTE_LIST;
         private HINMTA_LIST hINMTA_LIST;
         private List<HINMTA> hinmtaList;
         #region コマンドの実装
@@ -145,25 +149,27 @@ namespace PriceTagPrint.ViewModel
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public TenmayaViewModel()
+        public SaneiViewModel()
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
-            eOSKNMTA_LIST = new EOSKNMTA_LIST();
+            tOKMTE_LIST = new TOKMTE_LIST();
 
             CreateComboItems();
 
             // コンボボックス初期値セット
             HakkouTypeText = new ReactiveProperty<int>(1);
-            VbunCdText = new ReactiveProperty<string>("");
+            VbunCdText = new ReactiveProperty<int>(1);
             BunruiCodeText = new ReactiveProperty<string>("");
             NefudaBangouText = new ReactiveProperty<int>();
 
             // SubScribe定義
             HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
+            VbunCdText.Subscribe(x => VbunCdTextChanged(x));
             BunruiCodeText.Subscribe(x => BunruiCodeTextChanged(x));
             NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
 
             SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
+            SelectedVbunCdIndex.Subscribe(x => SelectedVbunCdIndexChanged(x));
             SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
 
@@ -197,6 +203,7 @@ namespace PriceTagPrint.ViewModel
             var bunruis = new BunruiCodeList().GetBunruiCodes();
             bunruis.Insert(0, new BunruiCode("", ""));
             HakkouTypeItems.Value = new ObservableCollection<CommonIdName>(CreateHakkouTypeItems());
+            VbunCdItems.Value = new ObservableCollection<CommonIdName>(CreateVbunCdItems());
             BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
             NefudaBangouItems.Value = new ObservableCollection<CommonIdName>(CreateNefudaBangouItems());
         }
@@ -220,6 +227,28 @@ namespace PriceTagPrint.ViewModel
         }
 
         /// <summary>
+        /// 分類コードItems生成
+        /// </summary>
+        /// <returns></returns>
+        public List<CommonIdName> CreateVbunCdItems()
+        {
+            var list = new List<CommonIdName>();
+            var item = new CommonIdName();
+            item.Id = 1842;
+            item.Name = "1842：レッグ";
+            list.Add(item);
+            var item2 = new CommonIdName();
+            item2.Id = 1837;
+            item2.Name = "1837：婦人インナー";
+            list.Add(item2);
+            var item3 = new CommonIdName();
+            item3.Id = 1816;
+            item3.Name = "1816：紳士インナー";
+            list.Add(item3);
+            return list;
+        }
+
+        /// <summary>
         /// 値札番号Items生成
         /// </summary>
         /// <returns></returns>
@@ -228,11 +257,11 @@ namespace PriceTagPrint.ViewModel
             var list = new List<CommonIdName>();
             var item1 = new CommonIdName();
             item1.Id = 1;
-            item1.Name = "1：天満屋ストア_貼札_プロパー";
+            item1.Name = "1：貼り札 白無地21号_JAN1段";
             list.Add(item1);
             var item2 = new CommonIdName();
             item2.Id = 2;
-            item2.Name = "2：天満屋ストア_下札_プロパー";
+            item2.Name = "2：下げ札 白無地11号_JAN1段";
             list.Add(item2);
             return list;
         }
@@ -252,6 +281,19 @@ namespace PriceTagPrint.ViewModel
 
         /// <summary>
         /// 分類コードテキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
+        private void VbunCdTextChanged(int id)
+        {
+            var item = VbunCdItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedVbunCdIndex.Value = VbunCdItems.Value.IndexOf(item);
+            }
+        }
+
+        /// <summary>
+        /// 和合分類コードテキスト変更処理
         /// </summary>
         /// <param name="id"></param>
         private void BunruiCodeTextChanged(string id)
@@ -306,6 +348,23 @@ namespace PriceTagPrint.ViewModel
         /// 分類コードコンボ変更処理
         /// </summary>
         /// <param name="idx"></param>
+        private void SelectedVbunCdIndexChanged(int idx)
+        {
+            var item = VbunCdItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                VbunCdText.Value = item.Id;
+            }
+            else
+            {
+                VbunCdText.Value = 0;
+            }
+        }
+
+        /// <summary>
+        /// 和合分類コードコンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
         private void SelectedBunruiCodeIndexChanged(int idx)
         {
             var item = BunruiCodeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
@@ -347,16 +406,16 @@ namespace PriceTagPrint.ViewModel
             JusinDate.Value = DateTime.Today;
             NouhinDate.Value = DateTime.Today.AddDays(1);
             SelectedHakkouTypeIndex.Value = 0;
-            VbunCdText.Value = "";
+            SelectedVbunCdIndex.Value = 0;
             BunruiCodeText.Value = "";
             SelectedNefudaBangouIndex.Value = 0;
             SttHincd.Value = "";
             EndHincd.Value = "";
             TotalMaisu.Value = "";
-            TenmayaDatas.Clear();
-            if (TenmayaItems.Value != null && TenmayaItems.Value.Any())
+            SaneiDatas.Clear();
+            if (SaneiItems.Value != null && SaneiItems.Value.Any())
             {
-                TenmayaItems.Value.Clear();
+                SaneiItems.Value.Clear();
             }
             HakkouTypeTextBox.Focus();
         }
@@ -380,7 +439,7 @@ namespace PriceTagPrint.ViewModel
                 this.NouhinDatePicker.Focus();
                 return false;
             }
-            if (string.IsNullOrEmpty(this.VbunCdText.Value))
+            if (string.IsNullOrEmpty(this.VbunCdText.Value.ToString()) || (this.VbunCdText.Value != 1842 && this.VbunCdText.Value != 1837 && this.VbunCdText.Value != 1816))
             {
                 MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -411,42 +470,44 @@ namespace PriceTagPrint.ViewModel
         {
             ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
-                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.TENMAYA, JusinDate.Value, NouhinDate.Value);
-                var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(TidNum.TENMAYA);
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.SANEI, JusinDate.Value, NouhinDate.Value);
+                var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.SANEI);
 
-                if (eosJutraList.Any() && easKnmtaList.Any())
+                if (eosJutraList.Any() && tokmteList.Any())
                 {
                     var innerJoinData = eosJutraList
-                            .Join(
-                                   easKnmtaList,
+                            .GroupJoin(
+                                   tokmteList,
                                    e1 => new
                                    {
+                                       VHINCD = e1.VHINCD.TrimEnd(),
                                        VRYOHNCD = e1.VRYOHNCD.ToString()
                                    },
                                    e2 => new
                                    {
-                                       VRYOHNCD = e2.VRYOHNCD.ToString()
+                                       VHINCD = e2.EOSHINID.TrimEnd(),
+                                       VRYOHNCD = e2.TOKCD.ToString()
                                    },
-                                   (eosj, eosm) => new
+                                   (eosj, tkmte) => new
                                    {
                                        VRYOHNCD = eosj.VRYOHNCD,
-                                       VRYOHNNM = eosm.VRYOHNNM,
                                        VRCVDT = eosj.VRCVDT,
                                        VNOHINDT = eosj.VNOHINDT,
-                                       DATNO = eosj.DATNO,
-                                       VROWNO = eosj.VROWNO,
                                        VBUNCD = eosj.VBUNCD,
                                        VHINCD = eosj.VHINCD.TrimEnd(),
                                        VHINNMA = eosj.VHINNMA.TrimEnd(),
                                        HINCD = eosj.HINCD.TrimEnd(),
-                                       VCYOBI7 = eosj.VCYOBI7.TrimEnd(),
                                        QOLTORID = eosj.QOLTORID.TrimEnd(),
                                        VURITK = eosj.VURITK,
-                                       VSURYO = eosj.VSURYO,
+                                       VIRISU = eosj.VIRISU,
+                                       VSURYO = eosj.VSURYO,                                       
                                        VSIZNM = eosj.VSIZNM.TrimEnd(),
                                        VCOLNM = eosj.VCOLNM.TrimEnd(),
+                                       EOSHINNA = tkmte.Any() ? tkmte.FirstOrDefault().EOSHINNA.TrimEnd() : "",
+                                       SIZCD = tkmte.Any() ? tkmte.FirstOrDefault().SIZCD.TrimEnd() : "",
+                                       EOSURITK = tkmte.Any() ? tkmte.FirstOrDefault().EOSURITK : 0,
                                    })
-                            .Where(x => x.VBUNCD.TrimEnd() == this.VbunCdText.Value)
+                            .Where(x => x.VBUNCD.TrimEnd() == this.VbunCdText.Value.ToString())
                             .Where(x => !string.IsNullOrEmpty(this.BunruiCodeText.Value) ? x.HINCD.StartsWith(this.BunruiCodeText.Value) : true)
                             .OrderBy(x => x.VRYOHNCD)
                                     .ThenBy(x => x.VRCVDT)
@@ -461,8 +522,8 @@ namespace PriceTagPrint.ViewModel
                             int endHincd;
                             int aitSttHincd;
                             int aitEndHincd;
-                            TenmayaDatas.Clear();
-                            TenmayaDatas.AddRange(
+                            SaneiDatas.Clear();
+                            SaneiDatas.AddRange(
                                 innerJoinData
                                     .GroupJoin(
                                            hinmtaList,
@@ -477,65 +538,85 @@ namespace PriceTagPrint.ViewModel
                                            (a, hin) => new
                                            {
                                                VRYOHNCD = a.VRYOHNCD,
-                                               VRYOHNNM = a.VRYOHNNM,
                                                VRCVDT = a.VRCVDT,
                                                VNOHINDT = a.VNOHINDT,
-                                               VCYOBI7 = a.VCYOBI7,
-                                               HINBAN = !string.IsNullOrEmpty(a.VCYOBI7) && a.VCYOBI7.Contains("-") ?
-                                                            a.VCYOBI7.Substring(0, a.VCYOBI7.IndexOf("-")) : "",
-                                               VURITK = a.VURITK,
-                                               JANCD = a.VHINCD,
-                                               QOLTORID = a.QOLTORID,
-                                               HINCD = a.HINCD,
+                                               VHINCD = a.VHINCD,
                                                VHINNMA = a.VHINNMA,
-                                               HINNM = hin.Any() ? hin.FirstOrDefault().HINNMA : "",
+                                               HINCD = hin.Any() ? hin.FirstOrDefault().HINCLID.TrimEnd() + "-" + hin.FirstOrDefault().HINID.TrimEnd() : "",
+                                               DISPHINCD = a.HINCD,
+                                               HINID = hin.Any() ? hin.FirstOrDefault().HINID.TrimEnd() : "",
+                                               QOLTORID = a.QOLTORID,
+                                               VIRISU = a.VIRISU,
+                                               VURITK = a.EOSURITK > 0 ? a.EOSURITK : a.VURITK,
                                                VSURYO = a.VSURYO,
-                                               VSIZNM = a.VSIZNM,
-                                               VCOLNM = a.VCOLNM,
+                                               HINNM = hin.Any() ? hin.FirstOrDefault().HINNMA : "",                                               
+                                               VSIZNM = !string.IsNullOrEmpty(a.VSIZNM) ? a.VSIZNM : "　",
+                                               VCOLNM = !string.IsNullOrEmpty(a.VCOLNM) ? a.VCOLNM : "　",
+                                               MESSAGE = !string.IsNullOrEmpty(a.EOSHINNA) ? a.EOSHINNA : " ",
+                                               NEFUDA = !string.IsNullOrEmpty(a.SIZCD) ? a.SIZCD : "1",
+                                               BUMONCD = !string.IsNullOrEmpty(a.VBUNCD) && a.VBUNCD.Length > 3 ?
+                                                            a.VBUNCD.Substring(0, 3) == "184" ? "1" :
+                                                            a.VBUNCD.Substring(0, 3) == "183" ? "2" :
+                                                            a.VBUNCD.Substring(0, 3) == "181" ? "3" :
+                                                            a.VBUNCD.Substring(0, 3) == "182" ? "4" : "　"
+                                                            : "　",
+                                               TUIKA_KBN = "1",
+                                               SET_INFO = "S",
                                            })
                                     .GroupBy(a => new
                                     {
                                         a.VRYOHNCD,
-                                        a.VRYOHNNM,
                                         a.VRCVDT,
                                         a.VNOHINDT,
-                                        a.VCYOBI7,
-                                        a.HINBAN,
-                                        a.VURITK,
-                                        a.JANCD,
-                                        a.QOLTORID,
-                                        a.HINCD,
+                                        a.VHINCD,
                                         a.VHINNMA,
+                                        a.HINCD,
+                                        a.DISPHINCD,
+                                        a.HINID,
+                                        a.QOLTORID,
+                                        a.VIRISU,
+                                        a.VURITK,                                      
                                         a.HINNM,
                                         a.VSIZNM,
                                         a.VCOLNM,
+                                        a.MESSAGE,
+                                        a.NEFUDA,
+                                        a.BUMONCD,
+                                        a.TUIKA_KBN,
+                                        a.SET_INFO,
                                     })
-                                    .Select(g => new TenmayaData()
+                                    .Select(g => new SaneiData()
                                     {
                                         VRYOHNCD = g.Key.VRYOHNCD,
-                                        VRYOHNNM = g.Key.VRYOHNNM,
                                         VRCVDT = g.Key.VRCVDT,
                                         VNOHINDT = g.Key.VNOHINDT,
-                                        VSURYO = g.Sum(y => y.VSURYO),
-                                        VCYOBI7 = g.Key.VCYOBI7,
-                                        HINBAN = g.Key.HINBAN,
-                                        VURITK = g.Key.VURITK,
-                                        VHINCD = g.Key.JANCD,
-                                        QOLTORID = g.Key.QOLTORID,
-                                        HINCD = g.Key.HINCD,
+                                        VHINCD = g.Key.VHINCD,
                                         VHINNMA = g.Key.VHINNMA,
-                                        HINNM = g.Key.HINNM,
+                                        HINCD = g.Key.HINCD,
+                                        HINID = g.Key.HINID,
+                                        DSPHINCD = g.Key.DISPHINCD,
+                                        QOLTORID = g.Key.QOLTORID,
+                                        VIRISU = g.Key.VIRISU,
+                                        VURITK = g.Key.VURITK,
+                                        VSURYO = g.Sum(y => y.VSURYO),
+                                        DSPHINNM = g.Key.HINNM,
                                         VSIZNM = g.Key.VSIZNM,
                                         VCOLNM = g.Key.VCOLNM,
+                                        MESSAGE = g.Key.MESSAGE,
+                                        NEFUDA = g.Key.NEFUDA,
+                                        BUMONCD = g.Key.BUMONCD,
+                                        TUIKA_KBN = g.Key.TUIKA_KBN,
+                                        SET_INFO = g.Key.SET_INFO,
                                     })
+                                    .Where(x => x.NEFUDA == this.NefudaBangouText.Value.ToString())
                                     .Where(x => !string.IsNullOrEmpty(this.SttHincd.Value) ?
                                                     int.TryParse(this.SttHincd.Value, out sttHincd) &&
-                                                    int.TryParse(x.HINBAN, out aitSttHincd) ?
+                                                    int.TryParse(x.HINID, out aitSttHincd) ?
                                                         aitSttHincd >= sttHincd : true
                                                 : true)
                                     .Where(x => !string.IsNullOrEmpty(this.EndHincd.Value) ?
                                                     int.TryParse(this.EndHincd.Value, out endHincd) &&
-                                                    int.TryParse(x.HINBAN, out aitEndHincd) ?
+                                                    int.TryParse(x.HINID, out aitEndHincd) ?
                                                         aitEndHincd <= endHincd : true
                                                 : true)
                                     .OrderBy(x => x.VRYOHNCD)
@@ -544,13 +625,13 @@ namespace PriceTagPrint.ViewModel
                                     );
                         }
 
-                        if (TenmayaDatas.Any())
+                        if (SaneiDatas.Any())
                         {
-                            TenmayaItems.Value = new ObservableCollection<TenmayaItem>();
-                            var TenmayaModelList = new TenmayaItemList();
-                            var addItems = new ObservableCollection<TenmayaItem>(TenmayaModelList.ConvertTenmayaDataToModel(TenmayaDatas)).ToList();
+                            SaneiItems.Value = new ObservableCollection<SaneiItem>();
+                            var SaneiModelList = new SaneiItemList();
+                            var addItems = new ObservableCollection<SaneiItem>(SaneiModelList.ConvertSaneiDataToModel(SaneiDatas)).ToList();
                             // 直接ObservableにAddするとなぜか落ちるためListをかます。
-                            var setItems = new List<TenmayaItem>();
+                            var setItems = new List<SaneiItem>();
                             addItems.ForEach(item =>
                             {
                                 Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -559,12 +640,12 @@ namespace PriceTagPrint.ViewModel
                                       .Subscribe(e =>
                                       {
                                           // 発行枚数に変更があったら合計発行枚数も変更する
-                                          TotalMaisu.Value = TenmayaItems.Value.Sum(x => x.発行枚数).ToString();
+                                          TotalMaisu.Value = SaneiItems.Value.Sum(x => x.発行枚数).ToString();
                                       });
                                 setItems.Add(item);
                             });
-                            TenmayaItems.Value = new ObservableCollection<TenmayaItem>(setItems);
-                            TotalMaisu.Value = TenmayaItems.Value.Sum(x => x.発行枚数).ToString();
+                            SaneiItems.Value = new ObservableCollection<SaneiItem>(setItems);
+                            TotalMaisu.Value = SaneiItems.Value.Sum(x => x.発行枚数).ToString();
                         }
                         else
                         {
@@ -601,9 +682,9 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool PrintCheck()
         {
-            return TenmayaItems.Value != null &&
-                   TenmayaItems.Value.Any() &&
-                   TenmayaItems.Value.Sum(x => x.発行枚数) > 0;
+            return SaneiItems.Value != null &&
+                   SaneiItems.Value.Any() &&
+                   SaneiItems.Value.Sum(x => x.発行枚数) > 0;
         }
 
         /// <summary>
@@ -612,7 +693,7 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var fname = Tid.TENMAYA + "_" +
+            var fname = Tid.SANEI + "_" +
                         this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.NouhinDate.Value.ToString("yyyyMMdd") + ".csv";
             var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
@@ -631,26 +712,30 @@ namespace PriceTagPrint.ViewModel
         /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {
-            var list = TenmayaItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var list = SaneiItems.Value.Where(x => x.発行枚数 > 0).ToList();
             var csvColSort = new string[]
             {
-                "取引先コード",
-                "EOSコード",
-                "サイズ",
-                "カラー",
-                "販促",
-                "略号",
-                "フリー入力",
-                "本体価格",
+                "納品月",
+                "納品日",
+                "追加情報",
+                "部門コード",
+                "仕入先コード",
                 "JANコード",
+                "品番",
+                "カラー名",
+                "サイズ名",
+                "セット情報",
+                "セット数",
+                "メッセージ",
+                "売価",
+                "値下げラベルNo",
                 "発行枚数"
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
-            datas.Columns.Remove("表示用サイズ");
-            datas.Columns.Remove("表示用カラー");
-            datas.Columns.Remove("表示用商品コード");
-            datas.Columns.Remove("表示用商品名"); 
+            datas.Columns.Remove("表示用品番");
+            datas.Columns.Remove("表示用商品名");
+            datas.Columns.Remove("表示用セット情報");
             datas.Columns.Remove("リスト表示商品名");
             new CsvUtility().Write(datas, fullName, true);
         }
@@ -664,8 +749,8 @@ namespace PriceTagPrint.ViewModel
         {
             // ※振分発行用ＰＧ
             var layName = NefudaBangouText.Value == 1
-                            ? @"01_天満屋ストア【手入力】_貼札_プロパー.mllayx"
-                            : @"02_天満屋ストア【手入力】_下札_プロパー.mllayx";
+                            ? @"12_貼り札（大）白無地21号_JAN1段（税込自動計算）.mllayx"
+                            : @"13_下げ札（小）白無地11号_JAN1段（税込自動計算）.mllayx";
             var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + _grpName + @"\" + layName;
             var dq = "\"";
             var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
@@ -682,7 +767,7 @@ namespace PriceTagPrint.ViewModel
         #endregion
     }
 
-    public class TenmayaItem : INotifyPropertyChanged
+    public class SaneiItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String propertyName = "")
@@ -705,64 +790,73 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public string 取引先コード { get; set; }     //csv
-        public string EOSコード { get; set; }     //csv & 表示
-        public string サイズ { get; set; }  //csv
-        public string 表示用サイズ { get; set; }  //表示
-        public string カラー { get; set; }  //csv
-        public string 表示用カラー { get; set; }  //表示
-        public string 販促 { get; set; }  //csv　空白でOK
-        public string 略号 { get; set; } //csv　固定で"WU"
-        public string フリー入力 { get; set; } //csv 品番 + 枝番
-        public string 表示用商品コード { get; set; }    //表示
-        public decimal 本体価格 { get; set; }  //csv & 表示 税抜き売価に変換して表示
+        public string 納品月 { get; set; }    //csv
+        public string 納品日 { get; set; }    //csv
+        public string 追加情報 { get; set; }   //csv
+        public string 部門コード { get; set; }  //csv
+        public string 仕入先コード { get; set; }     //csv
         public string JANコード { get; set; }   //csv & 表示
+        public string 品番 { get; set; }    //csv
+        public string 表示用品番 { get; set; }    //表示
         public string 表示用商品名 { get; set; }   //表示
+        public string カラー名 { get; set; }  //csv & 表示
+        public string サイズ名 { get; set; }  //csv & 表示
+        public string セット情報 { get; set; }   //csv        
+        public decimal セット数 { get; set; }  //csv
+        public string メッセージ { get; set; }  //csv
+        public decimal 売価 { get; set; }  //csv & 表示
+        public string 値下げラベルNo { get; set; } //csv      
+        public string 表示用セット情報 { get; set; }    //表示
         public string リスト表示商品名 { get; set; }   //表示
-        public TenmayaItem(decimal 発行枚数, string 取引先コード, string EOSコード, string サイズ, string 表示用サイズ, string カラー,
-                            string 表示用カラー, string 販促, string 略号, string フリー入力, string 表示用商品コード, decimal 本体価格,
-                            string JANコード, string 表示用商品名, string リスト表示商品名)
+        public SaneiItem(decimal 発行枚数, string 納品月, string 納品日, string 追加情報, string 部門コード, string 仕入先コード,
+                            string JANコード, string 品番, string 表示用品番, string 表示用商品名, string サイズ名, string カラー名,
+                            string セット情報, decimal セット数, string メッセージ, decimal 売価, string 値下げラベルNo, 
+                            string 表示用セット情報, string リスト表示商品名)
         {
             this.発行枚数 = 発行枚数;
-            this.取引先コード = 取引先コード;
-            this.EOSコード = EOSコード;
-            this.サイズ = サイズ;
-            this.表示用サイズ = 表示用サイズ;
-            this.カラー = カラー;
-            this.表示用カラー = 表示用カラー;
-            this.販促 = 販促;
-            this.略号 = 略号;
-            this.フリー入力 = フリー入力;
-            this.表示用商品コード = 表示用商品コード;
-            this.本体価格 = 本体価格;
+            this.納品月 = 納品月;
+            this.納品日 = 納品日;
+            this.追加情報 = 追加情報;
+            this.部門コード = 部門コード;
+            this.仕入先コード = 仕入先コード;
             this.JANコード = JANコード;
+            this.品番 = 品番;
+            this.表示用品番 = 表示用品番;
             this.表示用商品名 = 表示用商品名;
+            this.サイズ名 = サイズ名;
+            this.カラー名 = カラー名;
+            this.セット情報 = セット情報;
+            this.セット数 = セット数;
+            this.メッセージ = メッセージ;
+            this.売価 = 売価;
+            this.値下げラベルNo = 値下げラベルNo;
+            this.表示用セット情報 = 表示用セット情報;
             this.リスト表示商品名 = リスト表示商品名;
         }
     }
 
-    public class TenmayaItemList
+    public class SaneiItemList
     {
-        public IEnumerable<TenmayaItem> ConvertTenmayaDataToModel(List<TenmayaData> datas)
+        public IEnumerable<SaneiItem> ConvertSaneiDataToModel(List<SaneiData> datas)
         {
-            var result = new List<TenmayaItem>();
-            var henkanList = new TenmayaHenkanList();
-            TenmayaHenkan shenkan;
-            TenmayaHenkan chenkan;
-            decimal zeinuki = 0m;
-            string dispSize = "";
-            string dispColor = "";
-            var zeiritsu = Zeiritsu.items.FirstOrDefault(x => x.SttDate <= DateTime.Today && DateTime.Today <= x.EndDate)?.Kakeritsu ?? 1;
+            var result = new List<SaneiItem>();
+            DateTime convDate;
+            string 納品月 = "";
+            string 納品日 = "";
+            string サイズ名 = "";
+            string カラー名 = "";
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             datas.ForEach(data =>
             {
-                shenkan = henkanList.GetSizeHenkanchiByName(data.VSIZNM, new TenmayaHenkan("", data.VSIZNM));
-                chenkan = henkanList.GetColorHenkanchiByName(data.VCOLNM, new TenmayaHenkan("", data.VCOLNM));
-                zeinuki = data.VURITK / zeiritsu;
-                dispSize = shenkan.変換値 + " " + shenkan.変換A;
-                dispColor = chenkan.変換値 + " " + chenkan.変換A;
+                convDate = DateTime.ParseExact(data.VNOHINDT, "yyyyMMdd", null);
+                納品月 = convDate != null ? convDate.Month.ToString() : "";
+                納品日 = convDate != null ? convDate.Day.ToString() : "";                
+                カラー名 = Microsoft.VisualBasic.Strings.StrConv(data.VCOLNM, Microsoft.VisualBasic.VbStrConv.Wide, 0x411);
+                サイズ名 = Microsoft.VisualBasic.Strings.StrConv(data.VSIZNM, Microsoft.VisualBasic.VbStrConv.Wide, 0x411);
                 result.Add(
-                    new TenmayaItem(data.VSURYO, data.QOLTORID, "", shenkan.変換値, dispSize, chenkan.変換値, dispColor,
-                                    "", "WU", data.VCYOBI7, data.HINCD, zeinuki, data.VHINCD, data.HINNM, data.VHINNMA));
+                    new SaneiItem(data.VSURYO, 納品月, 納品日, data.TUIKA_KBN, data.BUMONCD, data.QOLTORID, data.VHINCD,
+                                  data.HINCD, data.DSPHINCD, data.DSPHINNM, サイズ名, カラー名, data.SET_INFO,
+                                  data.VIRISU, data.MESSAGE, data.VURITK, string.Empty, data.SET_INFO + data.VIRISU, data.VHINNMA));
             });
             return result;
         }
