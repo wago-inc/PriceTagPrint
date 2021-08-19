@@ -149,43 +149,42 @@
                       ItemsSource="{Binding BunruiCodeItems.Value}"
                       SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
                       DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
-                      IsTabStop="False"/>
-
-            <!--値札番号-->
-            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 値 札 番 号" Style="{StaticResource TitleText}" 
-                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="5" Grid.Column="7" x:Name="NefudaBangouText" 
-                     Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
-                     HorizontalContentAlignment="Center" MaxLength="1"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     LostFocus="TextBox_LostFocus"                     
-                     TabIndex="6">
-            </TextBox>
-            <ComboBox Grid.Row="5" Grid.Column="8" Grid.ColumnSpan="3" x:Name="NefudaBangouComboBox" 
-                      ItemsSource="{Binding NefudaBangouItems.Value}"
-                      SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
-                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
-                      IsTabStop="False"/>
+                      IsTabStop="False"/>            
 
             <!--品番-->
-            <TextBlock Grid.Row="7" Grid.Column="6" Text=" 品　　　番" Style="{StaticResource TitleText}" 
+            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 品　　　番" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
+            <TextBox Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
                      Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}"
                      HorizontalContentAlignment="Center" MaxLength="5" Margin="0,0,10,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="7"/>
-            <TextBlock Grid.Row="7" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Row="7" Grid.Column="10" x:Name="EndHincdText"
+                     TabIndex="6"/>
+            <TextBlock Grid.Row="5" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
+            <TextBox Grid.Row="5" Grid.Column="10" x:Name="EndHincdText"
                      Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
                      HorizontalContentAlignment="Center" MaxLength="5" Margin="10,0,0,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      KeyDown="TextBox_KeyDown"
-                     TabIndex="8"/>
+                     TabIndex="7"/>
 
+            <!--値札番号-->
+            <TextBlock Grid.Row="7" Grid.Column="6" Text=" 値 札 番 号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="7" Grid.Column="7" x:Name="NefudaBangouText" 
+                     Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     LostFocus="TextBox_LostFocus"                     
+                     TabIndex="8">
+            </TextBox>
+            <ComboBox Grid.Row="7" Grid.Column="8" Grid.ColumnSpan="3" x:Name="NefudaBangouComboBox" 
+                      ItemsSource="{Binding NefudaBangouItems.Value}"
+                      SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
         </Grid>
 
         <!--<StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="JusinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
@@ -391,9 +390,9 @@
             <Button Grid.Column="7" Command="{Binding FuncActionCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="8" Command="{Binding FuncActionCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
             <Button Grid.Column="9" Command="{Binding FuncActionCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" CommandParameter="F10" Content=" Ｆ１０&#xa;プレビュー" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" CommandParameter="F10" Content=" Ｆ１０&#xa;プレビュー" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False" x:Name="Fnc10"/>
             <Button Grid.Column="11" Command="{Binding FuncActionCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
-            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" CommandParameter="F12" Content=" Ｆ１２&#xa;値札発行" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" CommandParameter="F12" Content=" Ｆ１２&#xa;値札発行" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False" x:Name="Fnc12"/>
         </Grid>
     </Grid>
 </Window>

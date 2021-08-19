@@ -143,17 +143,23 @@ namespace PriceTagPrint.View
                 case "F10":
                     if (((YasusakiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((YasusakiViewModel)this.DataContext).ExecPrint(true);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((YasusakiViewModel)this.DataContext).ExecPrint(true);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        } 
                     }
                     break;
                 case "F12":
                     if (((YasusakiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((YasusakiViewModel)this.DataContext).ExecPrint(false);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((YasusakiViewModel)this.DataContext).ExecPrint(false);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        } 
                     }                        
                     break;
             }

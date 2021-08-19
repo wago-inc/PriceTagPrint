@@ -141,17 +141,31 @@ namespace PriceTagPrint.View
                 case "F10":
                     if (((MaruyoshiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((MaruyoshiViewModel)this.DataContext).ExecPrint(true);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((MaruyoshiViewModel)this.DataContext).ExecPrint(true);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     break;
                 case "F12":
                     if (((MaruyoshiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((MaruyoshiViewModel)this.DataContext).ExecPrint(false);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((MaruyoshiViewModel)this.DataContext).ExecPrint(false);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        } 
+                    }
+                    else
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     break;
             }

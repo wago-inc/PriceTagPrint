@@ -245,7 +245,7 @@ namespace PriceTagPrint.ViewModel
             item3.Id = 1816;
             item3.Name = "1816：紳士インナー";
             list.Add(item3);
-            return list;
+            return list.OrderBy(x => x.Id).ToList();
         }
 
         /// <summary>
@@ -553,7 +553,6 @@ namespace PriceTagPrint.ViewModel
                                                VSIZNM = !string.IsNullOrEmpty(a.VSIZNM) ? a.VSIZNM : "　",
                                                VCOLNM = !string.IsNullOrEmpty(a.VCOLNM) ? a.VCOLNM : "　",
                                                MESSAGE = !string.IsNullOrEmpty(a.EOSHINNA) ? a.EOSHINNA : " ",
-                                               NEFUDA = !string.IsNullOrEmpty(a.SIZCD) ? a.SIZCD : "1",
                                                BUMONCD = !string.IsNullOrEmpty(a.VBUNCD) && a.VBUNCD.Length > 3 ?
                                                             a.VBUNCD.Substring(0, 3) == "184" ? "1" :
                                                             a.VBUNCD.Substring(0, 3) == "183" ? "2" :
@@ -580,7 +579,6 @@ namespace PriceTagPrint.ViewModel
                                         a.VSIZNM,
                                         a.VCOLNM,
                                         a.MESSAGE,
-                                        a.NEFUDA,
                                         a.BUMONCD,
                                         a.TUIKA_KBN,
                                         a.SET_INFO,
@@ -603,12 +601,10 @@ namespace PriceTagPrint.ViewModel
                                         VSIZNM = g.Key.VSIZNM,
                                         VCOLNM = g.Key.VCOLNM,
                                         MESSAGE = g.Key.MESSAGE,
-                                        NEFUDA = g.Key.NEFUDA,
                                         BUMONCD = g.Key.BUMONCD,
                                         TUIKA_KBN = g.Key.TUIKA_KBN,
                                         SET_INFO = g.Key.SET_INFO,
                                     })
-                                    .Where(x => x.NEFUDA == this.NefudaBangouText.Value.ToString())
                                     .Where(x => !string.IsNullOrEmpty(this.SttHincd.Value) ?
                                                     int.TryParse(this.SttHincd.Value, out sttHincd) &&
                                                     int.TryParse(x.HINID, out aitSttHincd) ?

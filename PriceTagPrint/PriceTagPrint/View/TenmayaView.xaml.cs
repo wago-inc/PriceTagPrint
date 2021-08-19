@@ -135,17 +135,31 @@ namespace PriceTagPrint.View
                 case "F10":
                     if (((TenmayaViewModel)this.DataContext).PrintCheck())
                     {
-                        ((TenmayaViewModel)this.DataContext).ExecPrint(true);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (this.NefudaBangouText.IsFocused)
+                        {
+                            this.Fnc10.Focus();
+                        }
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((TenmayaViewModel)this.DataContext).ExecPrint(true);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        }                            
                     }
                     break;
                 case "F12":
                     if (((TenmayaViewModel)this.DataContext).PrintCheck())
                     {
-                        ((TenmayaViewModel)this.DataContext).ExecPrint(false);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (this.NefudaBangouText.IsFocused)
+                        {
+                            this.Fnc12.Focus();
+                        }
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((TenmayaViewModel)this.DataContext).ExecPrint(false);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        }                            
                     }
                     break;
             }

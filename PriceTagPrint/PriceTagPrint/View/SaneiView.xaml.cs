@@ -149,17 +149,39 @@ namespace PriceTagPrint.View
                 case "F10":
                     if (((SaneiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((SaneiViewModel)this.DataContext).ExecPrint(true);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (this.NefudaBangouText.IsFocused)
+                        {
+                            this.Fnc10.Focus();
+                        }
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((SaneiViewModel)this.DataContext).ExecPrint(true);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        }                            
+                    }
+                    else
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     break;
                 case "F12":
                     if (((SaneiViewModel)this.DataContext).PrintCheck())
                     {
-                        ((SaneiViewModel)this.DataContext).ExecPrint(false);
-                        this.HakkouTypeText.Focus();
-                        this.HakkouTypeText.SelectAll();
+                        if (this.NefudaBangouText.IsFocused)
+                        {
+                            this.Fnc12.Focus();
+                        }
+                        if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                        {
+                            ((SaneiViewModel)this.DataContext).ExecPrint(false);
+                            this.HakkouTypeText.Focus();
+                            this.HakkouTypeText.SelectAll();
+                        }                            
+                    }
+                    else
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     break;
             }
