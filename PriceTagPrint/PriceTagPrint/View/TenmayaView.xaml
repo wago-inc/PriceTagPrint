@@ -284,7 +284,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="リスト品名" Binding="{Binding Path=リスト表示商品名}" Width="3.8*"
+                    <DataGridTextColumn Header="リスト品名" Binding="{Binding Path=リスト表示商品名}" Width="3.7*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -294,7 +294,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     
-                    <DataGridTextColumn Header="マスタ品名" Binding="{Binding Path=表示用商品名}" Width="3.8*"
+                    <DataGridTextColumn Header="マスタ品名" Binding="{Binding Path=表示用商品名}" Width="3.7*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
@@ -304,7 +304,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="サイズ" Binding="{Binding Path=表示用サイズ}" Width="1.2*"
+                    <DataGridTextColumn Header="サイズ" Binding="{Binding Path=表示用サイズ}" Width="1.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

@@ -440,6 +440,7 @@ namespace PriceTagPrint.ViewModel
                                        VHINNMA = eosj.VHINNMA.TrimEnd(),
                                        HINCD = eosj.HINCD.TrimEnd(),
                                        VCYOBI7 = eosj.VCYOBI7.TrimEnd(),
+                                       VCYOBI11 = eosj.VCYOBI11.TrimEnd(),
                                        QOLTORID = eosj.QOLTORID.TrimEnd(),
                                        VURITK = eosj.VURITK,
                                        VSURYO = eosj.VSURYO,
@@ -481,11 +482,12 @@ namespace PriceTagPrint.ViewModel
                                                VRCVDT = a.VRCVDT,
                                                VNOHINDT = a.VNOHINDT,
                                                VCYOBI7 = a.VCYOBI7,
+                                               VCYOBI11 = a.VCYOBI11,
                                                HINBAN = !string.IsNullOrEmpty(a.VCYOBI7) && a.VCYOBI7.Contains("-") ?
                                                             a.VCYOBI7.Substring(0, a.VCYOBI7.IndexOf("-")) : "",
                                                VURITK = a.VURITK,
                                                JANCD = a.VHINCD,
-                                               QOLTORID = a.QOLTORID,
+                                               QOLTORID = a.QOLTORID.Length>= 5 ? a.QOLTORID.Substring(a.QOLTORID.Length - 5) : "17132",
                                                HINCD = a.HINCD,
                                                VHINNMA = a.VHINNMA,
                                                HINNM = hin.Any() ? hin.FirstOrDefault().HINNMA : "",
@@ -500,6 +502,7 @@ namespace PriceTagPrint.ViewModel
                                         a.VRCVDT,
                                         a.VNOHINDT,
                                         a.VCYOBI7,
+                                        a.VCYOBI11,
                                         a.HINBAN,
                                         a.VURITK,
                                         a.JANCD,
@@ -518,6 +521,7 @@ namespace PriceTagPrint.ViewModel
                                         VNOHINDT = g.Key.VNOHINDT,
                                         VSURYO = g.Sum(y => y.VSURYO),
                                         VCYOBI7 = g.Key.VCYOBI7,
+                                        VCYOBI11 = g.Key.VCYOBI11,
                                         HINBAN = g.Key.HINBAN,
                                         VURITK = g.Key.VURITK,
                                         VHINCD = g.Key.JANCD,
@@ -761,7 +765,7 @@ namespace PriceTagPrint.ViewModel
                 dispSize = shenkan.変換値 + " " + shenkan.変換A;
                 dispColor = chenkan.変換値 + " " + chenkan.変換A;
                 result.Add(
-                    new TenmayaItem(data.VSURYO, data.QOLTORID, "", shenkan.変換値, dispSize, chenkan.変換値, dispColor,
+                    new TenmayaItem(data.VSURYO, data.QOLTORID, data.VCYOBI11, shenkan.変換値, dispSize, chenkan.変換値, dispColor,
                                     "", "WU", data.VCYOBI7, data.HINCD, zeinuki, data.VHINCD, data.HINNM, data.VHINNMA));
             });
             return result;
