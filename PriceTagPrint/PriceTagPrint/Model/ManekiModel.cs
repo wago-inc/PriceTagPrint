@@ -41,7 +41,7 @@ namespace PriceTagPrint.Model
         /// <summary>
         /// 部門CD
         /// </summary>
-        public int BUMON { get; set; }
+        public string BUMON { get; set; }
         /// <summary>
         /// 下代変換CD
         /// </summary>

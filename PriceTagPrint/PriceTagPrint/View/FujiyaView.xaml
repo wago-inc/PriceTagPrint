@@ -1,0 +1,431 @@
+﻿<Window x:Class="PriceTagPrint.View.FujiyaView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PriceTagPrint.View"
+        xmlns:extend="clr-namespace:PriceTagPrint.Extend"
+        xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="【0107-フジヤ】値札発行" Height="715" Width="1100">
+
+    <Window.DataContext>
+        <vm:FujiyaViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <ResourceDictionary Source="/Style/StyleDic.xaml"/>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="ExecuteCommand" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
+        <KeyBinding Gesture="F4" Command="Close" CommandParameter="F4" />
+        <KeyBinding Gesture="F5" Command="Close" CommandParameter="F5" />
+        <KeyBinding Gesture="F10" Command="Close" CommandParameter="F10" />
+        <KeyBinding Gesture="F12" Command="Close" CommandParameter="F12" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <!--発行区分-->
+            <TextBlock Grid.Row="1" Grid.Column="1" Text=" 発 行 区 分" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="1" Grid.Column="2" x:Name="HakkouTypeText"
+                     Text="{Binding HakkouTypeText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1" 
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True" 
+                     extend:TextBoxAttachment.EnterCommand="True" 
+                     PreviewTextInput="TextBox_PreviewTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
+                     LostFocus="TextBox_LostFocus"
+                     TabIndex="1"/>
+            <ComboBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" x:Name="HakkouTypeComboBox"
+                      ItemsSource="{Binding HakkouTypeItems.Value}"
+                      SelectedIndex="{Binding SelectedHakkouTypeIndex.Value}"
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
+
+            <!--受注日-->
+            <TextBlock Grid.Row="3" Grid.Column="1" Text=" 受   注   日" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <DatePicker Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="JusinbiDatePicker"
+                        SelectedDate="{Binding JusinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewKeyDown="DatePicker_PreviewKeyDown"
+                        DateValidationError="DatePicker_DateValidationError"
+                        TabIndex="2">
+                <DatePicker.CalendarStyle>
+                    <Style TargetType="Calendar">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.CalendarStyle>
+            </DatePicker>
+            
+            <!--発注番号-->
+            <TextBlock Grid.Row="5" Grid.Column="1" Text=" 発 注 番 号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" x:Name="HachuNumberTextBox" 
+                     HorizontalContentAlignment="Center" MaxLength="7"                     
+                     Text="{Binding HachuBangou.Value}" Style="{StaticResource ContentText}"                      
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True" 
+                     TabIndex="3"/>
+            <TextBlock Grid.Row="5" Grid.Column="4" x:Name="HnoResultTextBox"
+                       Text="{Binding HnoResultString.Value}" Style="{StaticResource OtherText}" 
+                       HorizontalAlignment="Stretch" Foreground="{Binding HnoResultColor.Value}" Margin="5,0,0,0"/>            
+
+            <!--識別番号-->
+            <TextBlock Grid.Row="7" Grid.Column="1" Text=" 識 別 番 号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="7" Grid.Column="2" x:Name="ShikibetsuNoText"
+                     Text="{Binding ShikibetsuNoText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1" 
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True" 
+                     extend:TextBoxAttachment.EnterCommand="True" 
+                     PreviewTextInput="TextBox_PreviewShikibetsuNoTextInput" 
+                     CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
+                     LostFocus="TextBox_LostFocus"                     
+                     TabIndex="4"/>
+            
+            <!--分類コード-->
+            <TextBlock Grid.Row="1" Grid.Column="6" Text=" 分類コード" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="1" Grid.Column="7" x:Name="BunruiCodeText"
+                     Text="{Binding BunruiCodeText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="3"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="5"/>
+            <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="3" x:Name="BunruiCodeComboBox" 
+                      ItemsSource="{Binding BunruiCodeItems.Value}"
+                      SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
+
+            <!--品番-->
+            <TextBlock Grid.Row="3" Grid.Column="6" Text=" 品　　　番" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="3" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
+                     Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="5" Margin="0,0,10,0"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="6"/>
+            <TextBlock Grid.Row="3" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
+            <TextBox Grid.Row="3" Grid.Column="10" x:Name="EndHincdText"
+                     Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
+                     HorizontalContentAlignment="Center" MaxLength="5" Margin="10,0,0,0"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     KeyDown="TextBox_KeyDown"
+                     TabIndex="7"/>
+
+            <!--値札番号-->
+            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 値 札 番 号" Style="{StaticResource TitleText}" 
+                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Row="5" Grid.Column="7" x:Name="NefudaBangouText" 
+                     Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
+                     HorizontalContentAlignment="Center" MaxLength="1"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     LostFocus="TextBox_LostFocus"                     
+                     TabIndex="8">
+            </TextBox>
+            <ComboBox Grid.Row="5" Grid.Column="8" Grid.ColumnSpan="3" x:Name="NefudaBangouComboBox" 
+                      ItemsSource="{Binding NefudaBangouItems.Value}"
+                      SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
+                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      IsTabStop="False"/>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="HinGrid" IsEnabled="{Binding HinEnabled.Value}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <!--<TextBlock Grid.Column="1" Text=" 商品コード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" x:Name="SttHincdText"
+                     HorizontalContentAlignment="Center" MaxLength="5"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="4"/>
+            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}" x:Name="SttEdabanText"
+                     HorizontalContentAlignment="Center" MaxLength="2"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="5"/>
+            <TextBlock Grid.Column="4" Text="～" Style="{StaticResource OtherText}"/>
+            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
+                     HorizontalContentAlignment="Center" MaxLength="5"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="6"/>
+            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}" x:Name="EndEdabanText"
+                     HorizontalContentAlignment="Center" MaxLength="2"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="7"/>
+
+            <TextBlock Grid.Column="9" Text=" JANコード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+            <TextBox Grid.Column="10" Text="{Binding SttJancd.Value}" Style="{StaticResource ContentText}" x:Name="SttJancdText"
+                     HorizontalContentAlignment="Center" MaxLength="13"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="8"/>
+            <TextBlock Grid.Column="11" Text="～" Style="{StaticResource OtherText}"/>
+            <TextBox Grid.Column="12" Text="{Binding EndJancd.Value}" Style="{StaticResource ContentText}" x:Name="EndJancdText"
+                     HorizontalContentAlignment="Center" MaxLength="13"
+                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
+                     extend:TextBoxAttachment.EnterCommand="True"
+                     TabIndex="9"/>-->
+
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="Loaded">
+                    <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                      ItemsSource="{Binding Path=FujiyaItems.Value}" 
+                      Style="{StaticResource BasicDataGrid}"
+                      ColumnHeaderStyle="{StaticResource BasicDataGridColumnHeader}"
+                      RowStyle="{StaticResource BasicDataGridRow}">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="発行枚数" Binding="{Binding Path=発行枚数}" Width="1*" 
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="取引先" Binding="{Binding Path=取引先コード}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="部門" Binding="{Binding Path=部門コード}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    
+                    <DataGridTextColumn Header="中分類" Binding="{Binding Path=中分類}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="仕入週" Binding="{Binding Path=仕入週}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="相手先品番" Binding="{Binding Path=相手先品番}" Width="1.5*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="商品コード" Binding="{Binding Path=表示用商品コード}" Width="2*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="商品名" Binding="{Binding Path=商品名}" Width="6*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="原単価" Binding="{Binding Path=原単価}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="本体価格" Binding="{Binding Path=本体価格}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="売価" Binding="{Binding Path=売価}" Width="1*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="備考" Binding="{Binding Path=備考}" Width="0.7*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+                <!-- 右クリックによるコンテキストメニュー表示時、選択中セルの背景色/テキスト色が解除されないようにするためのコード-->
+                <DataGrid.Resources>
+                    <!--選択中セルの背景色（フォーカス有りの時）-->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Yellow"  />
+                    <!--選択中セルの文字色（フォーカス有りの時）-->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"  />
+                    <!--選択中セルの背景色（フォーカス無しの時）-->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Yellow" />
+                    <!--選択中セルの文字色（フォーカス無しの時）-->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="Black" />
+                </DataGrid.Resources>
+            </DataGrid>
+            <Grid Grid.Row="1" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="8*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="発 行 枚 数 計" Style="{StaticResource TitleText}" 
+                           HorizontalAlignment="Stretch" TextAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TotalMaisu.Value}" Style="{StaticResource ContentText}" 
+                         HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="Red" FontSize="18"
+                         IsReadOnly="True" IsTabStop="False" FontFamily="Yu Gothic UI Semibold" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="3" ShowGridLines="False" Margin="1,0,1,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content=" ESC&#xa;終 了" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="1" Command="{Binding FuncActionCommand}" Content="F1" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="2" Command="{Binding FuncActionCommand}" Content="F2" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="3" Command="{Binding FuncActionCommand}" Content="F3" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="4" Command="{Binding FuncActionCommand}" CommandParameter="F4" Content=" Ｆ４&#xa;クリア" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="5" Command="{Binding FuncActionCommand}" CommandParameter="F5" Content=" Ｆ５&#xa;検  索" Style="{StaticResource FkeyButton}" Visibility="Visible" IsTabStop="False"/>
+            <Button Grid.Column="6" Command="{Binding FuncActionCommand}" Content="F6" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="7" Command="{Binding FuncActionCommand}" Content="F7" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="8" Command="{Binding FuncActionCommand}" Content="F8" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="9" Command="{Binding FuncActionCommand}" Content="F9" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="10" Command="{Binding FuncActionCommand}" CommandParameter="F10" Content=" Ｆ１０&#xa;プレビュー" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False" x:Name="Fnc10"/>
+            <Button Grid.Column="11" Command="{Binding FuncActionCommand}" Content="F11" Style="{StaticResource FkeyButton}" Visibility="Collapsed" IsTabStop="False"/>
+            <Button Grid.Column="12" Command="{Binding FuncActionCommand}" CommandParameter="F12" Content=" Ｆ１２&#xa;値札発行" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False" x:Name="Fnc12"/>
+        </Grid>
+    </Grid>
+</Window>

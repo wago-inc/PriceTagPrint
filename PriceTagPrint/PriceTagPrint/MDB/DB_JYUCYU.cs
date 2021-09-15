@@ -13,7 +13,11 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// 得意先コード
         /// </summary>
-        public int TCODE { get; set; }        
+        public int TCODE { get; set; }
+        /// <summary>
+        /// 値付分類
+        /// </summary>
+        public string NETUKE_BUNRUI { get; set; }
         /// <summary>
         /// 値札区分
         /// </summary>
@@ -47,13 +51,21 @@ namespace PriceTagPrint.MDB
         /// </summary>
         public int BUNRUI { get; set; }
         /// <summary>
-        /// 商品コード
+        /// 品番
         /// </summary>
         public string SCODE { get; set; }
         /// <summary>
         /// 社内サイズ・カラーコード
         /// </summary>
         public int SAIZUS { get; set; }
+        /// <summary>
+        /// 店舗コード
+        /// </summary>
+        public int TENPO { get; set; }
+        /// <summary>
+        /// 商品コード
+        /// </summary>
+        public string SCODEP { get; set; }
         /// <summary>
         /// 相手先JANコード
         /// </summary>
@@ -77,16 +89,19 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// 参考上代
         /// </summary>
-        public int JYODAI { get; set; }
+        public int? JYODAI { get; set; }
+        /// <summary>
+        /// 税込売価
+        /// </summary>
+        public int? ZBAIKA { get; set; }
         /// <summary>
         /// 部門CD
         /// </summary>
-        public int BUMON { get; set; }
+        public int? BUMON { get; set; }
         /// <summary>
         /// SKU管理番号
         /// </summary>
-        public int SKU { get; set; }
-        
+        public int SKU { get; set; }        
         /// <summary>
         /// アイテムコード
         /// </summary>
@@ -120,12 +135,13 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DB_JYUCYU(int tcode, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, int? loctana_floor_no, int? loctana_tana_no,
-                         int? loctana_case_no, int bunrui, string scode, int saizus, string jancd, string hinmei, string saizun,
-                         int stanka, int htanka, int jyodai, int bumon, int sku, int itemcd, int? saizu, int? color, double? jtblcd,
-                         int hencd, int tkbn, string hinmein)
+        public DB_JYUCYU(int tcode, string netuke_bunrui, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, 
+                         int? loctana_floor_no, int? loctana_tana_no, int? loctana_case_no, int bunrui, string scode, int saizus, int tenpo,
+                         string scodep, string jancd, string hinmei, string saizun, int stanka, int htanka, int? jyodai, int? zbaika,
+                         int? bumon, int sku, int itemcd, int? saizu, int? color, double? jtblcd, int hencd, int tkbn, string hinmein)
         {
             this.TCODE = tcode;
+            this.NETUKE_BUNRUI = netuke_bunrui;
             this.NEFUDA_KBN = nefuda_kbn;
             this.HNO = hno;
             this.TSU = tsu;
@@ -136,12 +152,15 @@ namespace PriceTagPrint.MDB
             this.BUNRUI = bunrui;
             this.SCODE = scode;
             this.SAIZUS = saizus;
+            this.TENPO = tenpo;
+            this.SCODEP = scodep;
             this.JANCD = jancd;
             this.HINMEI = hinmei;
             this.SAIZUN = saizun;
             this.STANKA = stanka;
             this.HTANKA = htanka;            
             this.JYODAI = jyodai;
+            this.ZBAIKA = zbaika;
             this.BUMON = bumon;
             this.SKU = sku;
             this.ITEMCD = itemcd;
@@ -187,6 +206,7 @@ namespace PriceTagPrint.MDB
                     results.Add(new DB_JYUCYU
                         (
                             dr.Field<int>("TCODE"),
+                            dr.Field<string>("NETUKE_BUNRUI"),
                             dr.Field<int>("NEFUDA_KBN"),
                             dr.Field<int>("HNO"),
                             dr.Field<int>("TSU"),
@@ -197,13 +217,16 @@ namespace PriceTagPrint.MDB
                             dr.Field<int>("BUNRUI"),
                             dr.Field<string>("SCODE"),
                             dr.Field<int>("SAIZUS"),
+                            dr.Field<int>("TENPO"),
+                            dr.Field<string>("SCODEP"),
                             jancd,
                             dr.Field<string>("HINMEI"),
                             dr.Field<string>("SAIZUN"),
                             dr.Field<int>("STANKA"),
                             dr.Field<int>("HTANKA"),
-                            dr.Field<int>("JYODAI"),
-                            dr.Field<int>("BUMON"),
+                            dr.Field<int?>("JYODAI"),
+                            dr.Field<int?>("ZBAIKA"),
+                            dr.Field<int?>("BUMON"),
                             dr.Field<int>("SKU"),
                             dr.Field<int>("ITEMCD"),
                             dr.Field<int?>("SAIZU"),
@@ -264,6 +287,41 @@ namespace PriceTagPrint.MDB
             sql += "WHERE " + Environment.NewLine;
             sql += " HNO = " + hno + " AND" + Environment.NewLine;
             sql += " TCODE = " + tcode;
+
+            DataTable mdbDt = new DataTable();
+            var results = new List<DB_JYUCYU>();
+            // 読み込み
+            try
+            {
+                OdbcConnection mdbConn = new OdbcConnection(DBConnect.MdbConnectionString);
+                OdbcCommand sqlCommand = new OdbcCommand(sql, mdbConn);
+                sqlCommand.CommandTimeout = 30;
+
+                OdbcDataAdapter adapter = new OdbcDataAdapter(sqlCommand);
+
+                adapter.Fill(mdbDt);
+                adapter.Dispose();
+                sqlCommand.Dispose();
+
+                return mdbDt.Rows.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                return false;
+            }
+        }
+
+        public bool QueryWhereHnoJdateTcodeTenpoExists(int tcode, int tenpo, DateTime jdate, string hno)
+        {
+            var sql = "SELECT HNO " + Environment.NewLine;
+            sql += "FROM " + Environment.NewLine;
+            sql += " JYUCYU " + Environment.NewLine;
+            sql += "WHERE " + Environment.NewLine;
+            sql += " JDATE = #" + jdate.ToShortDateString() + "# AND" + Environment.NewLine;
+            sql += " HNO = " + hno + " AND" + Environment.NewLine;
+            sql += " TCODE = " + tcode + " AND" + Environment.NewLine;
+            sql += " TENPO = " + tenpo;
 
             DataTable mdbDt = new DataTable();
             var results = new List<DB_JYUCYU>();

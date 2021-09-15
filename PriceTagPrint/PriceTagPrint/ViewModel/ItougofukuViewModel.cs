@@ -724,7 +724,7 @@ namespace PriceTagPrint.ViewModel
                             STANKA = g.Key.STANKA,
                             HTANKA = g.Key.HTANKA,
                             ZTANKA = g.Key.ZTANKA,
-                            JYODAI = g.Key.JYODAI,
+                            JYODAI = g.Key.JYODAI ?? 0,
                             TEKIYOCD1 = g.Key.TEKIYOCD1 ?? 0,
                             TEKIYONM1 = shohinTekiyoDicho.FirstOrDefault(x => x.商品摘要コード == (g.Key.TEKIYOCD1 ?? 0))?.商品摘要名 ?? "",
                             TEKIYOCD2 = g.Key.TEKIYOCD2 ?? 0,
