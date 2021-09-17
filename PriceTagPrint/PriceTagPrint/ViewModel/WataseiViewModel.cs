@@ -556,7 +556,7 @@ namespace PriceTagPrint.ViewModel
                                 SAIZUN = j.SAIZUN.TrimEnd(),
                                 HTANKA = j.HTANKA,
                                 JYODAI = j.JYODAI,
-                                BUMON = j.BUMON,
+                                BUMON = j.BUMON?.ToString() ?? "",
                             })
                              .Select(g => new WataseiData
                              {
@@ -575,7 +575,7 @@ namespace PriceTagPrint.ViewModel
                                  HINMEI = g.Key.HINMEI,
                                  SAIZUN = g.Key.SAIZUN,
                                  HTANKA = g.Key.HTANKA,
-                                 JYODAI = g.Key.JYODAI,
+                                 JYODAI = g.Key.JYODAI ?? 0,
                                  BUMON = g.Key.BUMON,
                                  TSU = g.Sum(y => y.TSU),
                              })
@@ -798,7 +798,7 @@ namespace PriceTagPrint.ViewModel
                 bunrui = data.BUNRUI == 148 ? 918 : data.BUNRUI;
                 result.Add(
                     new WataseiItem(data.HNO, data.TCODE.ToString(), data.NEFUDA_KBN.ToString(), data.HINCD, data.JANCD, shika, data.HTANKA, data.SAIZUN,
-                                    " ", data.HINMEI, data.BUMON.ToString("000"), bunrui, data.SCODE, data.SAIZUS, data.TSU));
+                                    " ", data.HINMEI, data.BUMON.PadLeft(3, '0'), bunrui, data.SCODE, data.SAIZUS, data.TSU));
             });
             return result;
         }
