@@ -569,7 +569,7 @@ namespace PriceTagPrint.ViewModel
                                 JTBLCD = j.JTBLCD,
                                 SAIZU = j.SAIZU,
                                 COLOR = j.COLOR,
-                                BUMON = j.BUMON?.ToString() ?? "",
+                                BUMON = j.BUMON,
                                 HENCD = j.HENCD,
                                 JYODAI = j.JYODAI,
                                 HTANKA = j.HTANKA,
@@ -596,7 +596,7 @@ namespace PriceTagPrint.ViewModel
                                  COLCD = g.Key.COLOR.HasValue ? (int)g.Key.COLOR : 0,
                                  BUMON = g.Key.BUMON,
                                  HENCD = g.Key.HENCD,
-                                 JYODAI = g.Key.JYODAI ?? 0,
+                                 JYODAI = g.Key.JYODAI,
                                  HTANKA = g.Key.HTANKA,
                                  HINMEIN = g.Key.HINMEIN,
                                  STANKA = g.Key.STANKA,
@@ -805,7 +805,7 @@ namespace PriceTagPrint.ViewModel
         public string 条件テーブル { get; set; }  // CSV 条件ﾃｰﾌﾞﾙ名
         public string サイズ { get; set; } // CSV ｻｲｽﾞ名
         public string カラー { get; set; } // CSV ｶﾗｰCD
-        public string 部門CD { get; set; }  // CSV 部門CD
+        public int 部門CD { get; set; }  // CSV 部門CD
         public int 参考上代 { get; set; } // CSV 参考上代
         public string クラスCD { get; set; } // CSV ｸﾗｽCD
         public int 管理番号 { get; set; }  // CSV
@@ -832,7 +832,7 @@ namespace PriceTagPrint.ViewModel
 
 
         public ManekiItem(int SKU番号, string 商品CD, string 商品名, string サイズ, string カラー, int 下代, int 参考上代, int 上代,
-                          int BER上代, string 部門, string クラス, int アイテム, int 下代変換CD, string 定番区分, string 条件テーブル,
+                          int BER上代, int 部門, string クラス, int アイテム, int 下代変換CD, string 定番区分, string 条件テーブル,
                           int 値札No, string 納品月, string 上中下旬CD, int 発行枚数)
         {
             this.管理番号 = SKU番号;

@@ -220,14 +220,6 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
-                    case Tid.FUJIYA:
-                        {
-                            var view = new FujiyaView();
-                            view.Owner = window;
-                            view.Show();
-                            view.Owner.Hide();
-                        }
-                        break;
                     default:break;
                 }
             }

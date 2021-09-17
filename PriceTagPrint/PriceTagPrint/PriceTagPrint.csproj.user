@@ -12,9 +12,6 @@
     <Compile Update="View\CosmoMatsuokaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\FujiyaView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\HokaidoSankiView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -63,9 +60,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\CosmoMatsuokaView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\FujiyaView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\HokaidoSankiView.xaml">

@@ -44,8 +44,7 @@ namespace PriceTagPrint.Common
         public const int DOMMY = 129;
         public const int BIGA = 8108;
         public const int FUJI = 103;
-        public const int ZENSHOREN = 107;
-        public const int FUJIYA = 416;
+        public const int FUJIYA = 1420;
         public const int HOKKAIDO_SANKI = 121;
         public const int HONTENTAKAHASI = 8103;
         public const int MAXVALUE = 110;
@@ -94,8 +93,7 @@ namespace PriceTagPrint.Common
         public const string DOMMY = "0129";
         public const string BIGA = "8108";
         public const string FUJI = "0103";
-        public const string ZENSHOREN = "0107";
-        public const string FUJIYA = "0416";
+        public const string FUJIYA = "1420";
         public const string HOKKAIDO_SANKI = "0121";
         public const string HONTENTAKAHASI = "8103";
         public const string MAXVALUE = "0110";
@@ -141,7 +139,6 @@ namespace PriceTagPrint.Common
         public const string DOMMY = "ドミー";
         public const string BIGA = "ビッグエー";
         public const string FUJI = "フジ";
-        public const string ZENSHOREN = "全小連";
         public const string FUJIYA = "フジヤ";
         public const string HOKKAIDO_SANKI = "北海道三喜";
         public const string HONTENTAKAHASI = "本店タカハシ";
@@ -216,7 +213,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(17, Tid.DOMMY,          Tnm.DOMMY,          HakkouKind.Input, CreateDirList(TidNum.DOMMY)),
                 new Torihikisaki(18, Tid.BIGA,           Tnm.BIGA,           HakkouKind.Input, CreateDirList(TidNum.BIGA)),
                 new Torihikisaki(19, Tid.FUJI,           Tnm.FUJI,           HakkouKind.Input, CreateDirList(TidNum.FUJI)),
-                new Torihikisaki(20, Tid.FUJIYA,         Tnm.FUJIYA,         HakkouKind.Both,  CreateDirList(TidNum.FUJIYA)),
+                new Torihikisaki(20, Tid.FUJIYA,         Tnm.FUJIYA,         HakkouKind.Input, CreateDirList(TidNum.FUJIYA)),
                 new Torihikisaki(21, Tid.HOKKAIDO_SANKI, Tnm.HOKKAIDO_SANKI, HakkouKind.Both,  CreateDirList(TidNum.HOKKAIDO_SANKI)),
                 new Torihikisaki(22, Tid.HONTENTAKAHASI, Tnm.HONTENTAKAHASI, HakkouKind.Input, CreateDirList(TidNum.HONTENTAKAHASI)),
                 new Torihikisaki(23, Tid.MAXVALUE,       Tnm.MAXVALUE,       HakkouKind.Input, CreateDirList(TidNum.MAXVALUE)),
@@ -617,9 +614,9 @@ namespace PriceTagPrint.Common
         {
             var result = defVal;
             var list = sList.Where(x => x.変換A.ToUpperInvariant().StartsWith(name.ToUpperInvariant())).OrderBy(x => x.変換値);
-            if (list.Any())
+            if(list.Any())
             {
-                if (list.Count() == 1)
+                if(list.Count() == 1)
                 {
                     result = list.First();
                 }
@@ -651,100 +648,6 @@ namespace PriceTagPrint.Common
                 }
             }
             return result;
-        }
-    }
-
-    /// <summary>
-    /// フジヤ週数確認
-    /// </summary>
-    public class FujiyaSyuuSu
-    {
-        public string 週数 { get; set; }
-        public int 開始月 { get; set; }
-        public int 開始日 { get; set; }
-        public int 終了月 { get; set; }
-        public int 終了日 { get; set; }
-
-        public FujiyaSyuuSu(string 週数, int 開始月, int 開始日, int 終了月, int 終了日)
-        {
-            this.週数 = 週数;
-            this.開始月 = 開始月;
-            this.開始日 = 開始日;
-            this.終了月 = 終了月;
-            this.終了日 = 終了日;
-        }
-    }
-    public class FujiyaSyuuSuList
-    {
-        public List<FujiyaSyuuSu> syusuList;
-
-        public FujiyaSyuuSuList()
-        {
-            Create();
-        }
-
-        public void Create()
-        {
-            syusuList = new List<FujiyaSyuuSu>()
-            {
-                new FujiyaSyuuSu("1",   1,  1,  1,  7),    //  ～ 1/7
-                new FujiyaSyuuSu("2",   1,  8,  1, 14),    //  ～ 1/14
-                new FujiyaSyuuSu("3",   1, 15,  1, 21),    //  ～ 1/21
-                new FujiyaSyuuSu("4",   1, 22,  1, 28),    //  ～ 1/28
-                new FujiyaSyuuSu("5",   1, 29,  2,  4),    //  ～ 2/4
-                new FujiyaSyuuSu("6",   2,  5,  2, 11),    //  ～ 2/11
-                new FujiyaSyuuSu("7",   2, 12,  2, 18),    //  ～ 2/18
-                new FujiyaSyuuSu("8",   2, 19,  2, 25),    //  ～ 2/25
-                new FujiyaSyuuSu("9",   2, 26,  3,  4),    //  ～ 3/4
-                new FujiyaSyuuSu("10",  3,  5,  3, 11),    //  ～ 3/11
-                new FujiyaSyuuSu("11",  3, 12,  3, 18),    //  ～ 3/18
-                new FujiyaSyuuSu("12",  3, 19,  3, 25),    //  ～ 3/25
-                new FujiyaSyuuSu("13",  3, 26,  4,  1),    //  ～ 4/1
-                new FujiyaSyuuSu("14",  4,  2,  4,  8),    //  ～ 4/8
-                new FujiyaSyuuSu("15",  4,  9,  4, 15),    //  ～ 4/15
-                new FujiyaSyuuSu("16",  4, 16,  4, 22),    //  ～ 4/22
-                new FujiyaSyuuSu("17",  4, 23,  4, 29),    //  ～ 4/29
-                new FujiyaSyuuSu("18",  4, 30,  5,  6),    //  ～ 5/6
-                new FujiyaSyuuSu("19",  5,  7,  5, 13),    //  ～ 5/13
-                new FujiyaSyuuSu("20",  5, 14,  5, 20),    //  ～ 5/20
-                new FujiyaSyuuSu("21",  5, 21,  5, 27),    //  ～ 5/27
-                new FujiyaSyuuSu("22",  5, 28,  6,  3),    //  ～ 6/3
-                new FujiyaSyuuSu("23",  6,  4,  6, 10),    //  ～ 6/10
-                new FujiyaSyuuSu("24",  6, 11,  6, 17),    //  ～ 6/17
-                new FujiyaSyuuSu("25",  6, 18,  6, 24),    //  ～ 6/24
-                new FujiyaSyuuSu("26",  6, 25,  7,  1),    //  ～ 7/1
-                new FujiyaSyuuSu("27",  7,  2,  7,  8),    //  ～ 7/8
-                new FujiyaSyuuSu("28",  7,  9,  7, 15),    //  ～ 7/15
-                new FujiyaSyuuSu("29",  7, 16,  7, 22),    //  ～ 7/22
-                new FujiyaSyuuSu("30",  7, 23,  7, 29),    //  ～ 7/29
-                new FujiyaSyuuSu("31",  7, 30,  8,  5),    //  ～ 8/5
-                new FujiyaSyuuSu("32",  8,  6,  8, 12),    //  ～ 8/12
-                new FujiyaSyuuSu("33",  8, 13,  8, 19),    //  ～ 8/19
-                new FujiyaSyuuSu("34",  8, 20,  8, 26),    //  ～ 8/26
-                new FujiyaSyuuSu("35",  8, 27,  9,  2),    //  ～ 9/2
-                new FujiyaSyuuSu("36",  9,  3,  9,  9),    //  ～ 9/9
-                new FujiyaSyuuSu("37",  9, 10,  9, 16),    //  ～ 9/16
-                new FujiyaSyuuSu("38",  9, 17,  9, 23),    //  ～ 9/23
-                new FujiyaSyuuSu("39",  9, 24,  9, 30),    //  ～ 9/30
-                new FujiyaSyuuSu("40", 10,  1, 10,  7),    //  ～ 10/7
-                new FujiyaSyuuSu("41", 10,  8, 10, 14),    //  ～ 10/14
-                new FujiyaSyuuSu("42", 10, 15, 10, 21),    //  ～ 10/21
-                new FujiyaSyuuSu("43", 10, 22, 10, 28),    //  ～ 10/28
-                new FujiyaSyuuSu("44", 10, 29, 11,  4),    //  ～ 11/4
-                new FujiyaSyuuSu("45", 11,  5, 11, 11),    //  ～ 11/11
-                new FujiyaSyuuSu("46", 11, 12, 11, 18),    //  ～ 11/18
-                new FujiyaSyuuSu("47", 11, 19, 11, 25),    //  ～ 11/25
-                new FujiyaSyuuSu("48", 11, 26, 12,  2),    //  ～ 12/2
-                new FujiyaSyuuSu("49", 12,  3, 12,  9),    //  ～ 12/9
-                new FujiyaSyuuSu("50", 12, 10, 12, 16),    //  ～ 12/16
-                new FujiyaSyuuSu("51", 12, 17, 12, 23),    //  ～ 12/23
-                new FujiyaSyuuSu("52", 12, 24, 12, 31)    //  ～ 12/31
-            };
-        }
-
-        public FujiyaSyuuSu GetFujimaSyuuSuByDate(DateTime date, FujiyaSyuuSu defVal = null)
-        {
-            return syusuList.FirstOrDefault(x => new DateTime(date.Year, x.開始月, x.開始日) <= date && date <= new DateTime(date.Year, x.終了月, x.終了日)) ?? defVal;
         }
     }
 }
