@@ -66,5 +66,12 @@ namespace PriceTagPrint.Model
         /// 備考
         /// </summary>
         public string BIKOU { get; set; }
+        /// <summary>
+        /// 棚番号
+        /// </summary>
+        public int LOCTANA_SOKO_CODE { get; set; }
+        public int LOCTANA_FLOOR_NO { get; set; }
+        public int LOCTANA_TANA_NO { get; set; }
+        public int LOCTANA_CASE_NO { get; set; }
     }
 }

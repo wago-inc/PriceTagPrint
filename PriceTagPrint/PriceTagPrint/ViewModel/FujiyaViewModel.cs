@@ -281,7 +281,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                if(this.JusinDatePicker != null)
+                if (this.JusinDatePicker != null)
                 {
                     MessageBox.Show("受注日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                     HnoResultString.Value = "";
@@ -500,6 +500,10 @@ namespace PriceTagPrint.ViewModel
                                     STANKA = j.STANKA,
                                     HTANKA = j.HTANKA,
                                     ZBAIKA = j?.ZBAIKA ?? 0,
+                                    LOCTANA_SOKO_CODE = j.LOCTANA_SOKO_CODE,
+                                    LOCTANA_FLOOR_NO = j.LOCTANA_FLOOR_NO,
+                                    LOCTANA_TANA_NO = j.LOCTANA_TANA_NO,
+                                    LOCTANA_CASE_NO = j.LOCTANA_CASE_NO,
                                 })
                                  .Select(g => new FujiyaData
                                  {
@@ -516,10 +520,19 @@ namespace PriceTagPrint.ViewModel
                                      STANKA = g.Key.STANKA,
                                      HTANKA = g.Key.HTANKA,
                                      ZBAIKA = g.Key.ZBAIKA,
+                                     LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
+                                     LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
+                                     LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
+                                     LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
                                      TSU = g.Sum(y => y.TSU),
                                  })
-                             .OrderBy(g => g.HINCD)
-                             );
+                             .OrderBy(g => g.LOCTANA_SOKO_CODE)
+                             .ThenBy(g => g.LOCTANA_FLOOR_NO)
+                             .ThenBy(g => g.LOCTANA_TANA_NO)
+                             .ThenBy(g => g.LOCTANA_CASE_NO)
+                             .ThenBy(g => g.HINBAN)
+                             .ThenBy(g => g.EDABAN)
+                         );
 
                         if (FujiyaDatas.Any())
                         {
@@ -723,7 +736,7 @@ namespace PriceTagPrint.ViewModel
                 csvHincd = data.HINBAN + "-" + data.EDABAN;
                 result.Add(
                     new FujiyaItem(data.TSU, data.SHIKIBETSU, data.TORIHIKICD, data.BUMONCD, data.CHUBUNRUI,
-                                   data.SIRESYU, data.AITE_HINBAN, csvHincd, data.HINCD, data.HINNMA, 
+                                   data.SIRESYU, data.AITE_HINBAN, csvHincd, data.HINCD, data.HINNMA,
                                    data.STANKA, data.HTANKA, data.ZBAIKA, ""));
             });
             return result;
