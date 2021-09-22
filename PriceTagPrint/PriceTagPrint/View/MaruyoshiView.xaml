@@ -170,7 +170,9 @@
                      extend:TextBoxAttachment.EnterCommand="True"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="7"/>
-
+            <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
+                       Text="スマクラ for Web 切替日：未定" Style="{StaticResource OtherText}" FontSize="11"
+                       TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"  Margin="5,0,0,0"/>
         </Grid>
 
         <!--<StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="JusinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
@@ -221,7 +223,7 @@
             </behaviors:Interaction.Triggers>
         </Grid>-->
 
-        <Grid Grid.Row="2" Margin="10">
+        <Grid Grid.Row="2" Margin="10,5,10,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />

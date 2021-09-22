@@ -75,7 +75,7 @@ namespace PriceTagPrint.ViewModel
         private DB_0127_HANSOKU_BAIKA_CONV_LIST dB_0127_HANSOKU_LIST;
         private List<HINMTA> hinmtaList;
 
-        private string _webEdi切替日 = "20211001";
+        private string _スマクラforWeb切替日 = "20991231";
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -512,50 +512,50 @@ namespace PriceTagPrint.ViewModel
                                                VRCVDT = a.VRCVDT,
                                                VNOHINDT = a.VNOHINDT,
                                                // 分類コード
-                                               VBUNCD = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               VBUNCD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VBUNCD) ? "0" + a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) : " "
                                                         : !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
                                                DATNO = a.DATNO,
                                                VROWNO = a.VROWNO,
                                                // クラスコード
-                                               NEFCMA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(0, 4) : " "   
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
                                                // 当社品番
-                                               NEFCMB = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMB = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VCYOBI7) ? a.VCYOBI7.TrimEnd() : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
                                                NEFCMB2 = " ",
                                                // 商品名称
-                                               NEFCMC = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMC = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd() : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
                                                // カラーコード + カラー名
-                                               NEFCMD = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) + " " + a.VCOLNM.TrimEnd().Substring(0, 5) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
                                                // カラーコード
-                                               NEFCMD2 = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMD2 = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                          ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) : " "
                                                          : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
                                                // サイズコード
-                                               NEFCME = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCME = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) + a.VSIZNM.TrimEnd().Substring(a.VSIZNM.TrimEnd().Length - 2) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
                                                // サイズ名
-                                               NEFCMF = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMF = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VSIZNM.TrimEnd().Substring(0, 5) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
                                                // 単品コード
-                                               NEFCMG = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMG = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().IndexOf("-") + 1, 4) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
                                                // 組
-                                               NEFCMH = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMH = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().Length - 2) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
                                                // FLG
-                                               NEFCMI = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMI = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VTOKKB) ?
                                                             a.VTOKKB.TrimEnd() == "1" ? "2" :
                                                             a.VTOKKB.TrimEnd() == "0" ? "8" : " " : " "
@@ -563,37 +563,37 @@ namespace PriceTagPrint.ViewModel
                                                             a.VBODY1.Substring(118, 1) == "1" ? "8" :
                                                             a.VBODY1.Substring(118, 1) == "2" ? "2" : " " : " ",
                                                // 追加区分
-                                               NEFCMJ = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMJ = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) ?
                                                             a.VBODY1.Substring(126, 1) == "1" ? "T" :
                                                             a.VBODY1.Substring(126, 1) == "2" ? "Y" :
                                                             a.VBODY1.Substring(126, 1) == "3" ? "X" : " " : " ",
                                                // タグ区分
-                                               NEFCMK = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFCMK = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? "5"
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
                                                // 消売価
-                                               NEFTKA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFTKA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? 0
                                                         : !string.IsNullOrEmpty(a.VBODY1) &&
                                                             (a.VBODY1.Substring(119, 1) == "2" ||
                                                              a.VBODY1.Substring(119, 1) == "4" ||
                                                              a.VBODY1.Substring(119, 1) == "6") && decimal.TryParse(a.VBODY1.Substring(120, 6), out convdec) ? convdec : 0,
                                                // 売価
-                                               NEFTKB = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFTKB = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? Math.Ceiling(a.VURITK)
                                                         : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
                                                // 発行枚数
-                                               NEFSUA = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFSUA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? Math.Ceiling(a.VSURYO)
                                                         : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
                                                // 売価(なぜか二つ売価があるがそのままコンバートする)
-                                               NEFTKB2 = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFTKB2 = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? Math.Ceiling(a.VURITK)
                                                         : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
                                                // シーズンコード
-                                               NEFSEZ = a.VRCVDT.CompareTo(_webEdi切替日) >= 0
+                                               NEFSEZ = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
                                                         ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd().Substring(a.VHINNMA.TrimEnd().Length - 2) : " "
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
                                                VHINCD = a.VHINCD,
