@@ -228,6 +228,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.MIYAMA:
+                        {
+                            var view = new MiyamaView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     default:break;
                 }
             }

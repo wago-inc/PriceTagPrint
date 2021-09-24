@@ -9,7 +9,11 @@ using System.Windows;
 namespace PriceTagPrint.MDB
 {
     public class DB_JYUCYU
-    {        
+    {
+        /// <summary>
+        /// 納品日
+        /// </summary>
+        public DateTime? NDATE { get; set; }
         /// <summary>
         /// 得意先コード
         /// </summary>
@@ -130,16 +134,25 @@ namespace PriceTagPrint.MDB
         /// 商品名（日本語）
         /// </summary>
         public string HINMEIN { get; set; }
-
+        /// <summary>
+        /// 備考１
+        /// </summary>
+        public string BIKOU1 { get; set; }
+        /// <summary>
+        /// 備考２
+        /// </summary>
+        public string BIKOU2 { get; set; }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DB_JYUCYU(int tcode, string netuke_bunrui, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, 
-                         int? loctana_floor_no, int? loctana_tana_no, int? loctana_case_no, int bunrui, string scode, int saizus, int tenpo,
-                         string scodep, string jancd, string hinmei, string saizun, int stanka, int htanka, int? jyodai, int? zbaika,
-                         int? bumon, int sku, int itemcd, int? saizu, int? color, double? jtblcd, int hencd, int tkbn, string hinmein)
+        public DB_JYUCYU(DateTime? ndate, int tcode, string netuke_bunrui, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, 
+                         int? loctana_floor_no, int? loctana_tana_no, int? loctana_case_no, int bunrui, string scode,
+                         int saizus, int tenpo, string scodep, string jancd, string hinmei, string saizun, int stanka,
+                         int htanka, int? jyodai, int? zbaika, int? bumon, int sku, int itemcd, int? saizu, int? color,
+                         double? jtblcd, int hencd, int tkbn, string hinmein, string bikou1, string bikou2)
         {
+            this.NDATE = ndate;
             this.TCODE = tcode;
             this.NETUKE_BUNRUI = netuke_bunrui;
             this.NEFUDA_KBN = nefuda_kbn;
@@ -170,6 +183,8 @@ namespace PriceTagPrint.MDB
             this.HENCD = hencd;
             this.TKBN = tkbn;
             this.HINMEIN = hinmein;
+            this.BIKOU1 = bikou1;
+            this.BIKOU2 = bikou2;
         }
     }
 
@@ -205,6 +220,7 @@ namespace PriceTagPrint.MDB
                     jancd = dr.Field<string>("JANCD") ?? "";
                     results.Add(new DB_JYUCYU
                         (
+                            dr.Field<DateTime?>("NDATE"),
                             dr.Field<int>("TCODE"),
                             dr.Field<string>("NETUKE_BUNRUI"),
                             dr.Field<int>("NEFUDA_KBN"),
@@ -234,7 +250,9 @@ namespace PriceTagPrint.MDB
                             dr.Field<double?>("JTBLCD"),
                             dr.Field<int>("HENCD"),
                             dr.Field<int>("TKBN"),
-                            dr.Field<string>("HINMEIN")
+                            dr.Field<string>("HINMEIN"),
+                            dr.Field<string>("BIKOU1"),
+                            dr.Field<string>("BIKOU2")
                         ));
                 }
 
