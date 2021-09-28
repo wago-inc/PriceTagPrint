@@ -3,6 +3,7 @@ using PriceTagPrint.MDB;
 using PriceTagPrint.Model;
 using PriceTagPrint.View;
 using PriceTagPrint.WAG_USR1;
+using PriceTagPrint.WAGO;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
@@ -78,6 +79,7 @@ namespace PriceTagPrint.ViewModel
         public TextBox ShikibetsuNoTextBox = null;
         public DatePicker JusinDatePicker = null;
 
+        private LOC_LOCTANA_LIST lOCTANA_LIST;
         private DB_JYUCYU_LIST dB_JYUCYU_LIST;
         private FujiyaSyuuSuList syuuSuList;
 
@@ -151,6 +153,7 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public FujiyaViewModel()
         {
+            lOCTANA_LIST = new LOC_LOCTANA_LIST();
             dB_JYUCYU_LIST = new DB_JYUCYU_LIST();
             syuuSuList = new FujiyaSyuuSuList();
             CreateComboItems();
@@ -451,7 +454,7 @@ namespace PriceTagPrint.ViewModel
             ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
                 var wJyucyuList = dB_JYUCYU_LIST.QueryWhereHno(this.HachuBangou.Value);
-
+                var wLoctana = lOCTANA_LIST.QueryWhereWagoAllLocation();
                 if (wJyucyuList.Any())
                 {
                     int sttScode;
@@ -480,26 +483,60 @@ namespace PriceTagPrint.ViewModel
                         FujiyaDatas.Clear();
                         FujiyaDatas.AddRange(
                             wJyucyuList
+                                .GroupJoin(
+                                wLoctana,
+                                e1 => new
+                                {
+                                    hincd = e1.SCODE.TrimEnd(),
+                                    sizecol = e1.SAIZUS
+                                },
+                                e2 => new
+                                {
+                                    hincd = e2.LOCTANA_SYOHIN_CODE.ToString(),
+                                    sizecol = e2.LOCTANA_SIZECOLOR_CODE
+                                },
+                                (juc, loc) => new
+                                {
+                                    TSU = juc.TSU,
+                                    SHIKIBETSU = this.ShikibetsuNoText.Value,
+                                    TORIHIKISAKICD = "886",
+                                    BUMONCD = !string.IsNullOrEmpty(juc.NETUKE_BUNRUI) && juc.NETUKE_BUNRUI.Contains("-") ?
+                                                juc.NETUKE_BUNRUI.TrimEnd().Split("-").FirstOrDefault() ?? "" : "",
+                                    CHUBUNRUI = !string.IsNullOrEmpty(juc.NETUKE_BUNRUI) && juc.NETUKE_BUNRUI.Contains("-") ?
+                                                    juc.NETUKE_BUNRUI.TrimEnd().Split("-").LastOrDefault() ?? "" : "",
+                                    SIRESYU = syuuSuList.GetFujimaSyuuSuByDate(JusinDate.Value)?.週数 ?? "",
+                                    AITE_HINBAN = juc.JANCD.TrimEnd(),
+                                    HINCD = !string.IsNullOrEmpty(juc.SCODEP) ? juc.SCODEP.TrimEnd() :
+                                                juc.BUNRUI + "-" + juc.SCODE.TrimEnd() + "-" + juc.SAIZUS.ToString("00"),
+                                    BUNRUI = juc.BUNRUI,
+                                    HINBAN = juc.SCODE.TrimEnd(),
+                                    EDABAN = juc.SAIZU?.ToString("00") ?? "",
+                                    HINNMA = juc.HINMEI,
+                                    STANKA = juc.STANKA,
+                                    HTANKA = juc.HTANKA,
+                                    ZBAIKA = juc?.ZBAIKA ?? 0,
+                                    LOCTANA_SOKO_CODE = loc.Any() ? loc.FirstOrDefault().LOCTANA_SOKO_CODE : juc.LOCTANA_SOKO_CODE,
+                                    LOCTANA_FLOOR_NO = loc.Any() ? loc.FirstOrDefault().LOCTANA_FLOOR_NO : juc.LOCTANA_FLOOR_NO,
+                                    LOCTANA_TANA_NO = loc.Any() ? loc.FirstOrDefault().LOCTANA_TANA_NO : juc.LOCTANA_TANA_NO,
+                                    LOCTANA_CASE_NO = loc.Any() ? loc.FirstOrDefault().LOCTANA_CASE_NO : juc.LOCTANA_CASE_NO,
+                                })
                                 .GroupBy(j => new
                                 {
                                     TSU = j.TSU,
                                     SHIKIBETSU = this.ShikibetsuNoText.Value,
                                     TORIHIKISAKICD = "886",
-                                    BUMONCD = !string.IsNullOrEmpty(j.NETUKE_BUNRUI) && j.NETUKE_BUNRUI.Contains("-") ?
-                                                j.NETUKE_BUNRUI.TrimEnd().Split("-").FirstOrDefault() ?? "" : "",
-                                    CHUBUNRUI = !string.IsNullOrEmpty(j.NETUKE_BUNRUI) && j.NETUKE_BUNRUI.Contains("-") ?
-                                                    j.NETUKE_BUNRUI.TrimEnd().Split("-").LastOrDefault() ?? "" : "",
-                                    SIRESYU = syuuSuList.GetFujimaSyuuSuByDate(JusinDate.Value)?.週数 ?? "",
-                                    AITE_HINBAN = j.JANCD.TrimEnd(),
-                                    HINCD = !string.IsNullOrEmpty(j.SCODEP) ? j.SCODEP.TrimEnd() :
-                                                j.BUNRUI + "-" + j.SCODE.TrimEnd() + "-" + j.SAIZUS.ToString("00"),
+                                    BUMONCD = j.BUMONCD,
+                                    CHUBUNRUI = j.CHUBUNRUI,
+                                    SIRESYU = j.SIRESYU,
+                                    AITE_HINBAN = j.AITE_HINBAN,
+                                    HINCD = j.HINCD,
                                     BUNRUI = j.BUNRUI,
-                                    HINBAN = j.SCODE.TrimEnd(),
-                                    EDABAN = j.SAIZU?.ToString("00") ?? "",
-                                    HINNMA = j.HINMEI,
+                                    HINBAN = j.HINBAN,
+                                    EDABAN = j.EDABAN,
+                                    HINNMA = j.HINNMA,
                                     STANKA = j.STANKA,
                                     HTANKA = j.HTANKA,
-                                    ZBAIKA = j?.ZBAIKA ?? 0,
+                                    ZBAIKA = j.ZBAIKA,
                                     LOCTANA_SOKO_CODE = j.LOCTANA_SOKO_CODE,
                                     LOCTANA_FLOOR_NO = j.LOCTANA_FLOOR_NO,
                                     LOCTANA_TANA_NO = j.LOCTANA_TANA_NO,
@@ -529,7 +566,6 @@ namespace PriceTagPrint.ViewModel
                              .OrderBy(g => g.LOCTANA_SOKO_CODE)
                              .ThenBy(g => g.LOCTANA_FLOOR_NO)
                              .ThenBy(g => g.LOCTANA_TANA_NO)
-                             .ThenBy(g => g.LOCTANA_CASE_NO)
                              .ThenBy(g => g.HINBAN)
                              .ThenBy(g => g.EDABAN)
                          );
