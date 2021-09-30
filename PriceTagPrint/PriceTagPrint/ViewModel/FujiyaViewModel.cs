@@ -413,6 +413,8 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool InputCheck()
         {
+            int sttHin;
+            int endHin;
             DateTime convDate;
             if (string.IsNullOrEmpty(this.JusinDatePicker.Text) || !DateTime.TryParse(this.JusinDatePicker.Text, out convDate))
             {
@@ -441,6 +443,13 @@ namespace PriceTagPrint.ViewModel
             {
                 MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 this.HakkouTypeTextBox.Focus();
+                return false;
+            }
+            if (!string.IsNullOrEmpty(SttScode.Value) && !string.IsNullOrEmpty(EndScode.Value) &&
+                    int.TryParse(SttScode.Value, out sttHin) && int.TryParse(EndScode.Value, out endHin) &&
+                    sttHin > endHin)
+            {
+                MessageBox.Show("品番の大小関係が逆転しています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;

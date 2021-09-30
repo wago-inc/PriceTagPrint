@@ -267,7 +267,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                BunruiCodeText.Value = 3;
+                BunruiCodeText.Value = 51;
             }
         }
 
@@ -281,6 +281,11 @@ namespace PriceTagPrint.ViewModel
             if (item != null)
             {
                 SelectedNefudaBangouIndex.Value = NefudaBangouItems.Value.IndexOf(item);
+            }
+            else
+            {
+                NefudaBangouText.Value = 1;
+                SelectedNefudaBangouIndex.Value = 0;
             }
         }
 

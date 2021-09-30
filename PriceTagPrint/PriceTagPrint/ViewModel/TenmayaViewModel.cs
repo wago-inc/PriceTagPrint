@@ -485,6 +485,28 @@ namespace PriceTagPrint.ViewModel
                 MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            if (this.HakkouTypeText.Value == 2)
+            {
+                int sttHin;
+                int endHin;
+                if (!string.IsNullOrEmpty(SttHincd.Value) && !int.TryParse(SttHincd.Value, out sttHin))
+                {
+                    MessageBox.Show("開始品番を正しく入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+                if (!string.IsNullOrEmpty(EndHincd.Value) && !int.TryParse(EndHincd.Value, out endHin))
+                {
+                    MessageBox.Show("終了品番を正しく入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+                if (!string.IsNullOrEmpty(SttHincd.Value) && !string.IsNullOrEmpty(EndHincd.Value) &&
+                    int.TryParse(SttHincd.Value, out sttHin) && int.TryParse(EndHincd.Value, out endHin) &&
+                    sttHin > endHin)
+                {
+                    MessageBox.Show("品番の大小関係が逆転しています。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+            }
             return true;
         }
 

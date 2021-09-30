@@ -233,7 +233,7 @@ namespace PriceTagPrint.ViewModel
                 var fName = Path.GetFileNameWithoutExtension(file);
                 var item = new CommonIdName();
                 item.Id = id;
-                item.Name = fName;
+                item.Name = id + "：" + fName;
                 list.Add(item);
                 id++;
             }
@@ -874,8 +874,9 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         private void NefudaOutput(string fname, bool isPreview)
         {
-            // ※振分発行用ＰＧ            
-            var layName = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == NefudaBangouText.Value).Name + ".mllayx";
+            // ※振分発行用ＰＧ
+            var names = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == NefudaBangouText.Value).Name.Split("：");
+            var layName = (names.LastOrDefault() ?? "") + ".mllayx";
 
             var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + _grpName + @"\" + layName;
             var dq = "\"";
