@@ -144,6 +144,10 @@ namespace PriceTagPrint.ViewModel
         }
         #endregion
 
+        #region コンストラクタ
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public KyoueiViewModel()
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
@@ -164,6 +168,8 @@ namespace PriceTagPrint.ViewModel
             SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
             SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
         }
+
+        #endregion
 
         #region コントロール生成・変更
 

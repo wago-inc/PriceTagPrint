@@ -86,5 +86,9 @@ namespace PriceTagPrint.Model
         /// 品番のみ
         /// </summary>
         public string HINBAN { get; set; }
+        /// <summary>
+        /// 値札区分
+        /// </summary>
+        public string SIZCD { get; set; }
     }
 }

@@ -85,6 +85,12 @@ namespace PriceTagPrint.View
                     ((TenmayaViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
                     ((TenmayaViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
                 }
+                else if (txt.Name == "VbunCdText")
+                {
+                    // 変更通知が飛ばないため一旦-1をセット
+                    ((TenmayaViewModel)this.DataContext).SelectedVbunCdIndex.Value = -1;
+                    ((TenmayaViewModel)this.DataContext).SelectedVbunCdIndex.Value = 0;
+                }
                 else if (txt.Name == "NefudaBangouText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット

@@ -49,6 +49,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="3" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="3" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
@@ -171,9 +172,12 @@
                      extend:TextBoxAttachment.EnterCommand="True"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="7"/>
+            <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
+                       Text="キョーエイ用値札区分管理マスタ(HINMTE_TSURI)最終更新日:2021/09/29" Style="{StaticResource OtherText}" FontSize="11"
+                       TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"  Margin="5,0,0,0"/>
         </Grid>
-        
-        <Grid Grid.Row="2" Margin="10">
+
+        <Grid Grid.Row="2" Margin="10,5,10,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
