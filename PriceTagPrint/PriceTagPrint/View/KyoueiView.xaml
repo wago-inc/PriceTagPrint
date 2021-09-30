@@ -49,7 +49,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="3" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="3" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
@@ -89,6 +88,8 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <DatePicker Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="JusinbiDatePicker"
                         SelectedDate="{Binding JusinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewTextInput="TextBox_PreviewDateTextInput" 
+                        CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                         PreviewKeyDown="DatePicker_PreviewKeyDown"
                         DateValidationError="DatePicker_DateValidationError"
                         TabIndex="2">
@@ -108,6 +109,8 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <DatePicker Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="NouhinbiDatePicker" 
                         SelectedDate="{Binding NouhinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewTextInput="TextBox_PreviewDateTextInput" 
+                        CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                         PreviewKeyDown="DatePicker_PreviewKeyDown"
                         DateValidationError="DatePicker_DateValidationError"
                         TabIndex="3">
@@ -127,9 +130,10 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Row="1" Grid.Column="7" x:Name="BunruiCodeText"
                      Text="{Binding BunruiCodeText.Value}" Style="{StaticResource ContentText}" 
-                     HorizontalContentAlignment="Center" MaxLength="1"
+                     HorizontalContentAlignment="Center" MaxLength="3"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      LostFocus="TextBox_LostFocus"
                      TabIndex="4"/>
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="3" x:Name="BunruiCodeComboBox" 
@@ -146,6 +150,8 @@
                      HorizontalContentAlignment="Center" MaxLength="1"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput" 
+                     CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                      LostFocus="TextBox_LostFocus"                     
                      TabIndex="5">
             </TextBox>
@@ -155,21 +161,23 @@
                       DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
                       IsTabStop="False"/>
 
-            <!--単品コード-->
-            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 単品コード" Style="{StaticResource TitleText}" 
+            <!--相手先品番-->
+            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 相手先品番" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
                      Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}"
-                     HorizontalContentAlignment="Center" MaxLength="4" Margin="0,0,10,0"
+                     HorizontalContentAlignment="Center" MaxLength="12" Margin="0,0,10,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="6"/>
             <TextBlock Grid.Row="5" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Row="5" Grid.Column="10" x:Name="EndHincdText"
                      Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}"
-                     HorizontalContentAlignment="Center" MaxLength="4" Margin="10,0,0,0"
+                     HorizontalContentAlignment="Center" MaxLength="12" Margin="10,0,0,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="7"/>
             <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
@@ -230,6 +238,16 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
+                    <DataGridTextColumn Header="相手先品番" Binding="{Binding Path=京屋商品コード}" Width="1.5*"
+                                        CellStyle="{StaticResource UnTabStopCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    
                     <DataGridTextColumn Header="商品コード" Binding="{Binding Path=商品コード}" Width="1.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
@@ -269,17 +287,6 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="京屋商品コード" Binding="{Binding Path=京屋商品コード}" Width="1.5*"
-                                        CellStyle="{StaticResource UnTabStopCell}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    
                 </DataGrid.Columns>
                 <!-- 右クリックによるコンテキストメニュー表示時、選択中セルの背景色/テキスト色が解除されないようにするためのコード-->
                 <DataGrid.Resources>

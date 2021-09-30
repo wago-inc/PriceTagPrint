@@ -87,6 +87,8 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <DatePicker Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="JusinbiDatePicker"
                         SelectedDate="{Binding JusinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewTextInput="TextBox_PreviewDateTextInput" 
+                        CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                         PreviewKeyDown="DatePicker_PreviewKeyDown"
                         DateValidationError="DatePicker_DateValidationError"
                         TabIndex="2">
@@ -106,6 +108,8 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <DatePicker Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="NouhinbiDatePicker" 
                         SelectedDate="{Binding NouhinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewTextInput="TextBox_PreviewDateTextInput" 
+                        CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                         PreviewKeyDown="DatePicker_PreviewKeyDown"
                         DateValidationError="DatePicker_DateValidationError"
                         TabIndex="3">
@@ -128,6 +132,7 @@
                      HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="4"/>
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value}"
@@ -143,6 +148,7 @@
                      HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                      LostFocus="TextBox_LostFocus"                     
                      TabIndex="5">
             </TextBox>
@@ -160,6 +166,7 @@
                      HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      LostFocus="TextBox_LostFocus"
                      TabIndex="6"/>
             <ComboBox Grid.Row="5" Grid.Column="8" Grid.ColumnSpan="2" x:Name="McCodeComboBox" 
@@ -169,15 +176,6 @@
                       IsTabStop="False"/>
             
         </Grid>
-
-        <!--<StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="JusinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
-            <Calendar Name="JusinbiCalender" SelectedDatesChanged="JusinbiCalender_SelectedDatesChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Margin="0,64,250,0" Width="898" FontSize="14"/>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.RowSpan="4" x:Name="NouhinbiCalenderPanel" Visibility="Hidden" Panel.ZIndex="1">
-            <Calendar Name="NouhinbiCalender" SelectedDatesChanged="NouhinbiCalender_SelectedDatesChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Margin="0,92,250,0" Width="898" FontSize="14"/>
-        </StackPanel>-->
         
         <Grid Grid.Row="1" x:Name="HinGrid">
             <Grid.RowDefinitions>
@@ -200,12 +198,14 @@
                      HorizontalContentAlignment="Center" MaxLength="7"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="7"/>            
             <TextBlock Grid.Column="3" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="4" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
                      HorizontalContentAlignment="Center" MaxLength="7"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="8"/>            
 

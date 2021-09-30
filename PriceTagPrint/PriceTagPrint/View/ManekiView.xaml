@@ -86,6 +86,7 @@
                      Text="{Binding HachuBangou.Value}" Style="{StaticResource ContentText}"                      
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True" 
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="2"/>
             <TextBlock Grid.Row="3" Grid.Column="4" x:Name="HnoResultTextBox"
                        Text="{Binding HnoResultString.Value}" Style="{StaticResource OtherText}" 
@@ -99,6 +100,7 @@
                      HorizontalContentAlignment="Center" MaxLength="3"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="3"/>
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value}"
@@ -113,12 +115,11 @@
                      Text="{Binding NefudaBangouText.Value}" Style="{StaticResource ContentText}" 
                      HorizontalContentAlignment="Center" MaxLength="1"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"                     
+                     PreviewTextInput="TextBox_PreviewNumericTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                      LostFocus="TextBox_LostFocus"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="10">
             </TextBox>
-            <!--extend:TextBoxAttachment.EnterCommand="True"
-                     PreviewTextInput="TextBox_PreviewTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"-->
             <ComboBox Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="2" x:Name="NefudaBangouComboBox" 
                       ItemsSource="{Binding NefudaBangouItems.Value}"
                       SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
@@ -152,35 +153,41 @@
                      HorizontalContentAlignment="Center" MaxLength="5"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="4"/>
             <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}" x:Name="SttEdabanText"
                      HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="5"/>
             <TextBlock Grid.Column="4" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
                      HorizontalContentAlignment="Center" MaxLength="5"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="6"/>
             <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}" x:Name="EndEdabanText"
                      HorizontalContentAlignment="Center" MaxLength="2"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="7"/>
 
             <TextBlock Grid.Column="9" Text=" SKUコード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <TextBox Grid.Column="10" Text="{Binding SttSkucd.Value}" Style="{StaticResource ContentText}" x:Name="SttSkucdText"
-                     HorizontalContentAlignment="Center" MaxLength="13"
+                     HorizontalContentAlignment="Center" MaxLength="6"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="8"/>
             <TextBlock Grid.Column="11" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Column="12" Text="{Binding EndSkucd.Value}" Style="{StaticResource ContentText}" x:Name="EndSkucdText"
-                     HorizontalContentAlignment="Center" MaxLength="13"
+                     HorizontalContentAlignment="Center" MaxLength="6"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="9"/>
 
             <behaviors:Interaction.Triggers>

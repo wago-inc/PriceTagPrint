@@ -65,6 +65,34 @@ namespace PriceTagPrint.View
             e.Handled = result;
         }
 
+        /// <summary>
+        /// 数字のみテキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewNumericTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^0-9]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
+        /// <summary>
+        /// 日付テキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewDateTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^0-9/]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
         private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             // 貼り付けの場合

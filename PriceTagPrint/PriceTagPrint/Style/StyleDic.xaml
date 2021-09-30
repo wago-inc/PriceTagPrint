@@ -53,6 +53,9 @@
         <Setter Property="FontFamily" Value="Yu Gothic Medium"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="InputMethod.IsInputMethodEnabled" Value="False"/>
+        <Setter Property="InputMethod.PreferredImeState" Value="On"/>
+        <Setter Property="InputMethod.PreferredImeConversionMode" Value="Alphanumeric"/>
     </Style>
 
     <!--通常ボタン-->

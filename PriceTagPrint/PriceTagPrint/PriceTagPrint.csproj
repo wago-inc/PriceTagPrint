@@ -27,13 +27,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="新しいフォルダー1\**" />
     <Compile Remove="新しいフォルダー\**" />
-    <EmbeddedResource Remove="新しいフォルダー1\**" />
     <EmbeddedResource Remove="新しいフォルダー\**" />
-    <None Remove="新しいフォルダー1\**" />
     <None Remove="新しいフォルダー\**" />
-    <Page Remove="新しいフォルダー1\**" />
     <Page Remove="新しいフォルダー\**" />
   </ItemGroup>
 

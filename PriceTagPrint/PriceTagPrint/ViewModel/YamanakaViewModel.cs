@@ -308,6 +308,11 @@ namespace PriceTagPrint.ViewModel
             {
                 SelectedNefudaBangouIndex.Value = NefudaBangouItems.Value.IndexOf(item);
             }
+            else
+            {
+                SelectedNefudaBangouIndex.Value = 0;
+                NefudaBangouText.Value = 13;
+            }
         }
 
         /// <summary>
@@ -320,6 +325,11 @@ namespace PriceTagPrint.ViewModel
             if (item != null)
             {
                 SelectedMcCodeIndex.Value = McCodeItems.Value.IndexOf(item);
+            }
+            else
+            {
+                SelectedMcCodeIndex.Value = 0;
+                McCodeText.Value = 20;
             }
         }
 

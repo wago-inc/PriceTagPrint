@@ -86,6 +86,7 @@
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
             <DatePicker Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="JusinbiDatePicker"
                         SelectedDate="{Binding JusinDate.Value}" Style="{StaticResource DatePickerStyle}"
+                        PreviewTextInput="TextBox_PreviewDateTextInput" CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                         PreviewKeyDown="DatePicker_PreviewKeyDown"
                         DateValidationError="DatePicker_DateValidationError"
                         TabIndex="2">
@@ -108,6 +109,7 @@
                      Text="{Binding HachuBangou.Value}" Style="{StaticResource ContentText}"                      
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True" 
+                     PreviewTextInput="TextBox_PreviewDateTextInput"
                      TabIndex="3"/>
             <TextBlock Grid.Row="5" Grid.Column="4" x:Name="HnoResultTextBox"
                        Text="{Binding HnoResultString.Value}" Style="{StaticResource OtherText}" 
@@ -121,8 +123,7 @@
                      HorizontalContentAlignment="Center" MaxLength="1" 
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True" 
                      extend:TextBoxAttachment.EnterCommand="True" 
-                     PreviewTextInput="TextBox_PreviewShikibetsuNoTextInput" 
-                     CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      LostFocus="TextBox_LostFocus"                     
                      TabIndex="4"/>
             
@@ -134,6 +135,7 @@
                      HorizontalContentAlignment="Center" MaxLength="3"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="5"/>
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="3" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value}"
@@ -149,6 +151,7 @@
                      HorizontalContentAlignment="Center" MaxLength="5" Margin="0,0,10,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="6"/>
             <TextBlock Grid.Row="3" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
             <TextBox Grid.Row="3" Grid.Column="10" x:Name="EndHincdText"
@@ -156,6 +159,7 @@
                      HorizontalContentAlignment="Center" MaxLength="5" Margin="10,0,0,0"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput"
                      KeyDown="TextBox_KeyDown"
                      TabIndex="7"/>
 
@@ -167,6 +171,8 @@
                      HorizontalContentAlignment="Center" MaxLength="1"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
+                     PreviewTextInput="TextBox_PreviewNumericTextInput" 
+                     CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
                      LostFocus="TextBox_LostFocus"                     
                      TabIndex="8">
             </TextBox>
@@ -175,69 +181,7 @@
                       SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
                       DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
                       IsTabStop="False"/>
-        </Grid>
-        <Grid Grid.Row="1" x:Name="HinGrid" IsEnabled="{Binding HinEnabled.Value}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="3.5*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="3.5*"/>
-                <ColumnDefinition Width="20"/>
-            </Grid.ColumnDefinitions>
-            <!--<TextBlock Grid.Column="1" Text=" 商品コード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Column="2" Text="{Binding SttHincd.Value}" Style="{StaticResource ContentText}" x:Name="SttHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="5"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="4"/>
-            <TextBox Grid.Column="3" Text="{Binding SttEdaban.Value}" Style="{StaticResource ContentText}" x:Name="SttEdabanText"
-                     HorizontalContentAlignment="Center" MaxLength="2"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="5"/>
-            <TextBlock Grid.Column="4" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Column="5" Text="{Binding EndHincd.Value}" Style="{StaticResource ContentText}" x:Name="EndHincdText"
-                     HorizontalContentAlignment="Center" MaxLength="5"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="6"/>
-            <TextBox Grid.Column="6" Text="{Binding EndEdaban.Value}" Style="{StaticResource ContentText}" x:Name="EndEdabanText"
-                     HorizontalContentAlignment="Center" MaxLength="2"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="7"/>
-
-            <TextBlock Grid.Column="9" Text=" JANコード" Style="{StaticResource TitleText}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Column="10" Text="{Binding SttJancd.Value}" Style="{StaticResource ContentText}" x:Name="SttJancdText"
-                     HorizontalContentAlignment="Center" MaxLength="13"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="8"/>
-            <TextBlock Grid.Column="11" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Column="12" Text="{Binding EndJancd.Value}" Style="{StaticResource ContentText}" x:Name="EndJancdText"
-                     HorizontalContentAlignment="Center" MaxLength="13"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     TabIndex="9"/>-->
-
-            <behaviors:Interaction.Triggers>
-                <behaviors:EventTrigger EventName="Loaded">
-                    <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}" />
-                </behaviors:EventTrigger>
-            </behaviors:Interaction.Triggers>
-        </Grid>
+        </Grid>        
 
         <Grid Grid.Row="2" Margin="10">
             <Grid.RowDefinitions>

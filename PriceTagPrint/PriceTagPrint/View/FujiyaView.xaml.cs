@@ -66,14 +66,28 @@ namespace PriceTagPrint.View
         }
 
         /// <summary>
-        /// 識別番号テキストの入力制限
+        /// 数字のみテキストの入力制限
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TextBox_PreviewShikibetsuNoTextInput(object sender, TextCompositionEventArgs e)
+        private void TextBox_PreviewNumericTextInput(object sender, TextCompositionEventArgs e)
         {
             // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
             var regex = new Regex("[^0-9]+");
+            var text = e.Text;
+            var result = regex.IsMatch(text);
+            e.Handled = result;
+        }
+
+        /// <summary>
+        /// 日付テキストの入力制限
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewDateTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // 入力値が数値か否か判定し、数値ではない場合、処理済みにします。
+            var regex = new Regex("[^0-9/]+");
             var text = e.Text;
             var result = regex.IsMatch(text);
             e.Handled = result;
@@ -197,11 +211,11 @@ namespace PriceTagPrint.View
             {
                 if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
                 {
+                    // 何故か変更通知が飛ばないので検索処理直前にセット
+                    ((FujiyaViewModel)this.DataContext).SttScode.Value = this.SttHincdText.Text;
+                    ((FujiyaViewModel)this.DataContext).EndScode.Value = this.EndHincdText.Text;
                     if (((FujiyaViewModel)this.DataContext).InputCheck())
-                    {
-                        // 何故か変更通知が飛ばないので検索処理直前にセット
-                        ((FujiyaViewModel)this.DataContext).SttScode.Value = this.SttHincdText.Text;
-                        ((FujiyaViewModel)this.DataContext).EndScode.Value = this.EndHincdText.Text;
+                    {                        
                         ((FujiyaViewModel)this.DataContext).NefudaDataDisplay();
                         this.HakkouTypeText.Focus();
                         this.HakkouTypeText.SelectAll();
