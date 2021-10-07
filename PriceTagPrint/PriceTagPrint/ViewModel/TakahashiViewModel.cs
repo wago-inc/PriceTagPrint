@@ -23,7 +23,7 @@ using Reactive.Bindings;
 
 namespace PriceTagPrint.ViewModel
 {
-    public class WataseiViewModel : ViewModelsBase
+    public class TakahashiViewModel : ViewModelsBase
     {
         #region プロパティ
         // 発行区分
@@ -73,14 +73,14 @@ namespace PriceTagPrint.ViewModel
         //発行枚数計
         public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
 
-        private List<WataseiData> WataseiDatas { get; set; } = new List<WataseiData>();
+        private List<TakahashiData> TakahashiDatas { get; set; } = new List<TakahashiData>();
         // DataGrid Items
-        public ReactiveProperty<ObservableCollection<WataseiItem>> WataseiItems { get; set; }
-                = new ReactiveProperty<ObservableCollection<WataseiItem>>();
+        public ReactiveProperty<ObservableCollection<TakahashiItem>> TakahashiItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<TakahashiItem>>();
 
         #endregion
 
-        private readonly string _grpName = @"\7858_わたせい\【総額対応】わたせい_V5_RT308R";
+        private readonly string _grpName = @"\本店タカハシ";
 
         // 発行区分テキストボックス
         public TextBox HakkouTypeTextBox = null;
@@ -154,7 +154,7 @@ namespace PriceTagPrint.ViewModel
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public WataseiViewModel()
+        public TakahashiViewModel()
         {
             dB_JYUCYU_LIST = new DB_JYUCYU_LIST();
             CreateComboItems();
@@ -220,11 +220,11 @@ namespace PriceTagPrint.ViewModel
             var list = new List<CommonIdName>();
             var item = new CommonIdName();
             item.Id = 1;
-            item.Name = "1：ラベル（３８×３５）";
+            item.Name = "1：◆貼札_税込併記(35×38)";
             list.Add(item);
             var item2 = new CommonIdName();
             item2.Id = 2;
-            item2.Name = "2：タグ（３８×３５）";
+            item2.Name = "2：◆吊り札_税込併記(35×38)";
             list.Add(item2);
             return list;
         }
@@ -258,9 +258,9 @@ namespace PriceTagPrint.ViewModel
             {
                 ProcessingSplash ps = new ProcessingSplash("発注番号確認中...", () =>
                 {
-                    if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.WATASEI, hno))
+                    if (dB_JYUCYU_LIST.QueryWhereTcodeHnoExists(TidNum.HONTENTAKAHASI, hno))
                     {
-                        HnoResultString.Value = "登録済 " + Tid.WATASEI + "-" + Tnm.WATASEI;
+                        HnoResultString.Value = "登録済 " + Tid.HONTENTAKAHASI + "-" + Tnm.HONTENTAKAHASI;
                         HnoResultColor.Value = Brushes.Blue;
                     }
                     else
@@ -405,10 +405,10 @@ namespace PriceTagPrint.ViewModel
             SttJancd.Value = "";
             EndJancd.Value = "";
             TotalMaisu.Value = "";
-            WataseiDatas.Clear();
-            if (WataseiItems.Value != null && WataseiItems.Value.Any())
+            TakahashiDatas.Clear();
+            if (TakahashiItems.Value != null && TakahashiItems.Value.Any())
             {
-                WataseiItems.Value.Clear();
+                TakahashiItems.Value.Clear();
             }
             HakkouTypeTextBox.Focus();
         }
@@ -439,7 +439,7 @@ namespace PriceTagPrint.ViewModel
                 MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            if(this.HakkouTypeText.Value == 2)
+            if (this.HakkouTypeText.Value == 2)
             {
                 int sttHin;
                 int endHin;
@@ -447,7 +447,7 @@ namespace PriceTagPrint.ViewModel
                 int endEda;
                 long sttJan;
                 long endJan;
-                if(!string.IsNullOrEmpty(SttHincd.Value) && !int.TryParse(SttHincd.Value, out sttHin))
+                if (!string.IsNullOrEmpty(SttHincd.Value) && !int.TryParse(SttHincd.Value, out sttHin))
                 {
                     MessageBox.Show("開始商品コードを正しく入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
@@ -535,52 +535,48 @@ namespace PriceTagPrint.ViewModel
 
                 if (wJyucyuList.Any())
                 {
-                    WataseiDatas.Clear();
-                    WataseiDatas.AddRange(
+                    TakahashiDatas.Clear();
+                    TakahashiDatas.AddRange(
                         wJyucyuList
                             .GroupBy(j => new
                             {
                                 TCODE = j.TCODE,
-                                NEFUDA_KBN = j.NEFUDA_KBN.HasValue ? j.NEFUDA_KBN.Value : 0,
-                                HNO = j.HNO,
+                                BUMON = j.BUMON.HasValue ? j.BUMON.ToString() : "",
+                                JANCD = !string.IsNullOrEmpty(j.JANCD) ? j.JANCD.TrimEnd() : "",
                                 BUNRUI = j.BUNRUI,
+                                SCODE = j.SCODE.TrimEnd(),
+                                SAIZUS = j.SAIZUS,
+                                HINCD = string.Concat(j.BUNRUI, "-", j.SCODE.TrimEnd(), "-", j.SAIZUS.ToString("00")),
+                                HINMEI = j.HINMEI.TrimEnd(),
+                                SAIZUN = j.SAIZUN.TrimEnd(),
+                                STANKA = j.STANKA,
+                                HTANKA = j.HTANKA,
                                 LOCTANA_SOKO_CODE = j.LOCTANA_SOKO_CODE,
                                 LOCTANA_FLOOR_NO = j.LOCTANA_FLOOR_NO,
                                 LOCTANA_TANA_NO = j.LOCTANA_TANA_NO,
                                 LOCTANA_CASE_NO = j.LOCTANA_CASE_NO,
-                                SCODE = j.SCODE.TrimEnd(),
-                                SAIZUS = j.SAIZUS,
-                                HINCD = string.Concat(j.BUNRUI, "-", j.SCODE.TrimEnd().PadLeft(5, '0'), "-", j.SAIZUS.ToString("00")),
-                                JANCD = !string.IsNullOrEmpty(j.JANCD) ? j.JANCD.TrimEnd() : "",
-                                HINMEI = j.HINMEI.TrimEnd(),
-                                SAIZUN = j.SAIZUN.TrimEnd(),
-                                HTANKA = j.HTANKA,
-                                JYODAI = j.JYODAI,
-                                BUMON = j.BUMON?.ToString() ?? "",
                             })
-                             .Select(g => new WataseiData
+                             .Select(g => new TakahashiData
                              {
                                  TCODE = g.Key.TCODE,
-                                 NEFUDA_KBN = g.Key.NEFUDA_KBN,
-                                 HNO = g.Key.HNO,
+                                 BUMON = g.Key.BUMON,
+                                 JANCD = g.Key.JANCD,
                                  BUNRUI = g.Key.BUNRUI,
+                                 SCODE = g.Key.SCODE,
+                                 SAIZUS = g.Key.SAIZUS.ToString("00"),
+                                 HINCD = g.Key.HINCD,
+                                 HINMEI = g.Key.HINMEI,
+                                 SAIZUN = g.Key.SAIZUN,
+                                 STANKA = g.Key.STANKA,
+                                 HTANKA = g.Key.HTANKA,
                                  LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
                                  LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
                                  LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
                                  LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
-                                 SCODE = g.Key.SCODE,
-                                 SAIZUS = g.Key.SAIZUS.ToString("00"),
-                                 HINCD = g.Key.HINCD,
-                                 JANCD = g.Key.JANCD,
-                                 HINMEI = g.Key.HINMEI,
-                                 SAIZUN = g.Key.SAIZUN,
-                                 HTANKA = g.Key.HTANKA,
-                                 JYODAI = g.Key.JYODAI ?? 0,
-                                 BUMON = g.Key.BUMON,
                                  TSU = g.Sum(y => y.TSU),
                              })
-                             .Where(x => x.TSU > 0 && x.NEFUDA_KBN == NefudaBangouText.Value &&
-                                         (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
+                             .Where(x => x.TSU > 0 &&
+                                        (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
                              .OrderBy(g => g.BUNRUI)
                              .ThenBy(g => g.LOCTANA_SOKO_CODE)
                              .ThenBy(g => g.LOCTANA_FLOOR_NO)
@@ -590,13 +586,13 @@ namespace PriceTagPrint.ViewModel
                              .ThenBy(g => g.SAIZUS)
                          );
 
-                    if (WataseiDatas.Any())
+                    if (TakahashiDatas.Any())
                     {
-                        WataseiItems.Value = new ObservableCollection<WataseiItem>();
-                        var wataseiModelList = new WataseiItemList();
-                        var addItems = new ObservableCollection<WataseiItem>(wataseiModelList.ConvertWataseiDataToModel(WataseiDatas)).ToList();
+                        TakahashiItems.Value = new ObservableCollection<TakahashiItem>();
+                        var TakahashiModelList = new TakahashiItemList();
+                        var addItems = new ObservableCollection<TakahashiItem>(TakahashiModelList.ConvertTakahashiDataToModel(TakahashiDatas)).ToList();
                         // 直接ObservableにAddするとなぜか落ちるためListをかます。
-                        var setItems = new List<WataseiItem>();
+                        var setItems = new List<TakahashiItem>();
                         addItems.ForEach(item =>
                         {
                             Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -604,13 +600,13 @@ namespace PriceTagPrint.ViewModel
                                   h => item.PropertyChanged -= h)
                                   .Subscribe(e =>
                                   {
-                                          // 発行枚数に変更があったら合計発行枚数も変更する
-                                          TotalMaisu.Value = WataseiItems.Value.Sum(x => x.発行枚数).ToString();
+                                      // 発行枚数に変更があったら合計発行枚数も変更する
+                                      TotalMaisu.Value = TakahashiItems.Value.Sum(x => x.発行枚数).ToString();
                                   });
                             setItems.Add(item);
                         });
-                        WataseiItems.Value = new ObservableCollection<WataseiItem>(setItems);
-                        TotalMaisu.Value = WataseiItems.Value.Sum(x => x.発行枚数).ToString();
+                        TakahashiItems.Value = new ObservableCollection<TakahashiItem>(setItems);
+                        TotalMaisu.Value = TakahashiItems.Value.Sum(x => x.発行枚数).ToString();
                     }
                     else
                     {
@@ -642,9 +638,9 @@ namespace PriceTagPrint.ViewModel
         /// <returns></returns>
         public bool PrintCheck()
         {
-            return WataseiItems.Value != null &&
-                   WataseiItems.Value.Any() &&
-                   WataseiItems.Value.Sum(x => x.発行枚数) > 0;
+            return TakahashiItems.Value != null &&
+                   TakahashiItems.Value.Any() &&
+                   TakahashiItems.Value.Sum(x => x.発行枚数) > 0;
         }
 
         /// <summary>
@@ -653,7 +649,7 @@ namespace PriceTagPrint.ViewModel
         /// <param name="isPreview"></param>
         public void ExecPrint(bool isPreview)
         {
-            var fname = Tid.WATASEI + "_" + this.HachuBangou.Value + ".csv";
+            var fname = Tid.HONTENTAKAHASI + "_" + this.HachuBangou.Value + ".csv";
             var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
@@ -670,27 +666,22 @@ namespace PriceTagPrint.ViewModel
         /// <param name="fullName"></param>
         private void CsvExport(string fullName)
         {
-            var list = WataseiItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var list = TakahashiItems.Value.Where(x => x.発行枚数 > 0).ToList();
             var csvColSort = new string[]
             {
                 "部門",
-                "分類",
-                "品番",
-                "サイズ",
-                "本体価格",
+                "店番",
+                "原価",
+                "売価",
+                "JANコード",
+                "コメント",
                 "発行枚数"
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
-            datas.Columns.Remove("発注No");
-            datas.Columns.Remove("取引先CD");
-            datas.Columns.Remove("値札No");
-            datas.Columns.Remove("商品コード");
-            datas.Columns.Remove("JANコード");
-            datas.Columns.Remove("市価");
-            datas.Columns.Remove("サイズ名");
-            datas.Columns.Remove("カラー名");
-            datas.Columns.Remove("商品名");
+            datas.Columns.Remove("表示用商品コード");
+            datas.Columns.Remove("表示用商品名");
+            datas.Columns.Remove("表示用サイズカラー名");
             new CsvUtility().Write(datas, fullName, true);
         }
 
@@ -702,7 +693,9 @@ namespace PriceTagPrint.ViewModel
         private void NefudaOutput(string fname, bool isPreview)
         {
             // ※振分発行用ＰＧ
-            var layName = NefudaBangouText.Value == 1 ? @"貼り札.mllayx" : "下札.mllayx";
+            var layName = NefudaBangouText.Value == 1 ?
+                            @"00004-◆貼札_税込併記(35×38).mllayx" :
+                            @"00008-◆吊り札_税込併記(35×38).mllayx";
 
             var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + _grpName + @"\" + layName;
             var dq = "\"";
@@ -724,7 +717,7 @@ namespace PriceTagPrint.ViewModel
     /// データグリッド表示プロパティ
     /// CSVの出力にも流用
     /// </summary>
-    public class WataseiItem : INotifyPropertyChanged
+    public class TakahashiItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String propertyName = "")
@@ -734,14 +727,8 @@ namespace PriceTagPrint.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public string 部門 { get; set; }  // CSV
-        public int 分類 { get; set; } // CSV
-        public string 品番 { get; set; }  // CSV
-        public string サイズ { get; set; }    // CSV
-        public int 本体価格 { get; set; }  // CSV
-
         private int _発行枚数;
-        public int 発行枚数 // CSV
+        public int 発行枚数 // csv & 表示
         {
             get { return _発行枚数; }
             set
@@ -753,52 +740,46 @@ namespace PriceTagPrint.ViewModel
                 }
             }
         }
-        public int 発注No { get; set; }
-        public string 取引先CD { get; set; }
-        public string 値札No { get; set; }
-        public string 商品コード { get; set; }
-        public string JANコード { get; set; }
-        public int 市価 { get; set; }        
-        public string サイズ名 { get; set; }
-        public string カラー名 { get; set; }
-        public string 商品名 { get; set; }        
+        public string 部門 { get; set; } // csv1 & 表示 ※リストのクラス
+        public string 店番 { get; set; }  // csv2 空白固定
+        public int 原価 { get; set; } // csv3 & 表示
+        public int 売価 { get; set; } // csv4 & 表示
+        public string JANコード { get; set; }   // csv5 & 表示
+        public string コメント { get; set; }   // csv6 空白固定
+        public string 表示用商品コード { get; set; }    // 表示
+        public string 表示用商品名 { get; set; } // 表示
+        public string 表示用サイズカラー名 { get; set; } // 表示
 
-        public WataseiItem(int 発注No, string 取引先CD, string 値札No, string 商品コード, string JANコード, int 市価,
-                           int 売価, string サイズ名, string カラー名, string 商品名, string 部門, int 分類, string 品番,
-                           string サイズ, int 発行枚数)
+        public TakahashiItem(int 発行枚数, string 部門, string 店番, int 原価, int 売価, string JANコード,
+                             string コメント, string 表示用商品コード, string 表示用商品名, string 表示用サイズカラー名)
         {
-            this.発注No = 発注No;
-            this.取引先CD = 取引先CD;
-            this.値札No = 値札No;
-            this.商品コード = 商品コード;
-            this.JANコード = JANコード;
-            this.市価 = 市価;
-            this.本体価格 = 売価;
-            this.サイズ名 = サイズ名;
-            this.カラー名 = カラー名;
-            this.商品名 = 商品名;
-            this.部門 = 部門;
-            this.分類 = 分類;
-            this.品番 = 品番;
-            this.サイズ = サイズ;
             this.発行枚数 = 発行枚数;
+            this.部門 = 部門;
+            this.店番 = 店番;
+            this.原価 = 原価;
+            this.売価 = 売価;
+            this.JANコード = JANコード;
+            this.コメント = コメント;
+            this.表示用商品コード = 表示用商品コード;
+            this.表示用商品名 = 表示用商品名;
+            this.表示用サイズカラー名 = 表示用サイズカラー名;
         }
     }
 
-    public class WataseiItemList
+    public class TakahashiItemList
     {
-        public IEnumerable<WataseiItem> ConvertWataseiDataToModel(List<WataseiData> datas)
+        public IEnumerable<TakahashiItem> ConvertTakahashiDataToModel(List<TakahashiData> datas)
         {
-            var result = new List<WataseiItem>();
-            int shika = 0;
-            int bunrui = 0;
+            var result = new List<TakahashiItem>();
+            string hincd = "";
             datas.ForEach(data =>
             {
-                shika = data.HTANKA == data.JYODAI || data.HTANKA > data.JYODAI ? 0 : data.JYODAI;
-                bunrui = data.BUNRUI == 148 ? 918 : data.BUNRUI;
+                hincd = !string.IsNullOrEmpty(data.SCODE) && !string.IsNullOrEmpty(data.SCODE) ?
+                        string.Concat(data.SCODE, "-", data.SAIZUS) :
+                        !string.IsNullOrEmpty(data.SCODE) ? data.SCODE : "";
                 result.Add(
-                    new WataseiItem(data.HNO, data.TCODE.ToString(), data.NEFUDA_KBN.ToString(), data.HINCD, data.JANCD, shika, data.HTANKA, data.SAIZUN,
-                                    " ", data.HINMEI, data.BUMON.PadLeft(3, '0'), bunrui, data.SCODE, data.SAIZUS, data.TSU));
+                    new TakahashiItem(data.TSU, data.BUMON, "", data.STANKA, data.HTANKA, data.JANCD, 
+                                      "", data.HINCD, data.HINMEI, data.SAIZUN));
             });
             return result;
         }

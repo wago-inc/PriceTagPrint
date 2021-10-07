@@ -25,11 +25,15 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// 値札区分
         /// </summary>
-        public int NEFUDA_KBN { get; set; }
+        public int? NEFUDA_KBN { get; set; }
         /// <summary>
         /// 発注番号
         /// </summary>
         public int HNO { get; set; }
+        /// <summary>
+        /// 発注数
+        /// </summary>
+        public int HSU { get; set; }
         /// <summary>
         /// 出荷数
         /// </summary>
@@ -146,7 +150,7 @@ namespace PriceTagPrint.MDB
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DB_JYUCYU(DateTime? ndate, int tcode, string netuke_bunrui, int nefuda_kbn, int hno, int tsu, int? loctana_soko_code, 
+        public DB_JYUCYU(DateTime? ndate, int tcode, string netuke_bunrui, int? nefuda_kbn, int hno, int hsu, int tsu, int? loctana_soko_code, 
                          int? loctana_floor_no, int? loctana_tana_no, int? loctana_case_no, int bunrui, string scode,
                          int saizus, int tenpo, string scodep, string jancd, string hinmei, string saizun, int stanka,
                          int htanka, int? jyodai, int? zbaika, int? bumon, int sku, int itemcd, int? saizu, int? color,
@@ -157,6 +161,7 @@ namespace PriceTagPrint.MDB
             this.NETUKE_BUNRUI = netuke_bunrui;
             this.NEFUDA_KBN = nefuda_kbn;
             this.HNO = hno;
+            this.HSU = hsu;
             this.TSU = tsu;
             this.LOCTANA_SOKO_CODE = loctana_soko_code;
             this.LOCTANA_FLOOR_NO = loctana_floor_no;
@@ -223,8 +228,9 @@ namespace PriceTagPrint.MDB
                             dr.Field<DateTime?>("NDATE"),
                             dr.Field<int>("TCODE"),
                             dr.Field<string>("NETUKE_BUNRUI"),
-                            dr.Field<int>("NEFUDA_KBN"),
+                            dr.Field<int?>("NEFUDA_KBN"),
                             dr.Field<int>("HNO"),
+                            dr.Field<int>("HSU"),
                             dr.Field<int>("TSU"),
                             dr.Field<int?>("LOCTANA_SOKO_CODE"),
                             dr.Field<int?>("LOCTANA_FLOOR_NO"),

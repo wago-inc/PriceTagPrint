@@ -45,6 +45,9 @@
     <Compile Update="View\SaneiView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\TakahashiView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\TenmayaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -99,6 +102,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\SaneiView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\TakahashiView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\TenmayaView.xaml">
