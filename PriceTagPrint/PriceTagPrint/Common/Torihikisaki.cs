@@ -367,7 +367,8 @@ namespace PriceTagPrint.Common
                 case TidNum.YASUSAKI:
                     return new List<DirItem>()
                     {
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0112_ヤスサキ\【総額対応】ヤスサキ_V5_RT308R_振分発行", true)
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0112_ヤスサキ\【総額対応】ヤスサキ_V5_RT308R_振分発行", true),
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0112_ヤスサキ\【2段併記】ヤスサキ_JAN2段併記_RT308R", false)
                     };
                 case TidNum.WATASEI:
                     return new List<DirItem>()
