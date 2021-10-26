@@ -542,8 +542,7 @@ namespace PriceTagPrint.ViewModel
                                                VNOHINDT = a.VNOHINDT,
                                                VHINCD = a.VHINCD,
                                                VHINNMA = a.VHINNMA,
-                                               HINCD = hin.Any() ? hin.FirstOrDefault().HINCLID.TrimEnd() + "-" + hin.FirstOrDefault().HINID.TrimEnd() : "",
-                                               DISPHINCD = a.HINCD,
+                                               HINCD = a.HINCD,
                                                HINID = hin.Any() ? hin.FirstOrDefault().HINID.TrimEnd() : "",
                                                QOLTORID = a.QOLTORID,
                                                VIRISU = a.VIRISU,
@@ -570,7 +569,6 @@ namespace PriceTagPrint.ViewModel
                                         a.VHINCD,
                                         a.VHINNMA,
                                         a.HINCD,
-                                        a.DISPHINCD,
                                         a.HINID,
                                         a.QOLTORID,
                                         a.VIRISU,
@@ -592,7 +590,6 @@ namespace PriceTagPrint.ViewModel
                                         VHINNMA = g.Key.VHINNMA,
                                         HINCD = g.Key.HINCD,
                                         HINID = g.Key.HINID,
-                                        DSPHINCD = g.Key.DISPHINCD,
                                         QOLTORID = g.Key.QOLTORID,
                                         VIRISU = g.Key.VIRISU,
                                         VURITK = g.Key.VURITK,
@@ -729,7 +726,6 @@ namespace PriceTagPrint.ViewModel
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
-            datas.Columns.Remove("表示用品番");
             datas.Columns.Remove("表示用商品名");
             datas.Columns.Remove("表示用セット情報");
             datas.Columns.Remove("リスト表示商品名");
@@ -792,8 +788,7 @@ namespace PriceTagPrint.ViewModel
         public string 部門コード { get; set; }  //csv
         public string 仕入先コード { get; set; }     //csv
         public string JANコード { get; set; }   //csv & 表示
-        public string 品番 { get; set; }    //csv
-        public string 表示用品番 { get; set; }    //表示
+        public string 品番 { get; set; }    //csv & 表示
         public string 表示用商品名 { get; set; }   //表示
         public string カラー名 { get; set; }  //csv & 表示
         public string サイズ名 { get; set; }  //csv & 表示
@@ -805,7 +800,7 @@ namespace PriceTagPrint.ViewModel
         public string 表示用セット情報 { get; set; }    //表示
         public string リスト表示商品名 { get; set; }   //表示
         public SaneiItem(decimal 発行枚数, string 納品月, string 納品日, string 追加情報, string 部門コード, string 仕入先コード,
-                            string JANコード, string 品番, string 表示用品番, string 表示用商品名, string サイズ名, string カラー名,
+                            string JANコード, string 品番, string 表示用商品名, string サイズ名, string カラー名,
                             string セット情報, decimal セット数, string メッセージ, decimal 売価, string 値下げラベルNo, 
                             string 表示用セット情報, string リスト表示商品名)
         {
@@ -817,7 +812,6 @@ namespace PriceTagPrint.ViewModel
             this.仕入先コード = 仕入先コード;
             this.JANコード = JANコード;
             this.品番 = 品番;
-            this.表示用品番 = 表示用品番;
             this.表示用商品名 = 表示用商品名;
             this.サイズ名 = サイズ名;
             this.カラー名 = カラー名;
@@ -851,7 +845,7 @@ namespace PriceTagPrint.ViewModel
                 サイズ名 = Microsoft.VisualBasic.Strings.StrConv(data.VSIZNM, Microsoft.VisualBasic.VbStrConv.Wide, 0x411);
                 result.Add(
                     new SaneiItem(data.VSURYO, 納品月, 納品日, data.TUIKA_KBN, data.BUMONCD, data.QOLTORID, data.VHINCD,
-                                  data.HINCD, data.DSPHINCD, data.DSPHINNM, サイズ名, カラー名, data.SET_INFO,
+                                  data.HINCD, data.DSPHINNM, サイズ名, カラー名, data.SET_INFO,
                                   data.VIRISU, data.MESSAGE, data.VURITK, string.Empty, data.SET_INFO + data.VIRISU, data.VHINNMA));
             });
             return result;

@@ -102,10 +102,5 @@ C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\Pr
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\FujiyaView.baml
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\MiyamaView.g.cs
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\MiyamaView.baml
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.csprojAssemblyReference.cache
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\TakahashiView.g.cs
 C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\View\TakahashiView.baml
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\PriceTagPrint.dll.manifest
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\bin\Release\netcoreapp3.1\PriceTagPrint.application
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.dll.manifest
-C:\Users\wago99.WAGO\source\repos\wago-inc-system\PriceTagPrint\PriceTagPrint\PriceTagPrint\obj\Release\netcoreapp3.1\PriceTagPrint.application

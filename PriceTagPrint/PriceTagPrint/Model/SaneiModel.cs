@@ -27,17 +27,13 @@ namespace PriceTagPrint.Model
         /// </summary>
         public string VHINNMA { get; set; }
         /// <summary>
-        /// 商品コード（分類 + 品番）
+        /// 商品コード（分類 + 品番 + 枝番）
         /// </summary>
         public string HINCD { get; set; }
         /// <summary>
         /// 商品コード（品番のみ）
         /// </summary>
         public string HINID { get; set; }
-        /// <summary>
-        /// 表示用商品コード
-        /// </summary>
-        public string DSPHINCD { get; set; }
         /// <summary>
         /// 取引先コード
         /// </summary>

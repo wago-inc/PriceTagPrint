@@ -229,13 +229,13 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="品番" Binding="{Binding Path=表示用品番}" Width="1.5*"
+                    <DataGridTextColumn Header="品番" Binding="{Binding Path=品番}" Width="1.6*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Padding" Value="3,0,0,0"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
