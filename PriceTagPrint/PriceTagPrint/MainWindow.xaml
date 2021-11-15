@@ -117,6 +117,7 @@
                             <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="13" />
                             <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="14" />
                             <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="15" />
+                            <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource TitleButton}" Margin="5,10,0,10" Content="16" />
                             
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd01" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource TitleButton}" Content="ヤスサキ" />
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd02" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource TitleButton}" Content="ヤマナカ" />
@@ -133,6 +134,7 @@
                             <Button Grid.Row="5" Grid.Column="1" x:Name="Cmd13" Command="{Binding SelectAutoCommand}" CommandParameter="0416" Style="{StaticResource TitleButton}" Content="フジヤ" />
                             <Button Grid.Row="5" Grid.Column="3" x:Name="Cmd14" Command="{Binding SelectAutoCommand}" CommandParameter="8102" Style="{StaticResource TitleButton}" Content="ミヤマ" />
                             <Button Grid.Row="5" Grid.Column="5" x:Name="Cmd15" Command="{Binding SelectAutoCommand}" CommandParameter="8103" Style="{StaticResource TitleButton}" Content="本店タカハシ" />
+                            <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd16" Command="{Binding SelectAutoCommand}" CommandParameter="7501" Style="{StaticResource TitleButton}" Content="オカダ" />
                         </Grid>
 
                         <Grid ShowGridLines="false" Visibility="{Binding RyohanMenuVisibility.Value}">

@@ -36,6 +36,9 @@
     <Compile Update="View\MiyamaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\OkadaView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\OkinawaSankiView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,6 +96,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MiyamaView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\OkadaView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\OkinawaSankiView.xaml">

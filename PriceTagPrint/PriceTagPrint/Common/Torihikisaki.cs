@@ -206,7 +206,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(7,  Tid.AJU,            Tnm.AJU,            HakkouKind.Input, CreateDirList(TidNum.AJU)),
                 new Torihikisaki(8,  Tid.ABUABU,         Tnm.ABUABU,         HakkouKind.Input, CreateDirList(TidNum.ABUABU)),
                 new Torihikisaki(9,  Tid.ITOGOFUKU,      Tnm.ITOGOFUKU,      HakkouKind.Both,  CreateDirList(TidNum.ITOGOFUKU)),
-                new Torihikisaki(10, Tid.OKADA,          Tnm.OKADA,          HakkouKind.Input, CreateDirList(TidNum.OKADA)),
+                new Torihikisaki(10, Tid.OKADA,          Tnm.OKADA,          HakkouKind.Both,  CreateDirList(TidNum.OKADA)),
                 new Torihikisaki(11, Tid.KANETA,         Tnm.KANETA,         HakkouKind.Input, CreateDirList(TidNum.KANETA)),
                 new Torihikisaki(12, Tid.KYOEI,          Tnm.KYOEI,          HakkouKind.Both,  CreateDirList(TidNum.KYOEI)),
                 new Torihikisaki(13, Tid.COSMOMATUOKA,   Tnm.COSMOMATUOKA,   HakkouKind.Both,  CreateDirList(TidNum.COSMOMATUOKA)),

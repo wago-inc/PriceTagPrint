@@ -18,6 +18,7 @@ namespace PriceTagPrint.WAGO2
         public short BUNRUI { get; set; }
         public string SCODE { get; set; }
         public string SKBN { get; set; }
+        public string TSCODE { get; set; }
         public string BIKOU1 { get; set; }
         public string BIKOU2 { get; set; }
         public string NEFUDA_KBN { get; set; }
@@ -39,8 +40,8 @@ namespace PriceTagPrint.WAGO2
         /// <param name="nefuda_kbn"></param>
         /// <param name="netuke_bunrui"></param>
         public WEB_TORIHIKISAKI_TANKA(string tid, short tcode, short tenpo, int hcode, short saizu, short bunrui,
-                                      string scode, string skbn, string bikou1, string bikou2, string nefuda_kbn,
-                                      string netuke_bunrui)
+                                      string scode, string skbn, string tscode, string bikou1, string bikou2,
+                                      string nefuda_kbn, string netuke_bunrui)
         {
             this.TID = tid;
             this.TCODE = tcode;
@@ -50,6 +51,7 @@ namespace PriceTagPrint.WAGO2
             this.BUNRUI = bunrui;
             this.SCODE = scode;
             this.SKBN = skbn;
+            this.TSCODE = tscode;
             this.BIKOU1 = bikou1;
             this.BIKOU2 = bikou2;
             this.NEFUDA_KBN = nefuda_kbn;
@@ -87,10 +89,19 @@ namespace PriceTagPrint.WAGO2
                         {
                             results.Add(new WEB_TORIHIKISAKI_TANKA
                                 (
-                                    row.Field<string>("TID"), row.Field<short>("TCODE"), row.Field<short>("TENPO"),
-                                    row.Field<int>("HCODE"), row.Field<short>("SAIZU"), row.Field<short>("BUNRUI"),
-                                    row.Field<string>("SCODE"), row.Field<string>("SKBN"), row.Field<string>("BIKOU1"),
-                                    row.Field<string>("BIKOU2"), row.Field<string>("NEFUDA_KBN"), row.Field<string>("NETUKE_BUNRUI")
+                                    row.Field<string>("TID"), 
+                                    row.Field<short>("TCODE"), 
+                                    row.Field<short>("TENPO"),
+                                    row.Field<int>("HCODE"), 
+                                    row.Field<short>("SAIZU"), 
+                                    row.Field<short>("BUNRUI"),
+                                    row.Field<string>("SCODE"), 
+                                    row.Field<string>("SKBN"),
+                                    row.Field<string>("TSCODE"),
+                                    row.Field<string>("BIKOU1"),
+                                    row.Field<string>("BIKOU2"), 
+                                    row.Field<string>("NEFUDA_KBN"), 
+                                    row.Field<string>("NETUKE_BUNRUI")
                                 ));
                         }
                     }
