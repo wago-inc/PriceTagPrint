@@ -118,7 +118,7 @@
                        Text="※サブクラスNoと棚番号が検品リストと一致することを確認してください。" Style="{StaticResource OtherText}" 
                        TextAlignment="Left" HorizontalAlignment="Stretch" Foreground="Red" Margin="5,0,0,0"/>
             <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
-                       Text="7883_商品マスタ(7883_SYOHIN_MST)最終更新日:2021/10/05" Style="{StaticResource OtherText}" FontSize="11"
+                       Text="7883_商品マスタ(7883_SYOHIN_MST)最終更新日:2022/01/07" Style="{StaticResource OtherText}" FontSize="11"
                        TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"  Margin="5,0,0,0"/>
             
             <!--分類コード-->
