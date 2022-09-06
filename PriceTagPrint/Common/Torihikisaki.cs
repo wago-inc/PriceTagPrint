@@ -149,7 +149,7 @@ namespace PriceTagPrint.Common
         public const string MARBURU = "マーブル";
         public const string MANEKI = "マネキ";
         public const string MIYAMA = "ミヤマ";
-        public const string YANAGIYA = "ヤスサキ";
+        public const string YANAGIYA = "柳屋";
         public const string WORKWAY = "ワークウェイ";
         public const string SANKI = "三喜";
         public const string SUNNY_MART = "サニーマート";
