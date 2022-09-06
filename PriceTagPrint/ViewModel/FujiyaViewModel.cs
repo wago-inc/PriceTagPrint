@@ -533,7 +533,7 @@ namespace PriceTagPrint.ViewModel
                                 {
                                     TSU = j.TSU,
                                     SHIKIBETSU = this.ShikibetsuNoText.Value,
-                                    TORIHIKISAKICD = "886",
+                                    TORIHIKISAKICD = "885",
                                     BUMONCD = j.BUMONCD,
                                     CHUBUNRUI = j.CHUBUNRUI,
                                     SIRESYU = j.SIRESYU,
