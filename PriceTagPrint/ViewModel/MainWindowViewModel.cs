@@ -96,6 +96,7 @@ namespace PriceTagPrint.ViewModel
                 view.Owner.Hide();
             }
         }
+
         private void ShowAutoDisplay(string tcode)
         {
             DirectoryInfo di = new DirectoryInfo(CommonStrings.CSV_PATH);

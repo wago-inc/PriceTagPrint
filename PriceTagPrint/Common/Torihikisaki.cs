@@ -63,6 +63,9 @@ namespace PriceTagPrint.Common
         public const int MANSYO = 7903;
         public const int MANEI = 7908;
         public const int NANKOKU = 8208;
+        public const int IZUMI = 160;
+        public const int AKANOREN = 165;
+        public const int KEIOSTORE = 8115;
         public const int OTHER01 = -1;
         public const int OTHER02 = -2;
         public const int OTHER03 = -3;
@@ -113,6 +116,9 @@ namespace PriceTagPrint.Common
         public const string MANSYO = "7903";
         public const string MANEI = "7908";
         public const string NANKOKU = "8208";
+        public const string IZUMI = "0160";
+        public const string AKANOREN = "0165";
+        public const string KEIOSTORE = "8115";
         public const string OTHER01 = "OT01";
         public const string OTHER02 = "OT02";
         public const string OTHER03 = "OT03";
@@ -160,6 +166,9 @@ namespace PriceTagPrint.Common
         public const string MANSYO = "万勝";
         public const string MANEI = "萬栄";
         public const string NANKOKU = "ナンコクスーパー";
+        public const string IZUMI = "イズミ";
+        public const string AKANOREN = "あかのれん";
+        public const string KEIOSTORE = "京王ストア";
         public const string OTHER01 = "インナー商品シール";
         public const string OTHER02 = "和合ＪＡＮタグ";
         public const string OTHER03 = "品番・サイズ・素材シール";
@@ -233,12 +242,15 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(34, Tid.MANSYO,         Tnm.MANSYO,         HakkouKind.Input, CreateDirList(TidNum.MANSYO)),
                 new Torihikisaki(35, Tid.MANEI,          Tnm.MANEI,          HakkouKind.Input, CreateDirList(TidNum.MANEI)),
                 new Torihikisaki(36, Tid.NANKOKU,        Tnm.NANKOKU,        HakkouKind.Input, CreateDirList(TidNum.NANKOKU)),
-                new Torihikisaki(37, Tid.OTHER01,        Tnm.OTHER01,        HakkouKind.Input, CreateDirList(TidNum.OTHER01)),
-                new Torihikisaki(38, Tid.OTHER02,        Tnm.OTHER02,        HakkouKind.Input, CreateDirList(TidNum.OTHER02)),
-                new Torihikisaki(39, Tid.OTHER03,        Tnm.OTHER03,        HakkouKind.Input, CreateDirList(TidNum.OTHER03)),
-                new Torihikisaki(40, Tid.OTHER04,        Tnm.OTHER04,        HakkouKind.Input, CreateDirList(TidNum.OTHER04)),
-                new Torihikisaki(41, Tid.OTHER05,        Tnm.OTHER05,        HakkouKind.Input, CreateDirList(TidNum.OTHER05)),
-                new Torihikisaki(42, Tid.OTHER06,        Tnm.OTHER06,        HakkouKind.Input, CreateDirList(TidNum.OTHER06)),
+                new Torihikisaki(37, Tid.IZUMI,          Tnm.IZUMI,          HakkouKind.Input, CreateDirList(TidNum.IZUMI)),
+                new Torihikisaki(38, Tid.AKANOREN,       Tnm.AKANOREN,       HakkouKind.Input, CreateDirList(TidNum.AKANOREN)),
+                new Torihikisaki(39, Tid.KEIOSTORE,      Tnm.KEIOSTORE,      HakkouKind.Input, CreateDirList(TidNum.KEIOSTORE)),
+                new Torihikisaki(40, Tid.OTHER01,        Tnm.OTHER01,        HakkouKind.Input, CreateDirList(TidNum.OTHER01)),
+                new Torihikisaki(41, Tid.OTHER02,        Tnm.OTHER02,        HakkouKind.Input, CreateDirList(TidNum.OTHER02)),
+                new Torihikisaki(42, Tid.OTHER03,        Tnm.OTHER03,        HakkouKind.Input, CreateDirList(TidNum.OTHER03)),
+                new Torihikisaki(43, Tid.OTHER04,        Tnm.OTHER04,        HakkouKind.Input, CreateDirList(TidNum.OTHER04)),
+                new Torihikisaki(44, Tid.OTHER05,        Tnm.OTHER05,        HakkouKind.Input, CreateDirList(TidNum.OTHER05)),
+                new Torihikisaki(45, Tid.OTHER06,        Tnm.OTHER06,        HakkouKind.Input, CreateDirList(TidNum.OTHER06)),
             };
         }
 
@@ -424,6 +436,22 @@ namespace PriceTagPrint.Common
                     return new List<DirItem>()
                     {
                         new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0127_ヤマナカ\【総額対応】ヤマナカ_V5_RT308R_振分発行", false)
+                    };
+                case TidNum.IZUMI:
+                    return new List<DirItem>()
+                    {
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0160_イズミ\イズミ【BMS値札メッセージ】\20104-イズミ【BMS値札メッセージ】", false),
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0160_イズミ\イズミ値下シール【BMS値札メッセージ】\20105-イズミ値下シール【BMS値札メッセージ】", false)
+                    };
+                case TidNum.AKANOREN:
+                    return new List<DirItem>()
+                    {
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0165_あかのれん", false)
+                    };
+                case TidNum.KEIOSTORE:
+                    return new List<DirItem>()
+                    {
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\8115_京王ストア", false)
                     };
                 case TidNum.OTHER01:
                     return new List<DirItem>()

@@ -181,7 +181,7 @@
                      KeyDown="TextBox_KeyDown"
                      TabIndex="7"/>
             <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
-                       Text="キョーエイ用値札区分管理マスタ(TOKMTE_TSURI)最終更新日:2021/09/29" Style="{StaticResource OtherText}" FontSize="11"
+                       Text="キョーエイ用値札区分管理マスタ(TOKMTE_TSURI)最終更新日:2022/09/06" Style="{StaticResource OtherText}" FontSize="11"
                        TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"  Margin="5,0,0,0"/>
         </Grid>
 
