@@ -23,13 +23,14 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace PriceTagPrint.View
 {
     /// <summary>
     /// SaneiView.xaml の相互作用ロジック
     /// </summary>
-    public partial class SaneiView : Window
+    public partial class SaneiView : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 

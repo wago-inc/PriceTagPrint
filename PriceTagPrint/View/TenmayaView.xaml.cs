@@ -1,4 +1,5 @@
-﻿using PriceTagPrint.ViewModel;
+﻿using MahApps.Metro.Controls;
+using PriceTagPrint.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace PriceTagPrint.View
     /// <summary>
     /// TenmayaView.xaml の相互作用ロジック
     /// </summary>
-    public partial class TenmayaView : Window
+    public partial class TenmayaView : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 

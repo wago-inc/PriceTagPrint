@@ -1,4 +1,5 @@
-﻿using Oracle.DataAccess.Client;
+﻿using MahApps.Metro.Controls;
+using Oracle.DataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.Model;
 using PriceTagPrint.ViewModel;
@@ -27,7 +28,7 @@ namespace PriceTagPrint.View
     /// <summary>
     /// TakahashiView.xaml の相互作用ロジック
     /// </summary>
-    public partial class TakahashiView : Window
+    public partial class TakahashiView : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 

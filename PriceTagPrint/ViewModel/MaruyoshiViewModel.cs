@@ -75,7 +75,7 @@ namespace PriceTagPrint.ViewModel
         private DB_0127_HANSOKU_BAIKA_CONV_LIST dB_0127_HANSOKU_LIST;
         private List<HINMTA> hinmtaList;
 
-        private string _スマクラforWeb切替日 = "20220301";
+        private string _スマクラforWeb切替日 = "20991231";
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand

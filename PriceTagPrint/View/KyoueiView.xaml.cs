@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using MahApps.Metro.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Oracle.DataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.Model;
@@ -29,7 +30,7 @@ namespace PriceTagPrint.View
     /// <summary>
     /// KyoueiView.xaml の相互作用ロジック
     /// </summary>
-    public partial class KyoueiView : Window
+    public partial class KyoueiView : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 

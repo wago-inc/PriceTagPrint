@@ -10,13 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using MahApps.Metro.Controls;
 
 namespace PriceTagPrint.View
 {
     /// <summary>
     /// ProcessingSplash.xaml の相互作用ロジック
     /// </summary>
-    public partial class ProcessingSplash : Window
+    public partial class ProcessingSplash : MetroWindow
     {
         BackgroundWorker _backgroundWorker = new BackgroundWorker();
         Action action;

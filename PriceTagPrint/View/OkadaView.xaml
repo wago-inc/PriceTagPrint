@@ -1,16 +1,25 @@
-﻿<Window x:Class="PriceTagPrint.View.OkadaView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PriceTagPrint.View"
-        xmlns:extend="clr-namespace:PriceTagPrint.Extend"
-        xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
-        mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="【7501-岡田】値札発行" Height="715" Width="1100">
+﻿<metro:MetroWindow x:Class="PriceTagPrint.View.OkadaView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+                   xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                   xmlns:local="clr-namespace:PriceTagPrint.View"
+                   xmlns:extend="clr-namespace:PriceTagPrint.Extend"
+                   xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
+                   mc:Ignorable="d"
+                   WindowStartupLocation="CenterScreen"
+                   ShowCloseButton="False"
+                   TextOptions.TextFormattingMode="Ideal" 
+                   TextOptions.TextRenderingMode="Auto"
+                   Background="{DynamicResource MaterialDesignPaper}"
+                   GlowBrush="{DynamicResource AccentColorBrush}"
+                   FontFamily="{StaticResource MaterialDesignFont}"
+                   Title="【7501-岡田】値札発行" Height="715" Width="1100">
 
     <Window.DataContext>
         <vm:OkadaViewModel/>
@@ -366,4 +375,4 @@
             <Button Grid.Column="12" Command="{Binding FuncActionCommand}" CommandParameter="F12" Content=" Ｆ１２&#xa;値札発行" Style="{StaticResource FkeyButton}" FontSize="20" Visibility="Visible" IsTabStop="False"/>
         </Grid>
     </Grid>
-</Window>
+</metro:MetroWindow>

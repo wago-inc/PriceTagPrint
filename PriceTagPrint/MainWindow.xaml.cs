@@ -1,4 +1,5 @@
-﻿using PriceTagPrint.ViewModel;
+﻿using MahApps.Metro.Controls;
+using PriceTagPrint.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace PriceTagPrint
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 
