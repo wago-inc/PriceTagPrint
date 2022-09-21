@@ -628,7 +628,7 @@ namespace PriceTagPrint.ViewModel
             wk_Char = wk_Char.ToUpper();
 
             SearchChar = typenm1;
-            if(wk_Char.Contains(SearchChar))
+            if(wk_Char.StartsWith(SearchChar))
             {
                 wNEFUDA_NO = "13";
             }
