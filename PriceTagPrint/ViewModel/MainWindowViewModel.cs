@@ -245,6 +245,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.AKANOREN:
+                        {
+                            var view = new AkanorenView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     case Tid.OKADA:
                         {
                             var view = new OkadaView();

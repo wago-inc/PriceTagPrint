@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Image\PriceTagPrintImage.ico</ApplicationIcon>
     <Configurations>Debug;Release;ReleaseCreateExe</Configurations>
-    <AssemblyName>PriceTagPrint</AssemblyName>
+    <AssemblyName>値札発行</AssemblyName>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
