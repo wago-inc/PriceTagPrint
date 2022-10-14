@@ -38,8 +38,8 @@ namespace PriceTagPrint.ViewModel
 
         // 分類コード
         public ReactiveProperty<string> BunruiCodeText { get; set; }
-        public ReactiveProperty<ObservableCollection<BunruiCode>> BunruiCodeItems { get; set; }
-                = new ReactiveProperty<ObservableCollection<BunruiCode>>();
+        public ReactiveProperty<ObservableCollection<AKBUNRUICD>> BunruiCodeItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<AKBUNRUICD>>();
         public ReactiveProperty<int> SelectedBunruiCodeIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
@@ -138,10 +138,10 @@ namespace PriceTagPrint.ViewModel
         /// </summary>
         public void CreateComboItems()
         {
-            var bunruis = new BunruiCodeList().GetBunruiCodes();
-            bunruis.Insert(0, new BunruiCode("", ""));
+            var bunruis = new AKBUNRUICDLIST().list;
+            bunruis.Insert(0, new AKBUNRUICD("", "", "", ""));
             HakkouTypeItems.Value = new ObservableCollection<CommonIdName>(CreateHakkouTypeItems());
-            BunruiCodeItems.Value = new ObservableCollection<BunruiCode>(bunruis);
+            BunruiCodeItems.Value = new ObservableCollection<AKBUNRUICD>(bunruis);
             NefudaBangouItems.Value = new ObservableCollection<CommonIdName>(CreateNefudaBangouItems());
         }
 
@@ -226,9 +226,9 @@ namespace PriceTagPrint.ViewModel
         /// 分類コードテキスト変更処理
         /// </summary>
         /// <param name="id"></param>
-        private void BunruiCodeTextChanged(string id)
+        private void BunruiCodeTextChanged(string cd)
         {
-            var item = BunruiCodeItems.Value.FirstOrDefault(x => x.Id.TrimEnd() == id.TrimEnd());
+            var item = BunruiCodeItems.Value.FirstOrDefault(x => x.BUNRUICD.TrimEnd() == cd.TrimEnd());
             if (item != null)
             {
                 SelectedBunruiCodeIndex.Value = BunruiCodeItems.Value.IndexOf(item);
@@ -281,9 +281,22 @@ namespace PriceTagPrint.ViewModel
         private void SelectedBunruiCodeIndexChanged(int idx)
         {
             var item = BunruiCodeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
-            if (item != null)
+            if (item != null && !string.IsNullOrEmpty(item.BUNRUICD))
             {
-                BunruiCodeText.Value = item.Id.TrimEnd();
+                BunruiCodeText.Value = item.BUNRUICD.TrimEnd();
+                var nefudas = eOSAKTRA_LIST.QueryNefudanoWhereDatno(TidNum.AKANOREN, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
+                if(nefudas.Any() && nefudas.Count == 1)
+                {
+                    int convNefda;
+                    if(int.TryParse(nefudas.First(), out convNefda))
+                    {
+                        var nefitem = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == convNefda);
+                        if (nefitem != null)
+                        {
+                            SelectedNefudaBangouIndex.Value = NefudaBangouItems.Value.IndexOf(nefitem);
+                        }
+                    }                    
+                }
             }
             else
             {
@@ -407,7 +420,7 @@ namespace PriceTagPrint.ViewModel
                 this.NouhinDatePicker.Focus();
                 return false;
             }
-            if (!string.IsNullOrEmpty(this.BunruiCodeText.Value) && !BunruiCodeItems.Value.Select(x => x.Id.TrimEnd()).Contains(this.BunruiCodeText.Value))
+            if (string.IsNullOrEmpty(this.BunruiCodeText.Value) || (!string.IsNullOrEmpty(this.BunruiCodeText.Value) && !BunruiCodeItems.Value.Select(x => x.BUNRUICD.TrimEnd()).Contains(this.BunruiCodeText.Value)))
             {
                 MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -433,7 +446,7 @@ namespace PriceTagPrint.ViewModel
         {
             ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
-                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.AKANOREN, JusinDate.Value, NouhinDate.Value);
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.AKANOREN, JusinDate.Value, NouhinDate.Value, BunruiCodeText.Value);
 
                 var datnos = new List<string>();
                 if (eosJutraList.Any())
@@ -485,47 +498,74 @@ namespace PriceTagPrint.ViewModel
                                 COLSIZPTCD = aktra.AKA039,
                                 ADRNO = aktra.AKA035,
                                 TAGINFO = aktra.AKA025,
-                                WGHINBAN = !string.IsNullOrEmpty(jutra.HINCD.TrimEnd()) ? jutra.HINCD.Substring(4).TrimEnd() : "",
+                                WGHINBAN = !string.IsNullOrEmpty(jutra.HINCD.TrimEnd()) && jutra.HINCD.Contains("-") ? jutra.HINCD.TrimEnd().Substring(jutra.HINCD.IndexOf("-") + 1) : "",
                                 HTANKA = decimal.TryParse(aktra.AKA030, out cTanka) ? cTanka : 0,
                                 VRCVDT = jutra.VRCVDT,
-                                HINCD = jutra.HINCD,
+                                HINCD = jutra.HINCD.TrimEnd(),
                                 VHINCD = jutra.VHINCD.TrimEnd(),
+                                VBUNCD = jutra.VBUNCD.TrimEnd(),
+                                HINBAN = !string.IsNullOrEmpty(jutra.VCYOBI7) ? jutra.VCYOBI7.Substring(4).TrimEnd() : "",
                             })
-                        .Where(x => (!string.IsNullOrEmpty(this.BunruiCodeText.Value) ? x.HINCD.StartsWith(this.BunruiCodeText.Value) : true) &&
-                                    (!string.IsNullOrEmpty(this.SttHincd.Value) ?
-                                            int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.WGHINBAN, out aitSttHincd) ?
+                        .Where(x => (!string.IsNullOrEmpty(this.SttHincd.Value) ?
+                                            int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.HINBAN, out aitSttHincd) ?
                                                 aitSttHincd >= sttHincd : true
                                         : true) &&
                                     (!string.IsNullOrEmpty(this.EndHincd.Value) ?
-                                            int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.WGHINBAN, out aitEndHincd) ?
+                                            int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.HINBAN, out aitEndHincd) ?
                                                 aitEndHincd <= endHincd : true
                                         : true))
                             .OrderBy(x => x.VRCVDT)
                             .ThenBy(x => x.VHINCD);
 
+                    
                     AkanorenDatas.Clear();
                     AkanorenDatas.AddRange(
-                        tmpData
-                            .Select(x => new AkanorenData()
+                        tmpData.
+                            GroupBy(a => new
                             {
-                                MAISU = 0,
-                                TORISAKICD = x.TORISAKICD,
-                                SIRJOKEN = x.SIRJOKEN,
-                                SEASON = x.SEASON,
-                                TONYTUKI = x.TONYTUKI,
-                                ENDTUKI = x.ENDTUKI,
-                                URITYPE = x.URITYPE,
-                                BUMOCD = x.BUMOCD,
-                                CLASSCD = x.CLASSCD,
-                                SHOHINSYUCD = x.SHOHINSYUCD,
-                                AKHINBAN = x.AKHINBAN,
-                                COLCD = x.COLCD,
-                                SIZCD = x.SIZCD,
-                                COLSIZPTCD = x.COLSIZPTCD,
-                                ADRNO = x.ADRNO,
-                                TAGINFO = x.TAGINFO,
-                                WGHINBAN = x.WGHINBAN,
-                                HTANKA = x.HTANKA,
+                                a.TORISAKICD,
+                                a.SIRJOKEN,
+                                a.SEASON,
+                                a.TONYTUKI,
+                                a.ENDTUKI,
+                                a.URITYPE,
+                                a.BUMOCD,
+                                a.CLASSCD,
+                                a.SHOHINSYUCD,
+                                a.AKHINBAN,
+                                a.COLCD,
+                                a.SIZCD,
+                                a.COLSIZPTCD,
+                                a.ADRNO,
+                                a.TAGINFO,
+                                a.WGHINBAN,
+                                a.HTANKA,
+                                a.VRCVDT,
+                                a.HINCD,
+                                a.VHINCD,
+                            })
+                            .Select(g => new AkanorenData()
+                            {
+                                MAISU = g.Sum(y => y.MAISU),
+                                TORISAKICD = g.Key.TORISAKICD,
+                                SIRJOKEN = g.Key.SIRJOKEN,
+                                SEASON = g.Key.SEASON,
+                                TONYTUKI = g.Key.TONYTUKI,
+                                ENDTUKI = g.Key.ENDTUKI,
+                                URITYPE = g.Key.URITYPE,
+                                BUMOCD = g.Key.BUMOCD,
+                                CLASSCD = g.Key.CLASSCD,
+                                SHOHINSYUCD = g.Key.SHOHINSYUCD,
+                                AKHINBAN = g.Key.AKHINBAN,
+                                DISPAKHINBAN = g.Key.VHINCD,
+                                COLCD = g.Key.COLCD,
+                                SIZCD = g.Key.SIZCD,
+                                COLSIZPTCD = g.Key.COLSIZPTCD,
+                                ADRNO = g.Key.ADRNO,
+                                TAGINFO = g.Key.TAGINFO,
+                                WGHINBAN = g.Key.WGHINBAN,
+                                DISPHINBAN = g.Key.HINCD,
+                                HTANKA = g.Key.HTANKA,
                             })
                         );
 
@@ -634,6 +674,8 @@ namespace PriceTagPrint.ViewModel
                 "発行枚数"
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
+            datas.Columns.Remove("表示用自社品番");
+            datas.Columns.Remove("表示用和合品番");
             new CsvUtility().Write(datas, fullName, true);
         }
 
@@ -699,18 +741,20 @@ namespace PriceTagPrint.ViewModel
         public string 部門コード { get; set; }   //csv & 表示
         public string クラスコード { get; set; }  //csv & 表示  値札データ.品種コード
         public string 小品種コード { get; set; }  //csv & 表示  値札データ.品目コード
-        public string 自社品番 { get; set; }   //csv & 表示   値札データ.連番
+        public string 自社品番 { get; set; }   //csv   値札データ.連番
+        public string 表示用自社品番 { get; set; }   //表示
         public string カラーコード { get; set; }  //csv & 表示
         public string サイズコード { get; set; }  //csv & 表示
         public string 色サイズパターンコード { get; set; } //csv & 表示
         public string アドレスNo { get; set; }  //csv & 表示
         public string タグ情報 { get; set; }    //csv & 表示  値札データ.値札情報
-        public string 和合品番 { get; set; }   //csv & 表示
+        public string 和合品番 { get; set; }   //csv
+        public string 表示用和合品番 { get; set; }   //表示
         public decimal 標準価格 { get; set; }   //csv & 表示  値札データ.標準売単価
 
         public AkanorenItem(decimal 発行枚数, string 取引先コード, string 仕入条件, string 季節区分, string 投入月, string 販売終了月,
-                            string 売出区分, string 部門コード, string クラスコード, string 小品種コード, string 自社品番, string カラーコード,
-                            string サイズコード, string 色サイズパターンコード, string アドレスNo, string タグ情報, string 和合品番, decimal 標準価格)
+                            string 売出区分, string 部門コード, string クラスコード, string 小品種コード, string 自社品番, string 表示用自社品番, string カラーコード,
+                            string サイズコード, string 色サイズパターンコード, string アドレスNo, string タグ情報, string 和合品番, string 表示用和合品番, decimal 標準価格)
         {
             this.発行枚数 = 発行枚数;
             this.取引先コード = 取引先コード;
@@ -723,12 +767,14 @@ namespace PriceTagPrint.ViewModel
             this.クラスコード = クラスコード;
             this.小品種コード = 小品種コード;
             this.自社品番 = 自社品番;
+            this.表示用自社品番 = 表示用自社品番;
             this.カラーコード = カラーコード;
             this.サイズコード = サイズコード;
             this.色サイズパターンコード = 色サイズパターンコード;
             this.アドレスNo = アドレスNo;
             this.タグ情報 = タグ情報;
             this.和合品番 = 和合品番;
+            this.表示用和合品番 = 表示用和合品番;
             this.標準価格 = 標準価格;
         }
     }
@@ -742,8 +788,8 @@ namespace PriceTagPrint.ViewModel
             {
                 result.Add(
                     new AkanorenItem(data.MAISU, data.TORISAKICD, data.SIRJOKEN, data.SEASON, data.TONYTUKI, data.ENDTUKI, data.URITYPE,
-                                     data.BUMOCD, data.CLASSCD, data.SHOHINSYUCD, data.AKHINBAN, data.COLCD, data.SIZCD,
-                                     data.COLSIZPTCD, data.ADRNO, data.TAGINFO, data.WGHINBAN, data.HTANKA));
+                                     data.BUMOCD, data.CLASSCD, data.SHOHINSYUCD, data.AKHINBAN, data.DISPAKHINBAN, data.COLCD, data.SIZCD,
+                                     data.COLSIZPTCD, data.ADRNO, data.TAGINFO, data.WGHINBAN, data.DISPHINBAN, data.HTANKA));
             });
             return result;
         }

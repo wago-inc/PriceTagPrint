@@ -261,5 +261,64 @@ namespace PriceTagPrint.WAG_USR1
                 return null;
             }
         }
+
+        public List<string> QueryDatnoWhereTcodeAndDates(int tcode, DateTime jusin, DateTime nouhin, string bunrui = "", string sttHin = "", string endHin = "")
+        {
+            var sql = "SELECT " + Environment.NewLine;
+            sql += "	DATNO " + Environment.NewLine;
+            sql += "FROM " + Environment.NewLine;
+            sql += " WAG_USR1.EOSJUTRA " + Environment.NewLine;
+            sql += "WHERE " + Environment.NewLine;
+            sql += " VRYOHNCD = '" + tcode.ToString("000000") + "' " + Environment.NewLine;
+            sql += " AND VRCVDT = '" + jusin.ToString("yyyyMMdd") + "' " + Environment.NewLine;
+            sql += " AND VNOHINDT = '" + nouhin.ToString("yyyyMMdd") + "' " + Environment.NewLine;            
+            if (!string.IsNullOrEmpty(bunrui))
+            {
+                sql += Environment.NewLine;
+                sql += " AND VBUNCD = '" + bunrui + "' ";
+            }
+            if (!string.IsNullOrEmpty(sttHin))
+            {
+                sql += Environment.NewLine;
+                sql += " AND VHINCD >= '" + sttHin + "' ";
+            }
+            if (!string.IsNullOrEmpty(endHin))
+            {
+                sql += Environment.NewLine;
+                sql += " AND VHINCD <= '" + endHin + "' ";
+            }
+            sql += "GROUP BY DATNO";
+
+            DataTable orcDt = new DataTable();
+            var results = new List<string>();
+            var connectString = DBConnect.OrclConnectString + DBConnect.OrclDataSource;
+            try
+            {
+                using (OracleConnection orcConn = new OracleConnection(connectString))
+                {
+                    orcConn.Open();
+
+                    OracleCommand cmd = new OracleCommand(sql, orcConn);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                results.Add(reader.GetString(0));
+                            }
+                        }
+                    }
+                    orcConn.Close();
+                    return results;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
     }
 }

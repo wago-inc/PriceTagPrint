@@ -136,7 +136,7 @@
                      materialDesign:TextFieldAssist.TextFieldCornerRadius="3"
                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
                      SelectionBrush="DodgerBlue"
-                     HorizontalContentAlignment="Center" MaxLength="3"
+                     HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      PreviewTextInput="TextBox_PreviewNumericTextInput"
@@ -144,7 +144,7 @@
             <ComboBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="3" x:Name="BunruiCodeComboBox" 
                       ItemsSource="{Binding BunruiCodeItems.Value}"
                       SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
-                      DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      DisplayMemberPath="NAME" Style="{StaticResource ComboBoxStyle}"
                       IsTabStop="False"/>
 
             <!--値札番号-->
@@ -222,6 +222,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="Padding" Value="0,0,2,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -233,6 +234,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -244,6 +246,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -255,6 +258,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -266,28 +270,31 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
 
                     <!--自社品番（連番）    4byte-->
-                    <materialDesign:DataGridTextColumn Header="相手先品番" Binding="{Binding Path=自社品番}" Width="1.5*"
+                    <materialDesign:DataGridTextColumn Header="相手先品番" Binding="{Binding Path=表示用自社品番}" Width="2*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
 
                     <!--和合品番（仕入先品番） 10byte-->
-                    <materialDesign:DataGridTextColumn Header="和合品番" Binding="{Binding Path=和合品番}" Width="3*"
+                    <materialDesign:DataGridTextColumn Header="和合品番" Binding="{Binding Path=表示用和合品番}" Width="2.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -299,6 +306,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -310,6 +318,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -321,6 +330,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -332,6 +342,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -343,6 +354,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="2,0,0,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
@@ -355,6 +367,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="Padding" Value="0,0,0,2"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </materialDesign:DataGridTextColumn>
