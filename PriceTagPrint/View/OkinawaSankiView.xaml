@@ -19,7 +19,7 @@
                    Background="{DynamicResource MaterialDesignPaper}"
                    GlowBrush="{DynamicResource AccentColorBrush}"
                    FontFamily="{StaticResource MaterialDesignFont}"
-                   Title="【0118-沖縄三喜マルエー】値札発行" Height="715" Width="1100">
+                   Title="【0118-三喜】値札発行" Height="715" Width="1100">
 
     <Window.DataContext>
         <vm:OkinawaSankiViewModel/>

@@ -84,6 +84,7 @@ namespace PriceTagPrint.ViewModel
         #endregion
         private int _TOKCD = 118;
         private string _TOKNM = "㈱三喜";
+        private string _OKINAWA_CENTER = "5";
 
         // 発行区分テキストボックス
         public TextBox HakkouTypeTextBox = null;
@@ -668,6 +669,7 @@ namespace PriceTagPrint.ViewModel
                     case 1:
                         if (dB0118EosHachuList.Any() && tOKMSTPFs.Any() && wWebTorihikisakiTankaList.Any())
                         {
+                            int convJancd;
                             OkinawaSankiDatas.Clear();
                             OkinawaSankiDatas.AddRange(
                                 dB0118EosHachuList.Where(x => x.NSU > 0)
@@ -735,7 +737,7 @@ namespace PriceTagPrint.ViewModel
                                                     x.CENTCD == selectCenter : true) &&
                                                  (!string.IsNullOrEmpty(HinbanCodeText.Value) ?
                                                     x.HINBANCD == HinbanCodeText.Value : true))
-                                     .OrderBy(g => g.HNO)
+                                     .OrderBy(g => _OKINAWA_CENTER == CenterText.Value ? g.HNO : int.TryParse(g.SYOHINCD, out convJancd) ? convJancd : g.HNO)
                                      .ThenBy(g => g.HINCD.Replace("-", ""))
                                  );
                             
