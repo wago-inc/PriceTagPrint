@@ -146,6 +146,7 @@
                       ItemsSource="{Binding BunruiCodeItems.Value}"
                       SelectedIndex="{Binding SelectedBunruiCodeIndex.Value}"
                       DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      SelectionChanged="ComboBox_SelectionChanged"
                       IsTabStop="False"/>
 
             <!--値札番号-->
@@ -163,46 +164,18 @@
                      extend:TextBoxAttachment.EnterCommand="True"
                      PreviewTextInput="TextBox_PreviewNumericTextInput" 
                      CommandManager.PreviewExecuted="TextBox_PreviewExecuted"
-                     LostFocus="TextBox_LostFocus"                     
+                     LostFocus="TextBox_LostFocus"
+                     KeyDown="TextBox_KeyDown"
                      TabIndex="5">
             </TextBox>
             <ComboBox Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="3" x:Name="NefudaBangouComboBox" 
                       ItemsSource="{Binding NefudaBangouItems.Value}"
                       SelectedIndex="{Binding SelectedNefudaBangouIndex.Value}"
                       DisplayMemberPath="Name" Style="{StaticResource ComboBoxStyle}"
+                      SelectionChanged="ComboBox_SelectionChanged"
                       IsTabStop="False"/>
-
-            <!--単品コード-->
-            <TextBlock Grid.Row="5" Grid.Column="6" Text=" 単品コード" Style="{StaticResource TitleText}" 
-                       HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="5" Grid.Column="7" Grid.ColumnSpan="2" x:Name="SttHincdText"
-                     Text="{Binding SttHincd.Value}" 
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
-                     Height="27" Padding="0" FontSize="16" FontFamily="Yu Gothic Medium"        
-                     materialDesign:TextFieldAssist.TextFieldCornerRadius="3"
-                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
-                     SelectionBrush="DodgerBlue"
-                     HorizontalContentAlignment="Center" MaxLength="4" Margin="0,0,10,0"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     PreviewTextInput="TextBox_PreviewNumericTextInput"
-                     TabIndex="6"/>
-            <TextBlock Grid.Row="5" Grid.Column="9" Text="～" Style="{StaticResource OtherText}"/>
-            <TextBox Grid.Row="5" Grid.Column="10" x:Name="EndHincdText"
-                     Text="{Binding EndHincd.Value}" 
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
-                     Height="27" Padding="0" FontSize="16" FontFamily="Yu Gothic Medium"        
-                     materialDesign:TextFieldAssist.TextFieldCornerRadius="3"
-                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
-                     SelectionBrush="DodgerBlue"
-                     HorizontalContentAlignment="Center" MaxLength="4" Margin="10,0,0,0"
-                     extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
-                     extend:TextBoxAttachment.EnterCommand="True"
-                     PreviewTextInput="TextBox_PreviewNumericTextInput"
-                     KeyDown="TextBox_KeyDown"
-                     TabIndex="7"/>
-            <TextBlock Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
-                       Text="スマクラ for Web 切替日：未定" Style="{StaticResource OtherText}" FontSize="11"
+            <TextBlock Grid.Row="5" Grid.Column="6" Grid.ColumnSpan="5"
+                       Text="スマクラ for Web 切替日：2022/04/01" Style="{StaticResource OtherText}" FontSize="11"
                        TextAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"  Margin="5,0,0,0"/>
         </Grid>
 

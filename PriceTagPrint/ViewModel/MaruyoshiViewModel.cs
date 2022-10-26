@@ -49,11 +49,6 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
                 = new ReactiveProperty<int>(0);
 
-        // 開始相手品番
-        public ReactiveProperty<string> SttHincd { get; set; } = new ReactiveProperty<string>("");
-        // 終了相手品番
-        public ReactiveProperty<string> EndHincd { get; set; } = new ReactiveProperty<string>("");
-
         //発行枚数計
         public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
 
@@ -70,12 +65,14 @@ namespace PriceTagPrint.ViewModel
         public DatePicker NouhinDatePicker = null;
 
         private EOSJUTRA_LIST eOSJUTRA_LIST;
-        private EOSKNMTA_LIST eOSKNMTA_LIST;
         private HINMTA_LIST hINMTA_LIST;
+        private TOKMTE_TSURI_LIST tOKMTE_LIST;
+
         private DB_0127_HANSOKU_BAIKA_CONV_LIST dB_0127_HANSOKU_LIST;
         private List<HINMTA> hinmtaList;
 
-        private string _スマクラforWeb切替日 = "20991231";
+        private DateTime _スマクラforWeb切替日_date = new DateTime(2022, 4, 1);
+        private string _スマクラforWeb切替日 = "20220401";
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -146,7 +143,7 @@ namespace PriceTagPrint.ViewModel
         public MaruyoshiViewModel()
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
-            eOSKNMTA_LIST = new EOSKNMTA_LIST();
+            tOKMTE_LIST = new TOKMTE_TSURI_LIST();
 
             dB_0127_HANSOKU_LIST = new DB_0127_HANSOKU_BAIKA_CONV_LIST();
 
@@ -249,26 +246,40 @@ namespace PriceTagPrint.ViewModel
         public List<CommonIdName> CreateNefudaBangouItems()
         {
             var list = new List<CommonIdName>();
-            var item1 = new CommonIdName();
-            item1.Id = 0;
-            item1.Name = "0：２１号ラベルプロパー";
-            list.Add(item1);
-            var item2 = new CommonIdName();
-            item2.Id = 2;
-            item2.Name = "2：１２号タグプロパー";
-            list.Add(item2);
-            var item3 = new CommonIdName();
-            item3.Id = 3;
-            item3.Name = "3：１１号タグプロパー";
-            list.Add(item3);
-            var item4 = new CommonIdName();
-            item4.Id = 5;
-            item4.Name = "5：２１号ラベルプロパー";
-            list.Add(item4);
-            var item5 = new CommonIdName();
-            item5.Id = 6;
-            item5.Name = "6：値下げラベル";
-            list.Add(item5);
+            if(JusinDate.Value >= _スマクラforWeb切替日_date)
+            {
+                var item1 = new CommonIdName();
+                item1.Id = 0;
+                item1.Name = "0：２１号ラベルプロパー";
+                list.Add(item1);
+                var item3 = new CommonIdName();
+                item3.Id = 3;
+                item3.Name = "3：１１号タグプロパー";
+                list.Add(item3);
+            }
+            else
+            {
+                var item1 = new CommonIdName();
+                item1.Id = 0;
+                item1.Name = "0：２１号ラベルプロパー";
+                list.Add(item1);
+                var item2 = new CommonIdName();
+                item2.Id = 2;
+                item2.Name = "2：１２号タグプロパー";
+                list.Add(item2);
+                var item3 = new CommonIdName();
+                item3.Id = 3;
+                item3.Name = "3：１１号タグプロパー";
+                list.Add(item3);
+                var item4 = new CommonIdName();
+                item4.Id = 5;
+                item4.Name = "5：２１号ラベルプロパー";
+                list.Add(item4);
+                var item5 = new CommonIdName();
+                item5.Id = 6;
+                item5.Name = "6：値下げラベル";
+                list.Add(item5);                
+            }
             return list;
         }
 
@@ -383,8 +394,6 @@ namespace PriceTagPrint.ViewModel
             SelectedHakkouTypeIndex.Value = 0;
             SelectedBunruiCodeIndex.Value = 0;
             SelectedNefudaBangouIndex.Value = 0;
-            SttHincd.Value = "";
-            EndHincd.Value = "";
             TotalMaisu.Value = "";
             MaruyoshiDatas.Clear();
             if (MaruyoshiItems.Value != null && MaruyoshiItems.Value.Any())
@@ -440,25 +449,28 @@ namespace PriceTagPrint.ViewModel
             ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
                 var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.MARUYOSI, JusinDate.Value, NouhinDate.Value);
-                var easKnmtaList = eOSKNMTA_LIST.QueryWhereTcode(TidNum.MARUYOSI);
+                var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.MARUYOSI);
 
-                if (eosJutraList.Any() && easKnmtaList.Any())
+                if (eosJutraList.Any())
                 {
                     var innerJoinData = eosJutraList
-                            .Join(
-                                   easKnmtaList,
+                            .GroupJoin(
+                                   tokmteList,
                                    e1 => new
                                    {
-                                       VRYOHNCD = e1.VRYOHNCD.ToString()
+                                       VHINCD = e1.VHINCD.ToString().TrimEnd(),
+                                       TOKCD = e1.VRYOHNCD.ToString().TrimEnd(),
+                                       HINCD = e1.HINCD.ToString().TrimEnd(),
                                    },
                                    e2 => new
                                    {
-                                       VRYOHNCD = e2.VRYOHNCD.ToString()
+                                       VHINCD = e2.EOSHINID.TrimEnd(),
+                                       TOKCD = e2.TOKCD.TrimEnd(),
+                                       HINCD = e2.HINCD.TrimEnd(),
                                    },
-                                   (eosj, eosm) => new
+                                   (eosj, tok) => new
                                    {
                                        VRYOHNCD = eosj.VRYOHNCD,
-                                       VRYOHNNM = eosm.VRYOHNNM,
                                        VRCVDT = eosj.VRCVDT,
                                        VNOHINDT = eosj.VNOHINDT,
                                        VBUNCD = eosj.VBUNCD,
@@ -471,10 +483,12 @@ namespace PriceTagPrint.ViewModel
                                        VSIZNM = eosj.VSIZNM,
                                        VURITK = eosj.VURITK,
                                        VSURYO = eosj.VSURYO,
+                                       VCYOBI1 = eosj.VCYOBI1,
                                        VCYOBI7 = eosj.VCYOBI7,
                                        VTOKKB =eosj.VTOKKB,
                                        VHEAD1 = eosj.VHEAD1,
                                        VBODY1 = eosj.VBODY1,
+                                       SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }) : "",
                                    })
                             .OrderBy(x => x.VRYOHNCD)
                                     .ThenBy(x => x.VRCVDT)
@@ -486,10 +500,6 @@ namespace PriceTagPrint.ViewModel
                         var dateNow = DateTime.Now;
                         if (hinmtaList.Any())
                         {
-                            int sttHincd;
-                            int endHincd;
-                            int aitSttHincd;
-                            int aitEndHincd;
                             decimal convdec;
                             MaruyoshiDatas.Clear();
                             MaruyoshiDatas.AddRange(
@@ -508,18 +518,17 @@ namespace PriceTagPrint.ViewModel
                                            {
                                                RPTCLTID = " ",
                                                VRYOHNCD = a.VRYOHNCD,
-                                               VRYOHNNM = a.VRYOHNNM,
                                                VRCVDT = a.VRCVDT,
                                                VNOHINDT = a.VNOHINDT,
                                                // 分類コード
                                                VBUNCD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VBUNCD) ? "0" + a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
                                                DATNO = a.DATNO,
                                                VROWNO = a.VROWNO,
                                                // クラスコード
                                                NEFCMA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(0, 4) : " "   
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
                                                // 当社品番
                                                NEFCMB = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
@@ -532,27 +541,27 @@ namespace PriceTagPrint.ViewModel
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
                                                // カラーコード + カラー名
                                                NEFCMD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) + " " + a.VCOLNM.TrimEnd().Substring(0, 5) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
                                                // カラーコード
                                                NEFCMD2 = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                         ? !string.IsNullOrEmpty(a.VCOLNM) && a.VBUNCD.TrimEnd() != "009" ? a.VCOLNM.TrimEnd().Substring(a.VCOLNM.TrimEnd().Length - 2) : " "
+                                                         ? ""
                                                          : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
                                                // サイズコード
                                                NEFCME = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VBUNCD.TrimEnd().Substring(a.VBUNCD.TrimEnd().Length - 1) + a.VSIZNM.TrimEnd().Substring(a.VSIZNM.TrimEnd().Length - 2) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
                                                // サイズ名
                                                NEFCMF = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VSIZNM) && a.VBUNCD.TrimEnd() != "009" ? a.VSIZNM.TrimEnd().Substring(0, 5) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
                                                // 単品コード
                                                NEFCMG = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().IndexOf("-") + 1, 4) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
                                                // 組
                                                NEFCMH = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VHINCD) ? a.VHINCD.TrimEnd().Substring(a.VHINCD.TrimEnd().Length - 2) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
                                                // FLG
                                                NEFCMI = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
@@ -594,19 +603,21 @@ namespace PriceTagPrint.ViewModel
                                                         : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
                                                // シーズンコード
                                                NEFSEZ = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
-                                                        ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd().Substring(a.VHINNMA.TrimEnd().Length - 2) : " "
+                                                        ? ""
                                                         : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
                                                VHINCD = a.VHINCD,
                                                HINCD = a.HINCD,
-                                               JANCD = hin.Any() ? hin.FirstOrDefault().JANCD : "",
+                                               JANCD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? a.VCYOBI1.TrimEnd()
+                                                        : hin.Any() ? hin.FirstOrDefault().JANCD : "",
                                                WRTDT = dateNow.ToString("yyyyMMdd"),
                                                WRTTM = dateNow.ToString("hhmmss"),
+                                               NEFUDA = a.SIZCD
                                            })
                                     .GroupBy(a => new
                                     {
                                         a.RPTCLTID,
                                         a.VRYOHNCD,
-                                        a.VRYOHNNM,
                                         a.VRCVDT,
                                         a.VNOHINDT,
                                         a.VBUNCD,
@@ -631,13 +642,13 @@ namespace PriceTagPrint.ViewModel
                                         a.HINCD,
                                         a.NEFTKB2,
                                         a.NEFSEZ,
-                                        a.JANCD
+                                        a.JANCD,
+                                        a.NEFUDA
                                     })
                                     .Select(g => new MaruyoshiData()
                                     {
                                         RPTCLTID = g.Key.RPTCLTID,
                                         VRYOHNCD = g.Key.VRYOHNCD,
-                                        VRYOHNNM = g.Key.VRYOHNNM,
                                         VRCVDT = g.Key.VRCVDT,
                                         VNOHINDT = g.Key.VNOHINDT,
                                         VBUNCD = g.Key.VBUNCD,
@@ -663,25 +674,19 @@ namespace PriceTagPrint.ViewModel
                                         HINCD = g.Key.HINCD,
                                         NEFTKB2 = g.Key.NEFTKB2,
                                         NEFSEZ = g.Key.NEFSEZ,
-                                        JANCD = g.Key.JANCD
+                                        JANCD = g.Key.JANCD,
+                                        NEFUDA = g.Key.NEFUDA
                                     })
-                                    .Where(x => !string.IsNullOrEmpty(this.SttHincd.Value) ?
-                                                    int.TryParse(this.SttHincd.Value, out sttHincd) &&
-                                                    int.TryParse(x.NEFCMG, out aitSttHincd) ?
-                                                        aitSttHincd >= sttHincd : true
-                                                : true)
-                                    .Where(x => !string.IsNullOrEmpty(this.EndHincd.Value) ?
-                                                    int.TryParse(this.EndHincd.Value, out endHincd) &&
-                                                    int.TryParse(x.NEFCMG, out aitEndHincd) ?
-                                                        aitEndHincd <= endHincd : true
-                                                : true)
-                                    .Where(x => this.NefudaBangouText.Value != 0 ?
+                                    .Where(x => x.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0 ?
+                                        (this.NefudaBangouText.Value == 3 ? x.NEFUDA.TrimEnd() == "2" : x.NEFUDA.TrimEnd() != "2")
+                                        :
+                                        (this.NefudaBangouText.Value != 0 ?
                                                     this.NefudaBangouText.Value != 6 ?
-                                                    x.NEFCMK == this.NefudaBangouText.Value.ToString() : x.NEFTKA != 0 : true)
+                                                    x.NEFCMK == this.NefudaBangouText.Value.ToString() : x.NEFTKA != 0 : true))
                                     .OrderBy(x => x.VRYOHNCD)
                                     .ThenBy(x => x.VRCVDT)
                                     .ThenBy(x => x.VBUNCD)
-                                    .ThenBy(x => x.VHINCD)
+                                    .ThenBy(x => x.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0 ? x.JANCD : x.VHINCD)
                                     );
                         }
 
@@ -933,15 +938,6 @@ namespace PriceTagPrint.ViewModel
         private void CsvExport(string fullName)
         {
             var list = MaruyoshiItems.Value.Where(x => x.発行枚数 > 0).ToList();
-            list.ForEach(x =>
-            {
-                x.サイズ = "";
-                x.カラー = "";
-                if (!string.IsNullOrEmpty(x.棚番.TrimEnd()))
-                {
-                    x.品番 = x.棚番;
-                }
-            });
             var csvColSort = new string[]
             {
                 "発行枚数",
@@ -1067,13 +1063,15 @@ namespace PriceTagPrint.ViewModel
             var result = new List<MaruyoshiItem>();
             var hinban = "";
             var jancd = "";
+            var siznm = "";
             datas.ForEach(data =>
             {
                 hinban = !string.IsNullOrEmpty(data.NEFCMB) ? data.NEFCMB.TrimEnd() : data.NEFCMB2.TrimEnd();
                 jancd = !string.IsNullOrEmpty(data.JANCD) ? data.JANCD : " ";
+                siznm = !string.IsNullOrEmpty(data.NEFCME) ? data.NEFCME + " " + data.NEFCMF : "";
                 result.Add(
                     new MaruyoshiItem(data.NEFSUA, data.NEFCMA, hinban, data.NEFCMB2, data.NEFCMC, data.NEFCMD,
-                                      data.NEFCME + " " + data.NEFCMF, data.NEFCMG, data.NEFCMH, data.NEFCMI, data.NEFCMJ,
+                                      siznm, data.NEFCMG, data.NEFCMH, data.NEFCMI, data.NEFCMJ,
                                       data.NEFCMK, data.NEFTKA, data.NEFTKB, data.NEFTKB2, jancd, data.NEFSEZ));
             });
             return result;

@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using PriceTagPrint.Common;
 using PriceTagPrint.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -214,8 +215,9 @@ namespace PriceTagPrint.View
                     if (((MaruyoshiViewModel)this.DataContext).InputCheck())
                     {
                         // 何故か変更通知が飛ばないので検索処理直前にセット
-                        ((MaruyoshiViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
-                        ((MaruyoshiViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
+                        int nefuda;
+                        ((MaruyoshiViewModel)this.DataContext).NefudaBangouText.Value = 
+                            !string.IsNullOrEmpty(this.NefudaBangouText.Text) && int.TryParse(this.NefudaBangouText.Text, out nefuda) ? nefuda : 1;
                         ((MaruyoshiViewModel)this.DataContext).NefudaDataDisplay();
                         this.HakkouTypeText.Focus();
                         this.HakkouTypeText.SelectAll();
@@ -268,6 +270,32 @@ namespace PriceTagPrint.View
 
                 // DatePicker用のDateTimeをセット
                 picker.SelectedDate = convDt;
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            var selectedItem = combo.SelectedItem;
+            if (selectedItem != null)
+            {
+                int cnvVal;
+                if (combo.Name == "BunruiCodeComboBox" && BunruiCodeText != null && int.TryParse(BunruiCodeText.Text, out cnvVal))
+                {
+                    if (((CommonIdName)selectedItem).Id != cnvVal)
+                    {
+                        BunruiCodeText.Focus();
+                        BunruiCodeText.SelectAll();
+                    }
+                }
+                else if (combo.Name == "NefudaBangouComboBox" && NefudaBangouText != null && int.TryParse(NefudaBangouText.Text, out cnvVal))
+                {
+                    if (((CommonIdName)selectedItem).Id != cnvVal)
+                    {
+                        NefudaBangouText.Focus();
+                        NefudaBangouText.SelectAll();
+                    }
+                }
             }
         }
     }

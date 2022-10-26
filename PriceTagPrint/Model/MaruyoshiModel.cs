@@ -119,6 +119,7 @@ namespace PriceTagPrint.Model
         /// JANコード
         /// </summary>
         public string JANCD { get; set; }
+        public string NEFUDA { get; set; }
         public string WRTTM { get; set; }
         public string WRTDT { get; set; }
     }

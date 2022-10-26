@@ -83,9 +83,13 @@ namespace PriceTagPrint.WAG_USR1
         /// </summary>
         public string HINCD { get; set; }
         /// <summary>
+        /// JAN13桁(マルヨシスマクラ対応)
+        /// </summary>
+        public string VCYOBI1 { get; set; }
+        /// <summary>
         /// 北海道三喜 大中分類
         /// </summary>
-        public string VCYOBI3 { get; set; }
+        public string VCYOBI3 { get; set; }        
         /// <summary>
         /// JAN13桁
         /// </summary>
@@ -123,8 +127,8 @@ namespace PriceTagPrint.WAG_USR1
         public EOSJUTRA(string datno, string vryohncd, string vrcvdt, string vrowno, string vbuncd, 
                         string qoltorid, string vnohindt, string vhincd, string vcolcd, string vcolnm,
                         string vsizcd, string vsiznm, string vhinnma, decimal virisu, decimal vsuryo,
-                        decimal vgnktk, decimal vuritk, string hincd, string vcyobi3, string vcyobi7,
-                        string vcyobi11, string vtokkb, string vhead1, string vbody1)
+                        decimal vgnktk, decimal vuritk, string hincd, string vcyobi1, string vcyobi3, 
+                        string vcyobi7, string vcyobi11, string vtokkb, string vhead1, string vbody1)
         {
             this.DATNO = datno;
             this.VRYOHNCD = vryohncd;
@@ -144,6 +148,7 @@ namespace PriceTagPrint.WAG_USR1
             this.VURITK = vuritk;
             this.VGNKTK = vgnktk;
             this.HINCD = hincd;
+            this.VCYOBI1 = vcyobi1;
             this.VCYOBI3 = vcyobi3;
             this.VCYOBI7 = vcyobi7;
             this.VCYOBI11 = vcyobi11;
@@ -176,6 +181,7 @@ namespace PriceTagPrint.WAG_USR1
             sql += "	VGNKTK, " + Environment.NewLine;
             sql += "	VURITK, " + Environment.NewLine;
             sql += "	HINCD, " + Environment.NewLine;
+            sql += "	VCYOBI1, " + Environment.NewLine;
             sql += "	VCYOBI3, " + Environment.NewLine;
             sql += "	VCYOBI7, " + Environment.NewLine;
             sql += "	VCYOBI11, " + Environment.NewLine;
@@ -239,7 +245,8 @@ namespace PriceTagPrint.WAG_USR1
                                     row.Field<decimal>("VSURYO"), 
                                     row.Field<decimal>("VGNKTK"),
                                     row.Field<decimal>("VURITK"), 
-                                    row.Field<string>("HINCD"), 
+                                    row.Field<string>("HINCD"),
+                                    row.Field<string>("VCYOBI1"),
                                     row.Field<string>("VCYOBI3"),
                                     row.Field<string>("VCYOBI7"),
                                     row.Field<string>("VCYOBI11"),
