@@ -244,7 +244,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(36, Tid.NANKOKU,        Tnm.NANKOKU,        HakkouKind.Input, CreateDirList(TidNum.NANKOKU)),
                 new Torihikisaki(37, Tid.IZUMI,          Tnm.IZUMI,          HakkouKind.Input, CreateDirList(TidNum.IZUMI)),
                 new Torihikisaki(38, Tid.AKANOREN,       Tnm.AKANOREN,       HakkouKind.Both,  CreateDirList(TidNum.AKANOREN)),
-                new Torihikisaki(39, Tid.KEIOSTORE,      Tnm.KEIOSTORE,      HakkouKind.Input, CreateDirList(TidNum.KEIOSTORE)),
+                new Torihikisaki(39, Tid.KEIOSTORE,      Tnm.KEIOSTORE,      HakkouKind.Both,  CreateDirList(TidNum.KEIOSTORE)),
                 new Torihikisaki(40, Tid.OTHER01,        Tnm.OTHER01,        HakkouKind.Input, CreateDirList(TidNum.OTHER01)),
                 new Torihikisaki(41, Tid.OTHER02,        Tnm.OTHER02,        HakkouKind.Input, CreateDirList(TidNum.OTHER02)),
                 new Torihikisaki(42, Tid.OTHER03,        Tnm.OTHER03,        HakkouKind.Input, CreateDirList(TidNum.OTHER03)),

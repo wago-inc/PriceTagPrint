@@ -261,6 +261,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.KEIOSTORE:
+                        {
+                            var view = new KeiostoreView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     default:break;
                 }
             }

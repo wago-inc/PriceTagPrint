@@ -139,7 +139,8 @@
                             <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="14"/>
                             <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="15"/>
                             <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="16"/>
-
+                            <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="17"/>
+                            
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd01" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤスサキ" />
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd02" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤマナカ" />
                             <Button Grid.Row="0" Grid.Column="5" x:Name="Cmd03" Command="{Binding SelectAutoCommand}" CommandParameter="0102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マルヨシ" />
@@ -156,6 +157,7 @@
                             <Button Grid.Row="5" Grid.Column="3" x:Name="Cmd14" Command="{Binding SelectAutoCommand}" CommandParameter="8102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ミヤマ" />
                             <Button Grid.Row="5" Grid.Column="5" x:Name="Cmd15" Command="{Binding SelectAutoCommand}" CommandParameter="8103" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="本店タカハシ" />
                             <Button Grid.Row="7" Grid.Column="1" x:Name="Cmd16" Command="{Binding SelectAutoCommand}" CommandParameter="0165" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="あかのれん" />
+                            <Button Grid.Row="7" Grid.Column="3" x:Name="Cmd17" Command="{Binding SelectAutoCommand}" CommandParameter="8115" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="京王ストア" />
                         </Grid>
 
                         <Grid ShowGridLines="false" Visibility="{Binding RyohanMenuVisibility.Value}">
@@ -202,6 +204,7 @@
                             <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="21" />
                             <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="22" />
                             <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="23" />
+                            
                                                         
                             <Button Grid.Row="0" Grid.Column="1" x:Name="Cmd20" Command="{Binding SelectInputCommand}" CommandParameter="0170" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="アージュ" />                            
                             <Button Grid.Row="0" Grid.Column="3" x:Name="Cmd21" Command="{Binding SelectInputCommand}" CommandParameter="7705" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="イトウゴフク" />

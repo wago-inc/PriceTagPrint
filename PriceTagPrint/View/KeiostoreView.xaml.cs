@@ -28,9 +28,9 @@ using MSAPI = Microsoft.WindowsAPICodePack;
 namespace PriceTagPrint.View
 {
     /// <summary>
-    /// KyoueiView.xaml の相互作用ロジック
+    /// KeiostoreView.xaml の相互作用ロジック
     /// </summary>
-    public partial class KyoueiView : MetroWindow
+    public partial class KeiostoreView : MetroWindow
     {
         #region "最大化・最小化・閉じるボタンの非表示設定"
 
@@ -119,31 +119,30 @@ namespace PriceTagPrint.View
                 if (txt.Name == "HakkouTypeText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット
-                    ((KyoueiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
-                    ((KyoueiViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
+                    ((KeiostoreViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = -1;
+                    ((KeiostoreViewModel)this.DataContext).SelectedHakkouTypeIndex.Value = 0;
                 }
                 else if (txt.Name == "BunruiCodeText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット
-                    ((KyoueiViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = -1;
-                    ((KyoueiViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = 0;
+                    ((KeiostoreViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = -1;
+                    ((KeiostoreViewModel)this.DataContext).SelectedBunruiCodeIndex.Value = 0;
                 }
                 else if (txt.Name == "NefudaBangouText")
                 {
                     // 変更通知が飛ばないため一旦-1をセット
-                    ((KyoueiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
-                    ((KyoueiViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
+                    ((KeiostoreViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = -1;
+                    ((KeiostoreViewModel)this.DataContext).SelectedNefudaBangouIndex.Value = 0;
                 }
             }
         }
-
-        public KyoueiView()
+        public KeiostoreView()
         {
             InitializeComponent();
             this.HakkouTypeText.Focus();
-            ((KyoueiViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
-            ((KyoueiViewModel)this.DataContext).JusinDatePicker = this.JusinbiDatePicker;
-            ((KyoueiViewModel)this.DataContext).NouhinDatePicker = this.NouhinbiDatePicker;
+            ((KeiostoreViewModel)this.DataContext).HakkouTypeTextBox = this.HakkouTypeText;
+            ((KeiostoreViewModel)this.DataContext).JusinDatePicker = this.JusinbiDatePicker;
+            ((KeiostoreViewModel)this.DataContext).NouhinDatePicker = this.NouhinbiDatePicker;
         }
 
         /// <summary>
@@ -163,27 +162,27 @@ namespace PriceTagPrint.View
                     this.Owner.Show();
                     break;
                 case "F4":
-                    ((KyoueiViewModel)this.DataContext).Clear();
+                    ((KeiostoreViewModel)this.DataContext).Clear();
                     this.HakkouTypeText.Focus();
                     this.HakkouTypeText.SelectAll();
                     break;
                 case "F5":
-                    if (((KyoueiViewModel)this.DataContext).InputCheck())
+                    if (((KeiostoreViewModel)this.DataContext).InputCheck())
                     {
-                        ((KyoueiViewModel)this.DataContext).NefudaDataDisplay();
+                        ((KeiostoreViewModel)this.DataContext).NefudaDataDisplay();
                         this.HakkouTypeText.Focus();
                         this.HakkouTypeText.SelectAll();
                     }
                     break;
                 case "F10":
-                    if (((KyoueiViewModel)this.DataContext).PrintCheck())
+                    if (((KeiostoreViewModel)this.DataContext).PrintCheck())
                     {
                         if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                         {
-                            ((KyoueiViewModel)this.DataContext).ExecPrint(true);
+                            ((KeiostoreViewModel)this.DataContext).ExecPrint(true);
                             this.HakkouTypeText.Focus();
                             this.HakkouTypeText.SelectAll();
-                        }                            
+                        }
                     }
                     else
                     {
@@ -191,14 +190,14 @@ namespace PriceTagPrint.View
                     }
                     break;
                 case "F12":
-                    if (((KyoueiViewModel)this.DataContext).PrintCheck())
+                    if (((KeiostoreViewModel)this.DataContext).PrintCheck())
                     {
                         if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                         {
-                            ((KyoueiViewModel)this.DataContext).ExecPrint(false);
+                            ((KeiostoreViewModel)this.DataContext).ExecPrint(false);
                             this.HakkouTypeText.Focus();
                             this.HakkouTypeText.SelectAll();
-                        }                            
+                        }
                     }
                     else
                     {
@@ -219,12 +218,12 @@ namespace PriceTagPrint.View
             {
                 if (!string.IsNullOrEmpty(this.HakkouTypeText.Text))
                 {
-                    if (((KyoueiViewModel)this.DataContext).InputCheck())
+                    if (((KeiostoreViewModel)this.DataContext).InputCheck())
                     {
                         // 何故か変更通知が飛ばないので検索処理直前にセット
-                        ((KyoueiViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
-                        ((KyoueiViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
-                        ((KyoueiViewModel)this.DataContext).NefudaDataDisplay();
+                        ((KeiostoreViewModel)this.DataContext).SttHincd.Value = this.SttHincdText.Text;
+                        ((KeiostoreViewModel)this.DataContext).EndHincd.Value = this.EndHincdText.Text;
+                        ((KeiostoreViewModel)this.DataContext).NefudaDataDisplay();
                         this.HakkouTypeText.Focus();
                         this.HakkouTypeText.SelectAll();
                     }
@@ -276,6 +275,32 @@ namespace PriceTagPrint.View
 
                 // DatePicker用のDateTimeをセット
                 picker.SelectedDate = convDt;
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            var selectedItem = combo.SelectedItem;
+            int convTxt;
+            if (selectedItem != null)
+            {
+                if (combo.Name == "BunruiCodeComboBox" && BunruiCodeText != null && int.TryParse(BunruiCodeText.Text, out convTxt))
+                {
+                    if (((CommonIdName)selectedItem).Id != convTxt)
+                    {
+                        BunruiCodeText.Focus();
+                        BunruiCodeText.SelectAll();
+                    }
+                }
+                else if (combo.Name == "NefudaBangouComboBox" && NefudaBangouText != null && int.TryParse(NefudaBangouText.Text, out convTxt))
+                {
+                    if (((CommonIdName)selectedItem).Id != convTxt)
+                    {
+                        NefudaBangouText.Focus();
+                        NefudaBangouText.SelectAll();
+                    }
+                }
             }
         }
     }
