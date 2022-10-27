@@ -363,6 +363,10 @@ namespace PriceTagPrint.ViewModel
                             {
                                 _TOKNM = tOKMSTPFs.FirstOrDefault()?.RYAKU ?? "";
                                 tourokuFlg = true;
+                                if (dB0118EosHachuList.GroupBy(x => x.CENTCD).Select(g => g.Key).Count() >= 2)
+                                {
+                                    dbCentCd = "全て";
+                                }
                             }
                             else
                             {
@@ -394,6 +398,10 @@ namespace PriceTagPrint.ViewModel
                             {
                                 _TOKNM = tOKMSTPFs.FirstOrDefault()?.RYAKU ?? "";
                                 tourokuFlg = true;
+                                if (dB0118HchusyoList.GroupBy(x => x.CENTCD).Select(g => g.Key).Count() >= 2)
+                                {
+                                    dbCentCd = "全て";
+                                }
                             }
                             else
                             {
@@ -425,6 +433,10 @@ namespace PriceTagPrint.ViewModel
                             {
                                 _TOKNM = tOKMSTPFs.FirstOrDefault()?.RYAKU ?? "";
                                 tourokuFlg = true;
+                                if(dB0118KaitukesyoList.GroupBy(x => x.CENTCD).Select(g => g.Key).Count() >= 2)
+                                {
+                                    dbCentCd = "全て";
+                                }
                             }
                             else
                             {
@@ -720,7 +732,7 @@ namespace PriceTagPrint.ViewModel
                                          HNO = g.Key.HNO,
                                          TOKCD = g.Key.TOKCD,
                                          NEFUDA_KBN = g.Key.NEFUDA_KBN,
-                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA ?? "",
+                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA.TrimEnd() ?? "",
                                          EOS = " ",
                                          CENTCD = g.Key.CENTCD,
                                          HINBANCD = g.Key.HINBANCD,
@@ -826,7 +838,7 @@ namespace PriceTagPrint.ViewModel
                                          HNO = g.Key.HNO,
                                          TOKCD = g.Key.TOKCD,
                                          NEFUDA_KBN = g.Key.NEFUDA_KBN,
-                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA ?? "",
+                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA.TrimEnd() ?? "",
                                          EOS = " ",
                                          CENTCD = g.Key.CENTCD,
                                          HINBANCD = g.Key.HINBANCD,
@@ -917,7 +929,7 @@ namespace PriceTagPrint.ViewModel
                                          HNO = g.Key.HNO,
                                          TOKCD = g.Key.TOKCD,
                                          NEFUDA_KBN = g.Key.NEFUDA_KBN,
-                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA ?? "",
+                                         JIISYA = tOKMSTPFs.FirstOrDefault()?.JISYA.TrimEnd() + "01" ?? "",
                                          EOS = " ",
                                          CENTCD = g.Key.CENTCD,
                                          HINBANCD = g.Key.HINBANCD,
