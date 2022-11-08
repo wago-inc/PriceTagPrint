@@ -191,7 +191,8 @@ namespace PriceTagPrint.WAG_USR1
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.EOSJUTRA " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
-            sql += " VRYOHNCD = '" + tcode.ToString("000000") + "' " + Environment.NewLine;
+            sql += " DATKB = '1' " + Environment.NewLine;
+            sql += " AND VRYOHNCD = '" + tcode.ToString("000000") + "' " + Environment.NewLine;
             sql += " AND VRCVDT = '" + jusin.ToString("yyyyMMdd") + "' " + Environment.NewLine;
             sql += " AND VNOHINDT = '" + nouhin.ToString("yyyyMMdd") + "' ";
             if (!string.IsNullOrEmpty(bunrui))
@@ -276,7 +277,8 @@ namespace PriceTagPrint.WAG_USR1
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.EOSJUTRA " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
-            sql += " VRYOHNCD = '" + tcode.ToString("000000") + "' " + Environment.NewLine;
+            sql += " DATKB = '1' " + Environment.NewLine;
+            sql += " AND VRYOHNCD = '" + tcode.ToString("000000") + "' " + Environment.NewLine;
             sql += " AND VRCVDT = '" + jusin.ToString("yyyyMMdd") + "' " + Environment.NewLine;
             sql += " AND VNOHINDT = '" + nouhin.ToString("yyyyMMdd") + "' " + Environment.NewLine;            
             if (!string.IsNullOrEmpty(bunrui))
