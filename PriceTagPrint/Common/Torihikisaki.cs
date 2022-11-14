@@ -440,8 +440,7 @@ namespace PriceTagPrint.Common
                 case TidNum.IZUMI:
                     return new List<DirItem>()
                     {
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0160_イズミ\イズミ【BMS値札メッセージ】\20104-イズミ【BMS値札メッセージ】", false),
-                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0160_イズミ\イズミ値下シール【BMS値札メッセージ】\20105-イズミ値下シール【BMS値札メッセージ】", false)
+                        new DirItem(@"Y:\WAGOAPL\SATO\MLV5_Layout\0160_イズミ\イズミ【BMS値札メッセージ】", true)
                     };
                 case TidNum.AKANOREN:
                     return new List<DirItem>()
