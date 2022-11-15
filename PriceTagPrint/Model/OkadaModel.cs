@@ -61,7 +61,7 @@ namespace PriceTagPrint.Model
         /// <summary>
         /// 相手先JANコード
         /// </summary>
-        public string JANCD { get; set; }
+        public string AITHINBAN { get; set; }
         /// <summary>
         /// クラスコード
         /// </summary>

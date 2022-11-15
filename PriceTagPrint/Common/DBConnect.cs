@@ -17,6 +17,8 @@ namespace PriceTagPrint.Common
                                                 ")" +
                                               ");";
 
+        public const string TestMdbDataSource = @"\\Server00\h\database\発注受付処理\一般得意先\一般得意先発注受付_cl99.mdb";
+        public static string TestMdbConnectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=" + TestMdbDataSource;
 
         public const string MdbDataSource = @"\\Server00\h\database\得意先商品台帳\得意先商品台帳.mdb";
         public static string MdbConnectionString = "Driver={Microsoft Access Driver (*.mdb)};Dbq=" + MdbDataSource;

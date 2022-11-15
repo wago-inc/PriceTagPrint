@@ -222,11 +222,11 @@ namespace PriceTagPrint.ViewModel
             var list = new List<CommonIdName>();
             var item = new CommonIdName();
             item.Id = 1;
-            item.Name = "1：ラベル（３８×３５）";
+            item.Name = "1：ラベル";
             list.Add(item);
             var item2 = new CommonIdName();
             item2.Id = 2;
-            item2.Name = "2：タグ（３８×３５）";
+            item2.Name = "2：タグ";
             list.Add(item2);
             return list;
         }
@@ -570,7 +570,7 @@ namespace PriceTagPrint.ViewModel
                                        SCODE = juc.SCODE.TrimEnd(),
                                        SAIZUS = juc.SAIZUS,
                                        HINCD = string.Concat(juc.BUNRUI, "-", juc.SCODE.TrimEnd().PadLeft(5, '0'), "-", juc.SAIZUS.ToString("00")),
-                                       JANCD = !string.IsNullOrEmpty(juc.JANCD) ? juc.JANCD.TrimEnd() : tanka.FirstOrDefault()?.TSCODE.TrimEnd() ?? "",
+                                       AITHINBAN = tanka.FirstOrDefault()?.TSCODE?.TrimEnd() ?? "",
                                        HINMEI = juc.HINMEI.TrimEnd(),
                                        SAIZUN = juc.SAIZUN.TrimEnd(),
                                        HTANKA = juc.HTANKA,
@@ -591,7 +591,7 @@ namespace PriceTagPrint.ViewModel
                                 SCODE = j.SCODE,
                                 SAIZUS = j.SAIZUS,
                                 HINCD = j.HINCD,
-                                JANCD = j.JANCD,
+                                AITHINBAN = j.AITHINBAN,
                                 HINMEI = j.HINMEI,
                                 SAIZUN = j.SAIZUN,
                                 HTANKA = j.HTANKA,
@@ -611,7 +611,7 @@ namespace PriceTagPrint.ViewModel
                                  SCODE = g.Key.SCODE,
                                  SAIZUS = g.Key.SAIZUS.ToString("00"),
                                  HINCD = g.Key.HINCD,
-                                 JANCD = g.Key.JANCD,
+                                 AITHINBAN = g.Key.AITHINBAN,
                                  HINMEI = g.Key.HINMEI,
                                  SAIZUN = g.Key.SAIZUN,
                                  HTANKA = g.Key.HTANKA,
@@ -621,12 +621,7 @@ namespace PriceTagPrint.ViewModel
                              .Where(x => x.TSU > 0 && x.NEFUDA_KBN == NefudaBangouText.Value &&
                                          (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
                              .OrderBy(g => g.BUNRUI)
-                             .ThenBy(g => g.LOCTANA_SOKO_CODE)
-                             .ThenBy(g => g.LOCTANA_FLOOR_NO)
-                             .ThenBy(g => g.LOCTANA_TANA_NO)
-                             .ThenBy(g => g.LOCTANA_CASE_NO)
-                             .ThenBy(g => g.SCODE)
-                             .ThenBy(g => g.SAIZUS)
+                             .ThenBy(g => g.AITHINBAN)
                          );
 
                     if (OkadaDatas.Any())
@@ -723,7 +718,7 @@ namespace PriceTagPrint.ViewModel
             var datas = DataUtility.ToDataTable(list, csvColSort);
             // 不要なカラムの削除
             datas.Columns.Remove("商品コード");
-            datas.Columns.Remove("JANコード");
+            datas.Columns.Remove("相手先品番");
             datas.Columns.Remove("商品名");
             datas.Columns.Remove("サイズ");
             datas.Columns.Remove("サイズ名");
@@ -792,13 +787,13 @@ namespace PriceTagPrint.ViewModel
         public string 原価フラグ { get; set; } // CSV & 表示
         public int 本体価格 { get; set; }  // CSV        
         public string 商品コード { get; set; }   // 表示
-        public string JANコード { get; set; }   // 表示
+        public string 相手先品番 { get; set; }   // 表示
         public string 商品名 { get; set; } // 表示
         public string サイズ { get; set; } // 表示
         public string サイズ名 { get; set; } // 表示
 
         public OkadaItem(int 発行枚数, string クラスコード, int 連番, string 日付, string 品番, string 原価フラグ,
-                         int 本体価格, string 商品コード, string JANコード, string 商品名, string サイズ, string サイズ名)
+                         int 本体価格, string 商品コード, string 相手先品番, string 商品名, string サイズ, string サイズ名)
         {
             this.発行枚数 = 発行枚数;
             this.クラスコード = クラスコード;
@@ -808,7 +803,7 @@ namespace PriceTagPrint.ViewModel
             this.原価フラグ = 原価フラグ;
             this.本体価格 = 本体価格;
             this.商品コード = 商品コード;
-            this.JANコード = JANコード;
+            this.相手先品番 = 相手先品番;
             this.商品名 = 商品名;
             this.サイズ = サイズ;
             this.サイズ名 = サイズ名;           
@@ -829,7 +824,7 @@ namespace PriceTagPrint.ViewModel
             string genFlg = "";
             datas.ForEach(data =>
             {
-                renban = !string.IsNullOrEmpty(data.JANCD) && int.TryParse(data.JANCD.Substring(6, 5), out convRenban) ?
+                renban = !string.IsNullOrEmpty(data.AITHINBAN) && int.TryParse(data.AITHINBAN.Substring(6, 5), out convRenban) ?
                             convRenban : 0;
                 if (data.NDATE.HasValue)
                 {
@@ -842,14 +837,14 @@ namespace PriceTagPrint.ViewModel
                               day <= 31 ? "2" : "");
                 }
 
-                if (!string.IsNullOrEmpty(data.JANCD))
+                if (!string.IsNullOrEmpty(data.AITHINBAN))
                 {
-                    genFlg = data.JANCD.Substring(data.JANCD.Length - 2, 1);
+                    genFlg = data.AITHINBAN.Substring(data.AITHINBAN.Length - 2, 1);
                 }
                 hinban = data.BUNRUI + data.SCODE;
                 result.Add(
                     new OkadaItem(data.TSU, data.CLASSCD, renban, hiduke, hinban, genFlg, data.HTANKA,
-                                  data.HINCD, data.JANCD, data.HINMEI, data.SAIZUS, data.SAIZUN));
+                                  data.HINCD, data.AITHINBAN, data.HINMEI, data.SAIZUS, data.SAIZUN));
             });
             return result;
         }

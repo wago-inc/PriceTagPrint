@@ -277,7 +277,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="JANコード" Binding="{Binding Path=JANコード}" Width="2.5*"
+                    <DataGridTextColumn Header="相手先品番" Binding="{Binding Path=相手先品番}" Width="2.5*"
                                         CellStyle="{StaticResource UnTabStopCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
