@@ -269,6 +269,14 @@ namespace PriceTagPrint.ViewModel
                             view.Owner.Hide();
                         }
                         break;
+                    case Tid.NANKOKU:
+                        {
+                            var view = new NankokuView();
+                            view.Owner = window;
+                            view.Show();
+                            view.Owner.Hide();
+                        }
+                        break;
                     default:break;
                 }
             }
