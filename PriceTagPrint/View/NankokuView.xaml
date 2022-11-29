@@ -95,7 +95,7 @@
             <!--発注番号-->
             <TextBlock Grid.Row="3" Grid.Column="1" Text=" 発 注 番 号" Style="{StaticResource TitleText}" 
                        HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
-            <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" x:Name="HachuNumberTextBox" 
+            <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="1" x:Name="HachuNumberTextBox" 
                      HorizontalContentAlignment="Center" MaxLength="7"                     
                      Text="{Binding HachuBangou.Value}" 
                      Style="{StaticResource MaterialDesignOutlinedTextBox}" 
@@ -107,7 +107,7 @@
                      extend:TextBoxAttachment.EnterCommand="True" 
                      PreviewTextInput="TextBox_PreviewNumericTextInput"
                      TabIndex="2"/>
-            <TextBlock Grid.Row="3" Grid.Column="4" x:Name="HnoResultTextBox"
+            <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" x:Name="HnoResultTextBox"
                        Text="{Binding HnoResultString.Value}" Style="{StaticResource OtherText}" 
                        HorizontalAlignment="Stretch" Foreground="{Binding HnoResultColor.Value}" Margin="5,0,0,0"/>
 

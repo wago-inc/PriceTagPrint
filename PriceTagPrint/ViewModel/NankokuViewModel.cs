@@ -73,6 +73,7 @@ namespace PriceTagPrint.ViewModel
         public ReactiveProperty<ObservableCollection<NankokuItem>> NankokuItems { get; set; }
                 = new ReactiveProperty<ObservableCollection<NankokuItem>>();
 
+        private bool IsJuchuInp = false;
         #endregion
 
         private readonly string _grpName = @"\8208_ナンコクスーパー";
@@ -81,7 +82,7 @@ namespace PriceTagPrint.ViewModel
         public TextBox HakkouTypeTextBox = null;
 
         private DB_JYUCYU_LIST dB_JYUCYU_LIST;
-
+        private WEB_ORDER_CNV_LIST wEB_ORDER_CNV_LIST;
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
         public RelayCommand<string> FuncActionCommand
@@ -152,6 +153,7 @@ namespace PriceTagPrint.ViewModel
         public NankokuViewModel()
         {
             dB_JYUCYU_LIST = new DB_JYUCYU_LIST();
+            wEB_ORDER_CNV_LIST = new WEB_ORDER_CNV_LIST();
             CreateComboItems();
 
             // コンボボックス初期値セット
@@ -257,12 +259,19 @@ namespace PriceTagPrint.ViewModel
                     {
                         HnoResultString.Value = "登録済 " + Tid.NANKOKU + "-" + Tnm.NANKOKU;
                         HnoResultColor.Value = Brushes.Blue;
+                        IsJuchuInp = true;
+                        return;
                     }
-                    else
+                    if (wEB_ORDER_CNV_LIST.QueryWhereTcodekenpinListNo(TidNum.NANKOKU, hno)?.Any() ?? false)
                     {
-                        HnoResultString.Value = "※未登録";
-                        HnoResultColor.Value = Brushes.Red;
+                        HnoResultString.Value = "Web受付済 " + Tid.NANKOKU + "-" + Tnm.NANKOKU;
+                        HnoResultColor.Value = Brushes.Blue;
+                        IsJuchuInp = false;
+                        return;
                     }
+                    HnoResultString.Value = "※未登録";
+                    HnoResultColor.Value = Brushes.Red;
+                    IsJuchuInp = false;
                 });
                 //バックグラウンド処理が終わるまで表示して待つ
                 ps.ShowDialog();
@@ -403,6 +412,7 @@ namespace PriceTagPrint.ViewModel
             {
                 NankokuItems.Value.Clear();
             }
+            IsJuchuInp = false;
             HakkouTypeTextBox.Focus();
         }
 
@@ -483,101 +493,107 @@ namespace PriceTagPrint.ViewModel
         {
             ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
             {
-                var wJyucyuList = dB_JYUCYU_LIST.QueryWhereHno(this.HachuBangou.Value);
-
-                if (wJyucyuList.Any() && this.HakkouTypeText.Value == 2)
+                if (IsJuchuInp)
                 {
-                    int sttHincd;
-                    int endHincd;
-                    int sttEdaban;
-                    int endEdaban;
-                    int scode;
+                    var wJyucyuList = dB_JYUCYU_LIST.QueryWhereHno(this.HachuBangou.Value);                    
 
-                    wJyucyuList = wJyucyuList.Where(x =>
-                                                (int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.SCODE, out scode) ? scode >= sttHincd : true) &&
-                                                (int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.SCODE, out scode) ? scode <= endHincd : true) &&
-                                                (int.TryParse(this.SttEdaban.Value, out sttEdaban) ? x.SAIZUS >= sttEdaban : true) &&
-                                                (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.SAIZUS <= endEdaban : true))
-                                        .ToList();
-                }
-
-                if (wJyucyuList.Any())
-                {
-                    NankokuDatas.Clear();
-                    NankokuDatas.AddRange(
-                        wJyucyuList
-                            .GroupBy(j => new
-                            {
-                                TCODE = j.TCODE,
-                                HNO = j.HNO,
-                                BUMON = j.BUMON?.ToString() ?? "",
-                                BUNRUI = j.BUNRUI,
-                                SCODE = j.SCODE.TrimEnd(),
-                                SAIZUS = j.SAIZUS,
-                                JANCD = !string.IsNullOrEmpty(j.JANCD) ? j.JANCD.TrimEnd() : "",
-                                HINCD = !string.IsNullOrEmpty(j.SCODEP) ? j.SCODEP.TrimEnd() :
-                                        j.BUNRUI + "-" + j.SCODE.TrimEnd() + "-" + j.SAIZUS.ToString("00"),
-                                HINMEI = j.HINMEI.TrimEnd(),
-                                SAIZUN = j.SAIZUN.TrimEnd(),                                
-                                HTANKA = j.HTANKA,
-                                ZBAIKA = j.ZBAIKA ?? 0,
-                                LOCTANA_SOKO_CODE = j.LOCTANA_SOKO_CODE,
-                                LOCTANA_FLOOR_NO = j.LOCTANA_FLOOR_NO,
-                                LOCTANA_TANA_NO = j.LOCTANA_TANA_NO,
-                                LOCTANA_CASE_NO = j.LOCTANA_CASE_NO,
-                                TSU = j.TSU,
-                            })
-                             .Select(g => new NankokuData
-                             {
-                                 TCODE = g.Key.TCODE,
-                                 HNO = g.Key.HNO,
-                                 BUMON = g.Key.BUMON,
-                                 BUNRUI = g.Key.BUNRUI,
-                                 SCODE = g.Key.SCODE,
-                                 SAIZUS = g.Key.SAIZUS.ToString("00"),
-                                 JANCD = g.Key.JANCD,
-                                 HINCD = g.Key.HINCD,                                 
-                                 HINMEI = g.Key.HINMEI,
-                                 SAIZUN = g.Key.SAIZUN,
-                                 HTANKA = g.Key.HTANKA,
-                                 ZBAIKA = g.Key.ZBAIKA,
-                                 LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
-                                 LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
-                                 LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
-                                 LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
-                                 TSU = g.Sum(y => y.TSU),
-                             })
-                             .Where(x => x.TSU > 0 &&
-                                         (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
-                             .OrderBy(g => g.LOCTANA_SOKO_CODE)
-                             .ThenBy(g => g.LOCTANA_FLOOR_NO)
-                             .ThenBy(g => g.LOCTANA_TANA_NO)
-                             .ThenBy(g => g.LOCTANA_CASE_NO)
-                             .ThenBy(g => g.SCODE)
-                             .ThenBy(g => g.SAIZUS)
-                         );
-
-                    if (NankokuDatas.Any())
+                    if (wJyucyuList.Any() && this.HakkouTypeText.Value == 2)
                     {
-                        NankokuItems.Value = new ObservableCollection<NankokuItem>();
-                        var nankokuModelList = new NankokuItemList();
-                        var addItems = new ObservableCollection<NankokuItem>(nankokuModelList.ConvertNankokuDataToModel(NankokuDatas)).ToList();
-                        // 直接ObservableにAddするとなぜか落ちるためListをかます。
-                        var setItems = new List<NankokuItem>();
-                        addItems.ForEach(item =>
+                        int sttHincd;
+                        int endHincd;
+                        int sttEdaban;
+                        int endEdaban;
+                        int scode;
+
+                        wJyucyuList = wJyucyuList.Where(x =>
+                                                    (int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.SCODE, out scode) ? scode >= sttHincd : true) &&
+                                                    (int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.SCODE, out scode) ? scode <= endHincd : true) &&
+                                                    (int.TryParse(this.SttEdaban.Value, out sttEdaban) ? x.SAIZUS >= sttEdaban : true) &&
+                                                    (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.SAIZUS <= endEdaban : true))
+                                            .ToList();
+                    }
+
+                    if (wJyucyuList.Any())
+                    {
+                        NankokuDatas.Clear();
+                        NankokuDatas.AddRange(
+                            wJyucyuList
+                                .GroupBy(j => new
+                                {
+                                    TCODE = j.TCODE,
+                                    HNO = j.HNO,
+                                    BUMON = j.BUMON?.ToString() ?? "",
+                                    BUNRUI = j.BUNRUI,
+                                    SCODE = j.SCODE.TrimEnd(),
+                                    SAIZUS = j.SAIZUS,
+                                    JANCD = !string.IsNullOrEmpty(j.JANCD) ? j.JANCD.TrimEnd() : "",
+                                    HINCD = !string.IsNullOrEmpty(j.SCODEP) ? j.SCODEP.TrimEnd() :
+                                            j.BUNRUI + "-" + j.SCODE.TrimEnd() + "-" + j.SAIZUS.ToString("00"),
+                                    HINMEI = j.HINMEI.TrimEnd(),
+                                    SAIZUN = j.SAIZUN.TrimEnd(),
+                                    HTANKA = j.HTANKA,
+                                    ZBAIKA = j.ZBAIKA ?? 0,
+                                    LOCTANA_SOKO_CODE = j.LOCTANA_SOKO_CODE,
+                                    LOCTANA_FLOOR_NO = j.LOCTANA_FLOOR_NO,
+                                    LOCTANA_TANA_NO = j.LOCTANA_TANA_NO,
+                                    LOCTANA_CASE_NO = j.LOCTANA_CASE_NO,
+                                })
+                                 .Select(g => new NankokuData
+                                 {
+                                     TCODE = g.Key.TCODE,
+                                     HNO = g.Key.HNO,
+                                     BUMON = g.Key.BUMON,
+                                     BUNRUI = g.Key.BUNRUI,
+                                     SCODE = g.Key.SCODE,
+                                     SAIZUS = g.Key.SAIZUS.ToString("00"),
+                                     JANCD = g.Key.JANCD,
+                                     HINCD = g.Key.HINCD,
+                                     HINMEI = g.Key.HINMEI,
+                                     SAIZUN = g.Key.SAIZUN,
+                                     HTANKA = g.Key.HTANKA,
+                                     ZBAIKA = g.Key.ZBAIKA,
+                                     LOCTANA_SOKO_CODE = g.Key.LOCTANA_SOKO_CODE.HasValue ? (int)g.Key.LOCTANA_SOKO_CODE : 0,
+                                     LOCTANA_FLOOR_NO = g.Key.LOCTANA_FLOOR_NO.HasValue ? (int)g.Key.LOCTANA_FLOOR_NO : 0,
+                                     LOCTANA_TANA_NO = g.Key.LOCTANA_TANA_NO.HasValue ? (int)g.Key.LOCTANA_TANA_NO : 0,
+                                     LOCTANA_CASE_NO = g.Key.LOCTANA_CASE_NO.HasValue ? (int)g.Key.LOCTANA_CASE_NO : 0,
+                                     TSU = g.Sum(y => y.TSU),
+                                 })
+                                 .Where(x => x.TSU > 0 &&
+                                             (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
+                                 .OrderBy(g => g.LOCTANA_SOKO_CODE)
+                                 .ThenBy(g => g.LOCTANA_FLOOR_NO)
+                                 .ThenBy(g => g.LOCTANA_TANA_NO)
+                                 .ThenBy(g => g.LOCTANA_CASE_NO)
+                                 .ThenBy(g => g.SCODE)
+                                 .ThenBy(g => g.SAIZUS)
+                             );
+
+                        if (NankokuDatas.Any())
                         {
-                            Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-                                  h => item.PropertyChanged += h,
-                                  h => item.PropertyChanged -= h)
-                                  .Subscribe(e =>
-                                  {
-                                      // 発行枚数に変更があったら合計発行枚数も変更する
-                                      TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
-                                  });
-                            setItems.Add(item);
-                        });
-                        NankokuItems.Value = new ObservableCollection<NankokuItem>(setItems);
-                        TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
+                            NankokuItems.Value = new ObservableCollection<NankokuItem>();
+                            var nankokuModelList = new NankokuItemList();
+                            var addItems = new ObservableCollection<NankokuItem>(nankokuModelList.ConvertNankokuDataToModel(NankokuDatas)).ToList();
+                            // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                            var setItems = new List<NankokuItem>();
+                            addItems.ForEach(item =>
+                            {
+                                Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                      h => item.PropertyChanged += h,
+                                      h => item.PropertyChanged -= h)
+                                      .Subscribe(e =>
+                                      {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
+                                      });
+                                setItems.Add(item);
+                            });
+                            NankokuItems.Value = new ObservableCollection<NankokuItem>(setItems);
+                            TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     else
                     {
@@ -586,7 +602,112 @@ namespace PriceTagPrint.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var wWebOrderList = wEB_ORDER_CNV_LIST.QueryWherekenpinListNo(this.HachuBangou.Value);
+
+                    if (wWebOrderList.Any() && this.HakkouTypeText.Value == 2)
+                    {
+                        int sttHincd;
+                        int endHincd;
+                        int sttEdaban;
+                        int endEdaban;
+                        int scode;
+
+                        wWebOrderList = wWebOrderList.Where(x =>
+                                                    (int.TryParse(this.SttHincd.Value, out sttHincd) && int.TryParse(x.HOST_SYOHIN_CD, out scode) ? scode >= sttHincd : true) &&
+                                                    (int.TryParse(this.EndHincd.Value, out endHincd) && int.TryParse(x.HOST_SYOHIN_CD, out scode) ? scode <= endHincd : true) &&
+                                                    (int.TryParse(this.SttEdaban.Value, out sttEdaban) ? x.ORDERLIST_SIZECOLOR_CD >= sttEdaban : true) &&
+                                                    (int.TryParse(this.EndEdaban.Value, out endEdaban) ? x.ORDERLIST_SIZECOLOR_CD <= endEdaban : true))
+                                            .ToList();
+                    }
+
+                    if (wWebOrderList.Any())
+                    {
+                        NankokuDatas.Clear();
+                        NankokuDatas.AddRange(
+                            wWebOrderList
+                                .GroupBy(j => new
+                                {
+                                    TCODE = j.HOST_TORIHIKISAKI_CD,
+                                    HNO = j.KENPINLIST_NO,
+                                    BUMON = j.DENPRT_BUNRUI?.ToString() ?? "",
+                                    BUNRUI = j.HOST_BUNRUI_CD,
+                                    SCODE = j.HOST_SYOHIN_CD.TrimEnd(),
+                                    SAIZUS = j.ORDERLIST_SIZECOLOR_CD,
+                                    JANCD = !string.IsNullOrEmpty(j.DENPRT_SYOHIN_CODE) ? j.DENPRT_SYOHIN_CODE.TrimEnd() : "",
+                                    HINCD = !string.IsNullOrEmpty(j.SIZECOLOR_SETSUMEI4) ? 
+                                                j.SIZECOLOR_SETSUMEI4.TrimEnd() + (!string.IsNullOrEmpty(j.ORDERLIST_SIZECOLOR_CD.ToString()) ? 
+                                                    "-" + j.ORDERLIST_SIZECOLOR_CD.ToString("00") : "") :
+                                            j.HOST_BUNRUI_CD + "-" + j.HOST_SYOHIN_CD.TrimEnd() + "-" + j.ORDERLIST_SIZECOLOR_CD.ToString("00"),
+                                    HINMEI = j.SYOHIN_NAME1.TrimEnd(),
+                                    SAIZUN = j.SIZECOLOR_NAME1.TrimEnd(),
+                                    HTANKA = j.NETUKE_HBAIKA,
+                                    ZBAIKA = j.NETUKE_ZBAIKA,
+                                    LOCTANA_SOKO_CODE = !string.IsNullOrEmpty(j.LOCATION_CD) ? j.LOCATION_CD.Substring(0, 3) : "0",
+                                    LOCTANA_FLOOR_NO = !string.IsNullOrEmpty(j.LOCATION_CD) ? j.LOCATION_CD.Substring(3, 2) : "0",
+                                    LOCTANA_TANA_NO = !string.IsNullOrEmpty(j.LOCATION_CD) ? j.LOCATION_CD.Substring(5, 3) : "0",
+                                    LOCTANA_CASE_NO = !string.IsNullOrEmpty(j.LOCATION_CD) ? j.LOCATION_CD.Substring(8, 2) : "0",
+                                })
+                                 .Select(g => new NankokuData
+                                 {
+                                     TCODE = g.Key.TCODE,
+                                     HNO = g.Key.HNO,
+                                     BUMON = g.Key.BUMON,
+                                     BUNRUI = g.Key.BUNRUI,
+                                     SCODE = g.Key.SCODE,
+                                     SAIZUS = g.Key.SAIZUS.ToString("00"),
+                                     JANCD = g.Key.JANCD,
+                                     HINCD = g.Key.HINCD,
+                                     HINMEI = g.Key.HINMEI,
+                                     SAIZUN = g.Key.SAIZUN,
+                                     HTANKA = g.Key.HTANKA,
+                                     ZBAIKA = g.Key.ZBAIKA,
+                                     LOCTANA_SOKO_CODE = int.Parse(g.Key.LOCTANA_SOKO_CODE),
+                                     LOCTANA_FLOOR_NO = int.Parse(g.Key.LOCTANA_FLOOR_NO),
+                                     LOCTANA_TANA_NO = int.Parse(g.Key.LOCTANA_TANA_NO),
+                                     LOCTANA_CASE_NO = int.Parse(g.Key.LOCTANA_CASE_NO),
+                                     TSU = g.Sum(y => y.HACHU_SU),
+                                 })
+                                 .Where(x => x.TSU > 0 &&
+                                             (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
+                                 .OrderBy(g => g.LOCTANA_SOKO_CODE)
+                                 .ThenBy(g => g.LOCTANA_FLOOR_NO)
+                                 .ThenBy(g => g.LOCTANA_TANA_NO)
+                                 .ThenBy(g => g.LOCTANA_CASE_NO)
+                                 .ThenBy(g => g.SCODE)
+                                 .ThenBy(g => g.SAIZUS)
+                             );
+
+                        if (NankokuDatas.Any())
+                        {
+                            NankokuItems.Value = new ObservableCollection<NankokuItem>();
+                            var nankokuModelList = new NankokuItemList();
+                            var addItems = new ObservableCollection<NankokuItem>(nankokuModelList.ConvertNankokuDataToModel(NankokuDatas)).ToList();
+                            // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                            var setItems = new List<NankokuItem>();
+                            addItems.ForEach(item =>
+                            {
+                                Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                      h => item.PropertyChanged += h,
+                                      h => item.PropertyChanged -= h)
+                                      .Subscribe(e =>
+                                      {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
+                                      });
+                                setItems.Add(item);
+                            });
+                            NankokuItems.Value = new ObservableCollection<NankokuItem>(setItems);
+                            TotalMaisu.Value = NankokuItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             });
             //バックグラウンド処理が終わるまで表示して待つ
