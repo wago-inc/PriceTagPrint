@@ -42,9 +42,13 @@ namespace PriceTagPrint.WAG_USR1
         /// EOS売価単価
         /// </summary>
         public decimal EOSURITK { get; set; }
+        /// <summary>
+        /// DATKB
+        /// </summary>
+        public string DATKB { get; set; }
 
         public TOKMTE(string tokcd, string hincd, string eoshinid, string eoshinna, string eoshinnb, string colcd, 
-                      string sizcd, decimal eosuritk)
+                      string sizcd, decimal eosuritk, string datkb)
         {            
             this.TOKCD = tokcd;
             this.HINCD = hincd;
@@ -54,6 +58,7 @@ namespace PriceTagPrint.WAG_USR1
             this.COLCD = colcd;
             this.SIZCD = sizcd;
             this.EOSURITK = eosuritk;
+            this.DATKB = datkb;
         }
     }
 
@@ -61,7 +66,7 @@ namespace PriceTagPrint.WAG_USR1
     {
         public List<TOKMTE> QueryWhereTcode(int tcode)
         {
-            var sql = "SELECT TOKCD, HINCD, EOSHINID, EOSHINNA, EOSHINNB, COLCD, SIZCD, EOSURITK " + Environment.NewLine;
+            var sql = "SELECT TOKCD, HINCD, EOSHINID, EOSHINNA, EOSHINNB, COLCD, SIZCD, EOSURITK, DATKB " + Environment.NewLine;
             sql += "FROM " + Environment.NewLine;
             sql += " WAG_USR1.TOKMTE " + Environment.NewLine;
             sql += "WHERE " + Environment.NewLine;
@@ -88,7 +93,7 @@ namespace PriceTagPrint.WAG_USR1
                                 (
                                     row.Field<string>("TOKCD"), row.Field<string>("HINCD"), row.Field<string>("EOSHINID"),
                                     row.Field<string>("EOSHINNA"), row.Field<string>("EOSHINNB"), row.Field<string>("COLCD"),
-                                    row.Field<string>("SIZCD"), row.Field<decimal>("EOSURITK")
+                                    row.Field<string>("SIZCD"), row.Field<decimal>("EOSURITK"), row.Field<string>("DATKB")
                                 ));
                         }
                     }

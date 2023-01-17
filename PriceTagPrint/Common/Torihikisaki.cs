@@ -56,6 +56,7 @@ namespace PriceTagPrint.Common
         public const int WORKWAY = 7510;
         public const int SANKI = 118;
         public const int SUNNY_MART = 105;
+        public const int SUNNY_MART_NR = 106;
         public const int SANKAKU = 145;
         public const int SEVEN = 5201;
         public const int COPO = 7336;
@@ -109,6 +110,7 @@ namespace PriceTagPrint.Common
         public const string WORKWAY = "7510";
         public const string SANKI = "0118";
         public const string SUNNY_MART = "0105";
+        public const string SUNNY_MART_NR = "0106";
         public const string SANKAKU = "0145";
         public const string SEVEN = "5201";
         public const string COPO = "7336";
@@ -159,6 +161,7 @@ namespace PriceTagPrint.Common
         public const string WORKWAY = "ワークウェイ";
         public const string SANKI = "三喜";
         public const string SUNNY_MART = "サニーマート";
+        public const string SUNNY_MART_NR = "サニーマート(日流)";
         public const string SANKAKU = "三角商事";
         public const string SEVEN = "セブン";
         public const string COPO = "コポ";
@@ -242,7 +245,7 @@ namespace PriceTagPrint.Common
                 new Torihikisaki(34, Tid.MANSYO,         Tnm.MANSYO,         HakkouKind.Input, CreateDirList(TidNum.MANSYO)),
                 new Torihikisaki(35, Tid.MANEI,          Tnm.MANEI,          HakkouKind.Input, CreateDirList(TidNum.MANEI)),
                 new Torihikisaki(36, Tid.NANKOKU,        Tnm.NANKOKU,        HakkouKind.Both,  CreateDirList(TidNum.NANKOKU)),
-                new Torihikisaki(37, Tid.IZUMI,          Tnm.IZUMI,          HakkouKind.Input, CreateDirList(TidNum.IZUMI)),
+                new Torihikisaki(37, Tid.IZUMI,          Tnm.IZUMI,          HakkouKind.Both,  CreateDirList(TidNum.IZUMI)),
                 new Torihikisaki(38, Tid.AKANOREN,       Tnm.AKANOREN,       HakkouKind.Both,  CreateDirList(TidNum.AKANOREN)),
                 new Torihikisaki(39, Tid.KEIOSTORE,      Tnm.KEIOSTORE,      HakkouKind.Both,  CreateDirList(TidNum.KEIOSTORE)),
                 new Torihikisaki(40, Tid.OTHER01,        Tnm.OTHER01,        HakkouKind.Input, CreateDirList(TidNum.OTHER01)),
