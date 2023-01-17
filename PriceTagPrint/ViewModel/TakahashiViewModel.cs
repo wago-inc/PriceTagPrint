@@ -675,6 +675,7 @@ namespace PriceTagPrint.ViewModel
                 "売価",
                 "JANコード",
                 "コメント",
+                "商品コード",
                 "発行枚数"
             };
             var datas = DataUtility.ToDataTable(list, csvColSort);
@@ -746,12 +747,13 @@ namespace PriceTagPrint.ViewModel
         public int 売価 { get; set; } // csv4 & 表示
         public string JANコード { get; set; }   // csv5 & 表示
         public string コメント { get; set; }   // csv6 空白固定
+        public string 商品コード { get; set; }   // csv7
         public string 表示用商品コード { get; set; }    // 表示
         public string 表示用商品名 { get; set; } // 表示
         public string 表示用サイズカラー名 { get; set; } // 表示
 
         public TakahashiItem(int 発行枚数, string 部門, string 店番, int 原価, int 売価, string JANコード,
-                             string コメント, string 表示用商品コード, string 表示用商品名, string 表示用サイズカラー名)
+                             string コメント, string 商品コード, string 表示用商品コード, string 表示用商品名, string 表示用サイズカラー名)
         {
             this.発行枚数 = 発行枚数;
             this.部門 = 部門;
@@ -760,6 +762,7 @@ namespace PriceTagPrint.ViewModel
             this.売価 = 売価;
             this.JANコード = JANコード;
             this.コメント = コメント;
+            this.商品コード = 商品コード;
             this.表示用商品コード = 表示用商品コード;
             this.表示用商品名 = 表示用商品名;
             this.表示用サイズカラー名 = 表示用サイズカラー名;
@@ -779,7 +782,7 @@ namespace PriceTagPrint.ViewModel
                         !string.IsNullOrEmpty(data.SCODE) ? data.SCODE : "";
                 result.Add(
                     new TakahashiItem(data.TSU, data.BUMON, "", data.STANKA, data.HTANKA, data.JANCD, 
-                                      "", data.HINCD, data.HINMEI, data.SAIZUN));
+                                      "", hincd, data.HINCD, data.HINMEI, data.SAIZUN));
             });
             return result;
         }
