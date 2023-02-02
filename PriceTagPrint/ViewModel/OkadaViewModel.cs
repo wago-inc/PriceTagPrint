@@ -621,7 +621,12 @@ namespace PriceTagPrint.ViewModel
                              .Where(x => x.TSU > 0 && x.NEFUDA_KBN == NefudaBangouText.Value &&
                                          (!string.IsNullOrEmpty(BunruiCodeText.Value) ? x.BUNRUI.ToString() == BunruiCodeText.Value : true))
                              .OrderBy(g => g.BUNRUI)
-                             .ThenBy(g => g.AITHINBAN)
+                             .ThenBy(g => g.LOCTANA_SOKO_CODE)
+                             .ThenBy(g => g.LOCTANA_FLOOR_NO)
+                             .ThenBy(g => g.LOCTANA_TANA_NO)
+                             .ThenBy(g => g.LOCTANA_CASE_NO)
+                             .ThenBy(g => g.SCODE)
+                             .ThenBy(g => g.SAIZUS)
                          );
 
                     if (OkadaDatas.Any())
@@ -841,7 +846,7 @@ namespace PriceTagPrint.ViewModel
                 {
                     genFlg = data.AITHINBAN.Substring(data.AITHINBAN.Length - 2, 1);
                 }
-                hinban = data.BUNRUI + data.SCODE;
+                hinban = data.SCODE + "-" + data.SAIZUS;
                 result.Add(
                     new OkadaItem(data.TSU, data.CLASSCD, renban, hiduke, hinban, genFlg, data.HTANKA,
                                   data.HINCD, data.AITHINBAN, data.HINMEI, data.SAIZUS, data.SAIZUN));
