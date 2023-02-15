@@ -202,22 +202,30 @@ namespace PriceTagPrint.ViewModel
         public List<CommonIdName> CreateBunruiCodeItems()
         {
             var list = new List<CommonIdName>();
-            var item = new CommonIdName();
-            item.Id = 1;
-            item.Name = "1：衣料品";
-            list.Add(item);
             var item1 = new CommonIdName();
             item1.Id = 3;
-            item1.Name = "3：インナー";
+            item1.Name = "3：婦人インナー";
             list.Add(item1);
             var item2 = new CommonIdName();
             item2.Id = 6;
-            item2.Name = "6：インナー";
+            item2.Name = "6：肌着ナイティ";
             list.Add(item2);
             var item3 = new CommonIdName();
             item3.Id = 9;
-            item3.Name = "9：レッグ";
+            item3.Name = "9：靴下";
             list.Add(item3);
+            var item4 = new CommonIdName();
+            item4.Id = 36;
+            item4.Name = "36：グンゼ";
+            list.Add(item4);
+            var item5 = new CommonIdName();
+            item5.Id = 91;
+            item5.Name = "91：パンスト、ストッキング";
+            list.Add(item5);
+            var item6 = new CommonIdName();
+            item6.Id = 95;
+            item6.Name = "95：子供靴下";
+            list.Add(item6);
             return list;
         }
 
@@ -309,7 +317,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                BunruiCodeText.Value = 1;
+                BunruiCodeText.Value = 3;
             }
         }
 
@@ -454,6 +462,7 @@ namespace PriceTagPrint.ViewModel
                 if (eosJutraList.Any())
                 {
                     var innerJoinData = eosJutraList
+                            .Where(x => x.VBUNCD.EndsWith(BunruiCodeText.Value.ToString("00")))
                             .GroupJoin(
                                    tokmteList,
                                    e1 => new
