@@ -136,7 +136,7 @@
                      materialDesign:TextFieldAssist.TextFieldCornerRadius="3"
                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
                      SelectionBrush="DodgerBlue"
-                     HorizontalContentAlignment="Center" MaxLength="1"
+                     HorizontalContentAlignment="Center" MaxLength="4"
                      extend:TextBoxAttachment.IsSelectAllOnGotFocus="True"
                      extend:TextBoxAttachment.EnterCommand="True"
                      PreviewTextInput="TextBox_PreviewNumericTextInput"

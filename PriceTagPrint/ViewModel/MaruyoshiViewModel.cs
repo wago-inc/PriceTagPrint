@@ -203,28 +203,28 @@ namespace PriceTagPrint.ViewModel
         {
             var list = new List<CommonIdName>();
             var item1 = new CommonIdName();
-            item1.Id = 3;
-            item1.Name = "3：婦人インナー";
+            item1.Id = 5103;
+            item1.Name = "5103：婦人インナー";
             list.Add(item1);
             var item2 = new CommonIdName();
-            item2.Id = 6;
-            item2.Name = "6：肌着ナイティ";
+            item2.Id = 5106;
+            item2.Name = "5106：肌着ナイティ";
             list.Add(item2);
             var item3 = new CommonIdName();
-            item3.Id = 9;
-            item3.Name = "9：靴下";
+            item3.Id = 5109;
+            item3.Name = "5109：靴下";
             list.Add(item3);
             var item4 = new CommonIdName();
-            item4.Id = 36;
-            item4.Name = "36：グンゼ";
+            item4.Id = 5136;
+            item4.Name = "5136：グンゼ";
             list.Add(item4);
             var item5 = new CommonIdName();
-            item5.Id = 91;
-            item5.Name = "91：パンスト、ストッキング";
+            item5.Id = 5191;
+            item5.Name = "5191：パンスト、ストッキング";
             list.Add(item5);
             var item6 = new CommonIdName();
-            item6.Id = 95;
-            item6.Name = "95：子供靴下";
+            item6.Id = 5195;
+            item6.Name = "5195：子供靴下";
             list.Add(item6);
             return list;
         }
@@ -317,7 +317,7 @@ namespace PriceTagPrint.ViewModel
             }
             else
             {
-                BunruiCodeText.Value = 3;
+                BunruiCodeText.Value = 5103;
             }
         }
 
@@ -462,7 +462,7 @@ namespace PriceTagPrint.ViewModel
                 if (eosJutraList.Any())
                 {
                     var innerJoinData = eosJutraList
-                            .Where(x => x.VBUNCD.EndsWith(BunruiCodeText.Value.ToString("00")))
+                            .Where(x => x.VBUNCD.TrimEnd() == BunruiCodeText.Value.ToString())
                             .GroupJoin(
                                    tokmteList,
                                    e1 => new
@@ -695,7 +695,7 @@ namespace PriceTagPrint.ViewModel
                                     .OrderBy(x => x.VRYOHNCD)
                                     .ThenBy(x => x.VRCVDT)
                                     .ThenBy(x => x.VBUNCD)
-                                    .ThenBy(x => x.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0 ? x.JANCD : x.VHINCD)
+                                    .ThenBy(x => x.VHINCD)
                                     );
                         }
 
@@ -810,7 +810,8 @@ namespace PriceTagPrint.ViewModel
             {
                 if (svPos2 < svPos1)
                 {
-                    out_Char = (inStr.Substring(svPos2 - 1, svPos1 + 3)).TrimEnd();
+                    var sblen = inStr.Length - (svPos2 - 1);
+                    out_Char = (inStr.Substring(svPos2 - 1, sblen)).TrimEnd();
                 }
             }
 
@@ -929,7 +930,7 @@ namespace PriceTagPrint.ViewModel
             var fname = Tid.MARUYOSI + "_" +
                         this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
                         this.NouhinDate.Value.ToString("yyyyMMdd") + "_" +
-                        this.BunruiCodeText.Value.ToString("000") + ".csv";
+                        this.BunruiCodeText.Value.ToString() + ".csv";
             var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
             CsvExport(fullName);
             if (!File.Exists(fullName))
