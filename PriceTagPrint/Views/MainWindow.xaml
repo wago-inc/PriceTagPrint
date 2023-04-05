@@ -1,0 +1,379 @@
+﻿<metro:MetroWindow x:Class="PriceTagPrint.Views.MainWindow"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+                   xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                   xmlns:local="clr-namespace:PriceTagPrint"
+                   xmlns:vm="clr-namespace:PriceTagPrint.ViewModels"
+                   xmlns:conv="clr-namespace:PriceTagPrint.Common"
+                   mc:Ignorable="d"
+                   WindowStartupLocation="CenterScreen"
+                   ShowCloseButton="False"
+                   TextOptions.TextFormattingMode="Ideal" 
+                   TextOptions.TextRenderingMode="Auto"
+                   Background="{DynamicResource MaterialDesignPaper}"
+                   GlowBrush="{DynamicResource AccentColorBrush}"
+                   FontFamily="{StaticResource MaterialDesignFont}"
+                   Title="値札発行メニュー" Height="720" Width="1100">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <ResourceDictionary Source="/Style/StyleDic.xaml"/>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="ExecuteCommand" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Esc" Command="Close" CommandParameter="Esc" />
+    </Window.InputBindings>
+
+    <Grid ShowGridLines="False">
+        <Grid.Resources>
+            <conv:RadioButtonConverter x:Key="EnumConverter" />
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="5,5,5,0">
+            <materialDesign:ColorZone
+                Padding="2"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                Mode="PrimaryDark">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock x:Name="txtLoading" 
+                                   Text="{Binding SubTitleText.Value}" 
+                                   FontSize="25" FontWeight="Bold" 
+                                   TextAlignment="Center" />
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+        </StackPanel>
+
+        <DockPanel Grid.Row="1" Margin="4">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="8.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--メインメニュー左側-->
+                <Border Grid.Column="0"
+                        CornerRadius="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Margin="1">
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <RadioButton Name="AutoBtn" GroupName="buttons" Content=" 自動発行" FontSize="20" Style="{StaticResource MaterialDesignAccentRadioButton}" FontFamily="Yu Gothic Medium" Margin="20,15,0,5" 
+                                     IsChecked="{Binding SubMenuKind.Value,
+                                        ConverterParameter=Auto, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                        <RadioButton Name="RyohanBtn" GroupName="buttons" Content=" 量販店" FontSize="20" Style="{StaticResource MaterialDesignAccentRadioButton}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
+                                     IsChecked="{Binding SubMenuKind.Value, 
+                                        ConverterParameter=Ryohan, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                        <RadioButton Name="IppanBtn" GroupName="buttons" Content=" 一般店" FontSize="20" Style="{StaticResource MaterialDesignAccentRadioButton}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
+                                     IsChecked="{Binding SubMenuKind.Value, 
+                                        ConverterParameter=Ippan, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                        <RadioButton Name="OtherBtn" GroupName="buttons" Content=" その他" FontSize="20" Style="{StaticResource MaterialDesignAccentRadioButton}" FontFamily="Yu Gothic Medium" Margin="20,10,0,5"
+                                     IsChecked="{Binding SubMenuKind.Value, 
+                                        ConverterParameter=Other, 
+                                        Converter={StaticResource EnumConverter}}"/>
+                    </StackPanel>
+                </Border>
+
+                <!--メインメニュー右側-->
+                <Border Grid.Column="1"
+                        CornerRadius="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Margin="1">
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
+                        <StackPanel Orientation="Vertical">
+                            <Grid ShowGridLines="false" Visibility="{Binding AutoMenuVisibility.Value}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="1" />
+                                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="2" />
+                                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="3" />
+                                <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="4" />
+                                <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="5" />
+                                <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="6" />
+                                <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="7" />
+                                <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="8" />
+                                <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="9" />
+                                <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="10"/>
+                                <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="11"/>
+                                <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="12"/>
+                                <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="13"/>
+                                <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="14"/>
+                                <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="15"/>
+                                <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="16"/>
+                                <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="17"/>
+                                <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="18"/>
+                                <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="19"/>
+                                <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="20"/>
+                                <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="21" Visibility="Collapsed"/>
+                                <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="22" Visibility="Collapsed"/>
+                                <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="23" Visibility="Collapsed"/>
+                                <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="24" Visibility="Collapsed"/>
+                                
+                                <Button Grid.Row="0" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="0112" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤスサキ" />
+                                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="0127" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤマナカ" />
+                                <Button Grid.Row="0" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="0102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マルヨシ" />
+                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="0122" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="三喜" />
+                                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="7858" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="わたせい" />
+                                <Button Grid.Row="1" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="0101" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="キョーエイ" />
+                                <Button Grid.Row="2" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="7705" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="イトウゴフク" />
+                                <Button Grid.Row="2" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="2101" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マネキ" />
+                                <Button Grid.Row="2" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="0121" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="北海道三喜" />
+                                <Button Grid.Row="3" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="0109" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="天満屋" />
+                                <Button Grid.Row="3" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="0117" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="サンエー" />
+                                <Button Grid.Row="3" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="7883" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="コスモマツオカ" />
+                                <Button Grid.Row="4" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="0416" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="フジヤ" />
+                                <Button Grid.Row="4" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="8102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ミヤマ" />
+                                <Button Grid.Row="4" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="8103" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="本店タカハシ" />
+                                <Button Grid.Row="5" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="0165" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="あかのれん" />
+                                <Button Grid.Row="5" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="8115" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="京王ストア" />
+                                <Button Grid.Row="5" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="7501" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="岡田" />
+                                <Button Grid.Row="6" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="8208" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ナンコクスーパー" />
+                                <Button Grid.Row="6" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="0160" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="イズミ" />
+                                <Button Grid.Row="6" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="dummy" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="dummy" Visibility="Collapsed" />
+                                <Button Grid.Row="7" Grid.Column="1" Command="{Binding SelectAutoCommand}" CommandParameter="dummy" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="dummy" Visibility="Collapsed" />
+                                <Button Grid.Row="7" Grid.Column="3" Command="{Binding SelectAutoCommand}" CommandParameter="dummy" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="dummy" Visibility="Collapsed" />
+                                <Button Grid.Row="7" Grid.Column="5" Command="{Binding SelectAutoCommand}" CommandParameter="dummy" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="dummy" Visibility="Collapsed" />
+                            </Grid>
+
+                            <Grid ShowGridLines="false" Visibility="{Binding RyohanMenuVisibility.Value}" Cursor="">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="1" />
+                                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="2" />
+                                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="3" />
+                                <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="4" />
+                                <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="5" />
+                                <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="6" />
+                                <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="7" />
+                                <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="8" />
+                                <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="9" />
+                                <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="10" />
+                                <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="11" />
+                                <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="12" />
+                                <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="13" />
+                                <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="14" />
+                                <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="15" />
+                                <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="16" />
+                                <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="17" />
+                                <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="18" />
+                                <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="19" />
+                                <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="20" />
+                                <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="21" />
+                                <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="22" />
+                                <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="23" />
+                                <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="24" Visibility="Collapsed"/>
+
+                                <Button Grid.Row="0" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0170" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="アージュ" />
+                                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="7705" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="イトウゴフク" />
+                                <Button Grid.Row="0" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0101" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="キョーエイ" />
+                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="7883" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="コスモマツオカ" />
+                                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="0105" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="サニーマート" />
+                                <Button Grid.Row="1" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0117" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="サンエー" />
+                                <Button Grid.Row="2" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0145" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="三角商事" />
+                                <Button Grid.Row="2" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="0118" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="三喜" />
+                                <Button Grid.Row="2" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0109" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="天満屋ストア" />
+                                <Button Grid.Row="3" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="8108" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ビッグエー" />
+                                <Button Grid.Row="3" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="0103" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="フジ" />
+                                <Button Grid.Row="3" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0416" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="フジヤ" />
+                                <Button Grid.Row="4" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0121" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="北海道三喜" />
+                                <Button Grid.Row="4" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="8103" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="本店タカハシ" />
+                                <Button Grid.Row="4" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0110" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マックスバリュ西日本" />
+                                <Button Grid.Row="5" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="2101" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マネキ" />
+                                <Button Grid.Row="5" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="0102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マルヨシ" />
+                                <Button Grid.Row="5" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="7908" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="萬栄" />
+                                <Button Grid.Row="6" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="7903" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="万勝" />
+                                <Button Grid.Row="6" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="7858" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="わたせい" />
+                                <Button Grid.Row="6" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0160" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="イズミ" />
+                                <Button Grid.Row="7" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0165" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="あかのれん" />
+                                <Button Grid.Row="7" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="8115" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="京王ストア" />
+                                <Button Grid.Row="7" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="dummy" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="dummy" Visibility="Collapsed"/>
+                            </Grid>
+
+                            <Grid ShowGridLines="false" Visibility="{Binding IppanMenuVisibility.Value}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="1" />
+                                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="2" />
+                                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="3" />
+                                <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="4" />
+                                <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="5" />
+                                <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="6" />
+                                <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="7" />
+                                <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="8" />
+                                <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="9" />
+                                <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="10" />
+                                <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="11" />
+                                <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="12" />
+                                <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="13" />
+                                <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="14" />
+                                <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="15" />
+
+                                <Button Grid.Row="0" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="8104" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="アブアブ赤札堂" />
+                                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="7501" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="おかだ" />
+                                <Button Grid.Row="0" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="7500" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="カネタ" />
+                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="7336" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="コポ" />
+                                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="5201" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="セブン" />
+                                <Button Grid.Row="1" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="7846" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="タイフク東京" />
+                                <Button Grid.Row="2" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0129" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ドミー" />
+                                <Button Grid.Row="2" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="8208" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ナンコクスーパー" />
+                                <Button Grid.Row="2" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="7837" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="丸治" />
+                                <Button Grid.Row="3" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="8110" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="マーブル" />
+                                <Button Grid.Row="3" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="8102" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ミヤマ" />
+                                <Button Grid.Row="3" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="0112" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤスサキ" />
+                                <Button Grid.Row="4" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="0127" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ヤマナカ" />
+                                <Button Grid.Row="4" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="7840" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="柳屋" />
+                                <Button Grid.Row="4" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="7510" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="ワークウェイ" />
+                            </Grid>
+
+                            <Grid ShowGridLines="false" Visibility="{Binding OtherMenuVisibility.Value}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="1" />
+                                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="2" />
+                                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="3" />
+                                <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="4" />
+                                <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="5" />
+                                <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="5,10,2,10" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="6" />
+
+                                <Button Grid.Row="0" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="OT01" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="インナー商品シール" />
+                                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="OT02" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="和合ＪＡＮタグ" />
+                                <Button Grid.Row="0" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="OT03" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="品番･ｻｲｽﾞ･素材シール" />
+                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SelectInputCommand}" CommandParameter="OT04" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="品質シール" />
+                                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SelectInputCommand}" CommandParameter="OT05" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="品番・カラーシール" />
+                                <Button Grid.Row="1" Grid.Column="5" Command="{Binding SelectInputCommand}" CommandParameter="OT06" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Margin="0,0,5,0" Height="50" FontSize="24" Padding="0" Background="Indigo" Content="商材ラベル" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </DockPanel>
+
+        <Grid Grid.Row="2" ShowGridLines="False" Margin="1,0,1,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="ExecuteCommand" CommandParameter="Esc" Content=" ESC&#xa;終 了" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Visible"/>
+            <Button Grid.Column="1" Content="F1" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="2" Content="F2" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="3" Content="F3" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="4" Content="F4" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="5" Content="F5" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="6" Content="F6" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="7" Content="F7" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="8" Content="F8" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="9" Content="F9" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="10" Content="F10" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="11" Content="F11" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="12" Content="F12" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+            <Button Grid.Column="13" Content="F13" Style="{StaticResource MaterialDesignRaisedSecondaryButton}" Height="65" Padding="0" Margin="2,0,2,2" FontSize="21" Background="Indigo" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</metro:MetroWindow>
