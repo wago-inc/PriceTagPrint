@@ -1,5 +1,5 @@
-﻿using PriceTagPrint.Views;
-using PriceTagPrint.ViewModels;
+﻿using PriceTagPrint.View;
+using PriceTagPrint.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

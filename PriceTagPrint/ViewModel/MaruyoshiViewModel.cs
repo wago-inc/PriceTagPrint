@@ -1,0 +1,1090 @@
+﻿using PriceTagPrint.Common;
+using PriceTagPrint.MDB;
+using PriceTagPrint.Model;
+using PriceTagPrint.View;
+using PriceTagPrint.WAG_USR1;
+using Prism.Mvvm;
+using Reactive.Bindings;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+
+namespace PriceTagPrint.ViewModel
+{
+    public class MaruyoshiViewModel : ViewModelsBase
+    {
+        #region プロパティ
+        // 発行区分
+        public ReactiveProperty<int> HakkouTypeText { get; set; }
+        public ReactiveProperty<ObservableCollection<CommonIdName>> HakkouTypeItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
+        public ReactiveProperty<int> SelectedHakkouTypeIndex { get; set; }
+                = new ReactiveProperty<int>(0);
+
+        // 受信日
+        public ReactiveProperty<DateTime> JusinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today);
+
+        // 納品日
+        public ReactiveProperty<DateTime> NouhinDate { get; set; } = new ReactiveProperty<DateTime>(DateTime.Today.AddDays(1));
+
+        // 分類コード
+        public ReactiveProperty<int> BunruiCodeText { get; set; }
+        public ReactiveProperty<ObservableCollection<CommonIdName>> BunruiCodeItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
+        public ReactiveProperty<int> SelectedBunruiCodeIndex { get; set; }
+                = new ReactiveProperty<int>(0);
+
+        // 値札番号
+        public ReactiveProperty<int> NefudaBangouText { get; set; }
+        public ReactiveProperty<ObservableCollection<CommonIdName>> NefudaBangouItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<CommonIdName>>();
+        public ReactiveProperty<int> SelectedNefudaBangouIndex { get; set; }
+                = new ReactiveProperty<int>(0);
+
+        //発行枚数計
+        public ReactiveProperty<string> TotalMaisu { get; set; } = new ReactiveProperty<string>("");
+
+        private List<MaruyoshiData> MaruyoshiDatas { get; set; } = new List<MaruyoshiData>();
+        // DataGrid Items
+        public ReactiveProperty<ObservableCollection<MaruyoshiItem>> MaruyoshiItems { get; set; }
+                = new ReactiveProperty<ObservableCollection<MaruyoshiItem>>();
+
+        #endregion
+
+        // 発行区分テキストボックス
+        public TextBox HakkouTypeTextBox = null;
+        public DatePicker JusinDatePicker = null;
+        public DatePicker NouhinDatePicker = null;
+
+        private EOSJUTRA_LIST eOSJUTRA_LIST;
+        private HINMTA_LIST hINMTA_LIST;
+        private TOKMTE_TSURI_LIST tOKMTE_LIST;
+
+        private DB_0127_HANSOKU_BAIKA_CONV_LIST dB_0127_HANSOKU_LIST;
+        private List<HINMTA> hinmtaList;
+
+        private DateTime _スマクラforWeb切替日_date = new DateTime(2022, 4, 1);
+        private string _スマクラforWeb切替日 = "20220401";
+        #region コマンドの実装
+        private RelayCommand<string> funcActionCommand;
+        public RelayCommand<string> FuncActionCommand
+        {
+            get { return funcActionCommand = funcActionCommand ?? new RelayCommand<string>(FuncAction); }
+        }
+
+        /// <summary>
+        /// ファンクションキー処理
+        /// </summary>
+        /// <param name="parameter"></param>
+        private void FuncAction(string parameter)
+        {
+            switch (parameter)
+            {
+                case "ESC":
+
+                    break;
+                case "F4":
+                    Clear();
+                    this.HakkouTypeTextBox.Focus();
+                    this.HakkouTypeTextBox.SelectAll();
+                    break;
+                case "F5":
+                    if (InputCheck())
+                    {
+                        NefudaDataDisplay();
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
+                    }
+                    break;
+                case "F10":
+                    if (!PrintCheck())
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                    {
+                        ExecPrint(true);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
+                    }
+                    break;
+                case "F12":
+                    if (!PrintCheck())
+                    {
+                        MessageBox.Show("対象データが存在しません。", "値札発行エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (MessageBox.Show("値札の発行を行いますか？", "値札発行確認", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                    {
+                        ExecPrint(false);
+                        this.HakkouTypeTextBox.Focus();
+                        this.HakkouTypeTextBox.SelectAll();
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        #region コンストラクタ
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public MaruyoshiViewModel()
+        {
+            eOSJUTRA_LIST = new EOSJUTRA_LIST();
+            tOKMTE_LIST = new TOKMTE_TSURI_LIST();
+
+            dB_0127_HANSOKU_LIST = new DB_0127_HANSOKU_BAIKA_CONV_LIST();
+
+            CreateComboItems();
+
+            // コンボボックス初期値セット
+            HakkouTypeText = new ReactiveProperty<int>(1);
+            BunruiCodeText = new ReactiveProperty<int>();
+            NefudaBangouText = new ReactiveProperty<int>();
+
+            // SubScribe定義
+            HakkouTypeText.Subscribe(x => HakkouTypeTextChanged(x));
+            BunruiCodeText.Subscribe(x => BunruiCodeTextChanged(x));
+            NefudaBangouText.Subscribe(x => NefudaBangouTextChanged(x));
+
+            SelectedHakkouTypeIndex.Subscribe(x => SelectedHakkouTypeIndexChanged(x));
+            SelectedBunruiCodeIndex.Subscribe(x => SelectedBunruiCodeIndexChanged(x));
+            SelectedNefudaBangouIndex.Subscribe(x => SelectedNefudaBangouIndexChanged(x));
+
+            ProcessingSplash ps = new ProcessingSplash("起動中", () =>
+            {
+                hINMTA_LIST = new HINMTA_LIST();
+                hinmtaList = hINMTA_LIST.QueryWhereAll();
+            });
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
+            }
+            else
+            {
+                //処理が失敗した
+            }
+        }
+
+        #endregion
+
+        #region コントロール生成・変更
+
+        /// <summary>
+        /// コンボボックスItem生成
+        /// </summary>
+        public void CreateComboItems()
+        {
+            HakkouTypeItems.Value = new ObservableCollection<CommonIdName>(CreateHakkouTypeItems());
+            BunruiCodeItems.Value = new ObservableCollection<CommonIdName>(CreateBunruiCodeItems());
+            NefudaBangouItems.Value = new ObservableCollection<CommonIdName>(CreateNefudaBangouItems());
+        }
+
+        /// <summary>
+        /// 分類コードItems生成
+        /// </summary>
+        /// <returns></returns>
+        public List<CommonIdName> CreateBunruiCodeItems()
+        {
+            var list = new List<CommonIdName>();
+            var item1 = new CommonIdName();
+            item1.Id = 5103;
+            item1.Name = "5103：婦人インナー";
+            list.Add(item1);
+            var item2 = new CommonIdName();
+            item2.Id = 5106;
+            item2.Name = "5106：肌着ナイティ";
+            list.Add(item2);
+            var item3 = new CommonIdName();
+            item3.Id = 5109;
+            item3.Name = "5109：靴下";
+            list.Add(item3);
+            var item4 = new CommonIdName();
+            item4.Id = 5136;
+            item4.Name = "5136：グンゼ";
+            list.Add(item4);
+            var item5 = new CommonIdName();
+            item5.Id = 5191;
+            item5.Name = "5191：パンスト、ストッキング";
+            list.Add(item5);
+            var item6 = new CommonIdName();
+            item6.Id = 5195;
+            item6.Name = "5195：子供靴下";
+            list.Add(item6);
+            return list;
+        }
+
+        /// <summary>
+        /// 発行区分Items生成
+        /// </summary>
+        /// <returns></returns>
+        public List<CommonIdName> CreateHakkouTypeItems()
+        {
+            var list = new List<CommonIdName>();
+            var item = new CommonIdName();
+            item.Id = 1;
+            item.Name = "1：新規発行";
+            list.Add(item);
+            var item2 = new CommonIdName();
+            item2.Id = 2;
+            item2.Name = "2：再発行";
+            list.Add(item2);
+            return list;
+        }
+
+        /// <summary>
+        /// 値札番号Items生成
+        /// </summary>
+        /// <returns></returns>
+        public List<CommonIdName> CreateNefudaBangouItems()
+        {
+            var list = new List<CommonIdName>();
+            if(JusinDate.Value >= _スマクラforWeb切替日_date)
+            {
+                var item1 = new CommonIdName();
+                item1.Id = 0;
+                item1.Name = "0：２１号ラベルプロパー";
+                list.Add(item1);
+                var item3 = new CommonIdName();
+                item3.Id = 3;
+                item3.Name = "3：１１号タグプロパー";
+                list.Add(item3);
+            }
+            else
+            {
+                var item1 = new CommonIdName();
+                item1.Id = 0;
+                item1.Name = "0：２１号ラベルプロパー";
+                list.Add(item1);
+                var item2 = new CommonIdName();
+                item2.Id = 2;
+                item2.Name = "2：１２号タグプロパー";
+                list.Add(item2);
+                var item3 = new CommonIdName();
+                item3.Id = 3;
+                item3.Name = "3：１１号タグプロパー";
+                list.Add(item3);
+                var item4 = new CommonIdName();
+                item4.Id = 5;
+                item4.Name = "5：２１号ラベルプロパー";
+                list.Add(item4);
+                var item5 = new CommonIdName();
+                item5.Id = 6;
+                item5.Name = "6：値下げラベル";
+                list.Add(item5);                
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 発行区分テキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
+        private void HakkouTypeTextChanged(int id)
+        {
+            var item = HakkouTypeItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedHakkouTypeIndex.Value = HakkouTypeItems.Value.IndexOf(item);
+            }
+        }
+
+        /// <summary>
+        /// 分類コードテキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
+        private void BunruiCodeTextChanged(int id)
+        {
+            var item = BunruiCodeItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedBunruiCodeIndex.Value = BunruiCodeItems.Value.IndexOf(item);
+            }
+            else
+            {
+                BunruiCodeText.Value = 5103;
+            }
+        }
+
+        /// <summary>
+        /// 値札番号テキスト変更処理
+        /// </summary>
+        /// <param name="id"></param>
+        private void NefudaBangouTextChanged(int id)
+        {
+            var item = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == id);
+            if (item != null)
+            {
+                SelectedNefudaBangouIndex.Value = NefudaBangouItems.Value.IndexOf(item);
+            }
+            else
+            {
+                NefudaBangouText.Value = 0;
+            }
+        }
+
+        /// <summary>
+        /// 発行区分コンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
+        private void SelectedHakkouTypeIndexChanged(int idx)
+        {
+            var item = HakkouTypeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                HakkouTypeText.Value = item.Id;
+            }
+            else
+            {
+                HakkouTypeText.Value = 0;
+            }
+        }
+
+        /// <summary>
+        /// 分類コードコンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
+        private void SelectedBunruiCodeIndexChanged(int idx)
+        {
+            var item = BunruiCodeItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                BunruiCodeText.Value = item.Id;
+            }
+            else
+            {
+                BunruiCodeText.Value = 0;
+            }
+        }
+
+        /// <summary>
+        /// 値札番号コンボ変更処理
+        /// </summary>
+        /// <param name="idx"></param>
+        private void SelectedNefudaBangouIndexChanged(int idx)
+        {
+            var item = NefudaBangouItems.Value.Where((item, index) => index == idx).FirstOrDefault();
+            if (item != null)
+            {
+                NefudaBangouText.Value = item.Id;
+            }
+            else
+            {
+                NefudaBangouText.Value = -1;
+            }
+        }
+
+        #endregion
+
+        #region ファンクション
+        /// <summary>
+        /// F4 初期化処理
+        /// </summary>
+        public void Clear()
+        {
+            JusinDate.Value = DateTime.Today;
+            NouhinDate.Value = DateTime.Today.AddDays(1);
+            SelectedHakkouTypeIndex.Value = 0;
+            SelectedBunruiCodeIndex.Value = 0;
+            SelectedNefudaBangouIndex.Value = 0;
+            TotalMaisu.Value = "";
+            MaruyoshiDatas.Clear();
+            if (MaruyoshiItems.Value != null && MaruyoshiItems.Value.Any())
+            {
+                MaruyoshiItems.Value.Clear();
+            }
+            HakkouTypeTextBox.Focus();
+        }
+
+        /// <summary>
+        /// F5検索入力チェック
+        /// </summary>
+        /// <returns></returns>
+        public bool InputCheck()
+        {
+            DateTime convDate;
+            if (string.IsNullOrEmpty(this.JusinDatePicker.Text) || !DateTime.TryParse(this.JusinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("受信日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.JusinDatePicker.Focus();
+                return false;
+            }
+            if (string.IsNullOrEmpty(this.NouhinDatePicker.Text) || !DateTime.TryParse(this.NouhinDatePicker.Text, out convDate))
+            {
+                MessageBox.Show("納品日を入力してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.NouhinDatePicker.Focus();
+                return false;
+            }
+            if (this.HakkouTypeText.Value < 1 || this.HakkouTypeText.Value > 2)
+            {
+                MessageBox.Show("発行区分を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.HakkouTypeTextBox.Focus();
+                return false;
+            }
+            if (!this.BunruiCodeItems.Value.Select(x => x.Id).Any(id => id == this.BunruiCodeText.Value))
+            {
+                MessageBox.Show("分類コードを選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!this.NefudaBangouItems.Value.Select(x => x.Id).Any(id => id == this.NefudaBangouText.Value))
+            {
+                MessageBox.Show("値札番号を選択してください。", "入力エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// F5検索処理
+        /// </summary>
+        public void NefudaDataDisplay()
+        {
+            ProcessingSplash ps = new ProcessingSplash("データ作成中...", () =>
+            {
+                var eosJutraList = eOSJUTRA_LIST.QueryWhereTcodeAndDates(TidNum.MARUYOSI, JusinDate.Value, NouhinDate.Value);
+                var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.MARUYOSI);
+
+                if (eosJutraList.Any())
+                {
+                    var innerJoinData = eosJutraList
+                            .Where(x => x.VBUNCD.TrimEnd() == BunruiCodeText.Value.ToString())
+                            .GroupJoin(
+                                   tokmteList,
+                                   e1 => new
+                                   {
+                                       VHINCD = e1.VHINCD.ToString().TrimEnd(),
+                                       TOKCD = e1.VRYOHNCD.ToString().TrimEnd(),
+                                       HINCD = e1.HINCD.ToString().TrimEnd(),
+                                   },
+                                   e2 => new
+                                   {
+                                       VHINCD = e2.EOSHINID.TrimEnd(),
+                                       TOKCD = e2.TOKCD.TrimEnd(),
+                                       HINCD = e2.HINCD.TrimEnd(),
+                                   },
+                                   (eosj, tok) => new
+                                   {
+                                       VRYOHNCD = eosj.VRYOHNCD,
+                                       VRCVDT = eosj.VRCVDT,
+                                       VNOHINDT = eosj.VNOHINDT,
+                                       VBUNCD = eosj.VBUNCD,
+                                       DATNO = eosj.DATNO,
+                                       VROWNO = eosj.VROWNO,                                       
+                                       VHINCD = eosj.VHINCD,
+                                       HINCD = eosj.HINCD,
+                                       VHINNMA = eosj.VHINNMA,
+                                       VCOLNM = eosj.VCOLNM,
+                                       VSIZNM = eosj.VSIZNM,
+                                       VURITK = eosj.VURITK,
+                                       VSURYO = eosj.VSURYO,
+                                       VCYOBI1 = eosj.VCYOBI1,
+                                       VCYOBI7 = eosj.VCYOBI7,
+                                       VTOKKB =eosj.VTOKKB,
+                                       VHEAD1 = eosj.VHEAD1,
+                                       VBODY1 = eosj.VBODY1,
+                                       SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }) : "",
+                                   })
+                            .OrderBy(x => x.VRYOHNCD)
+                                    .ThenBy(x => x.VRCVDT)
+                                    .ThenBy(x => x.VBUNCD)
+                                    .ThenBy(x => x.VHINCD);
+
+                    if (innerJoinData.Any() && hinmtaList.Any())
+                    {
+                        var dateNow = DateTime.Now;
+                        if (hinmtaList.Any())
+                        {
+                            decimal convdec;
+                            MaruyoshiDatas.Clear();
+                            MaruyoshiDatas.AddRange(
+                                innerJoinData
+                                    .GroupJoin(
+                                           hinmtaList,
+                                           e => new
+                                           {
+                                               HINCD = e.HINCD.ToString().TrimEnd(),
+                                           },
+                                           h => new
+                                           {
+                                               HINCD = h.HINCD.TrimEnd(),
+                                           },
+                                           (a, hin) => new
+                                           {
+                                               RPTCLTID = " ",
+                                               VRYOHNCD = a.VRYOHNCD,
+                                               VRCVDT = a.VRCVDT,
+                                               VNOHINDT = a.VNOHINDT,
+                                               // 分類コード
+                                               VBUNCD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VHEAD1) ? "0" + a.VHEAD1.Substring(18, 1) : " ",
+                                               DATNO = a.DATNO,
+                                               VROWNO = a.VROWNO,
+                                               // クラスコード
+                                               NEFCMA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(5, 4) : " ",
+                                               // 当社品番
+                                               NEFCMB = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VCYOBI7) ? a.VCYOBI7.TrimEnd() : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(69, 10) : " ",
+                                               NEFCMB2 = " ",
+                                               // 商品名称
+                                               NEFCMC = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VHINNMA) ? a.VHINNMA.TrimEnd() : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(79, 25) : " ",
+                                               // カラーコード + カラー名
+                                               NEFCMD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) + " " + a.VBODY1.Substring(104, 5) : " ",
+                                               // カラーコード
+                                               NEFCMD2 = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                         ? ""
+                                                         : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(109, 2) : " ",
+                                               // サイズコード
+                                               NEFCME = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VHEAD1.Substring(18, 1) + a.VBODY1.Substring(116, 2) : " ",
+                                               // サイズ名
+                                               NEFCMF = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && a.VBUNCD.TrimEnd() != "009" ? a.VBODY1.Substring(111, 5) : " ",
+                                               // 単品コード
+                                               NEFCMG = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(10, 4) : " ",
+                                               // 組
+                                               NEFCMH = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(15, 2) : " ",
+                                               // FLG
+                                               NEFCMI = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? !string.IsNullOrEmpty(a.VTOKKB) ?
+                                                            a.VTOKKB.TrimEnd() == "1" ? "2" :
+                                                            a.VTOKKB.TrimEnd() == "0" ? "8" : " " : " "
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ?
+                                                            a.VBODY1.Substring(118, 1) == "1" ? "8" :
+                                                            a.VBODY1.Substring(118, 1) == "2" ? "2" : " " : " ",
+                                               // 追加区分
+                                               NEFCMJ = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ?
+                                                            a.VBODY1.Substring(126, 1) == "1" ? "T" :
+                                                            a.VBODY1.Substring(126, 1) == "2" ? "Y" :
+                                                            a.VBODY1.Substring(126, 1) == "3" ? "X" : " " : " ",
+                                               // タグ区分
+                                               NEFCMK = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? "5"
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(119, 1) : " ",
+                                               // 消売価
+                                               NEFTKA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? 0
+                                                        : !string.IsNullOrEmpty(a.VBODY1) &&
+                                                            (a.VBODY1.Substring(119, 1) == "2" ||
+                                                             a.VBODY1.Substring(119, 1) == "4" ||
+                                                             a.VBODY1.Substring(119, 1) == "6") && decimal.TryParse(a.VBODY1.Substring(120, 6), out convdec) ? convdec : 0,
+                                               // 売価
+                                               NEFTKB = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? Math.Ceiling(a.VURITK)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
+                                               // 発行枚数
+                                               NEFSUA = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? Math.Ceiling(a.VSURYO)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(27, 5), out convdec) ? convdec : 0,
+                                               // 売価(なぜか二つ売価があるがそのままコンバートする)
+                                               NEFTKB2 = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? Math.Ceiling(a.VURITK)
+                                                        : !string.IsNullOrEmpty(a.VBODY1) && decimal.TryParse(a.VBODY1.Substring(42, 7), out convdec) ? convdec : 0,
+                                               // シーズンコード
+                                               NEFSEZ = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? ""
+                                                        : !string.IsNullOrEmpty(a.VBODY1) ? a.VBODY1.Substring(101, 2) : " ",
+                                               VHINCD = a.VHINCD,
+                                               HINCD = a.HINCD,
+                                               JANCD = a.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0
+                                                        ? a.VCYOBI1.TrimEnd()
+                                                        : hin.Any() ? hin.FirstOrDefault().JANCD : "",
+                                               WRTDT = dateNow.ToString("yyyyMMdd"),
+                                               WRTTM = dateNow.ToString("hhmmss"),
+                                               NEFUDA = a.SIZCD
+                                           })
+                                    .GroupBy(a => new
+                                    {
+                                        a.RPTCLTID,
+                                        a.VRYOHNCD,
+                                        a.VRCVDT,
+                                        a.VNOHINDT,
+                                        a.VBUNCD,
+                                        a.NEFCMA,
+                                        a.NEFCMB,
+                                        a.NEFCMB2,
+                                        a.NEFCMC,
+                                        a.NEFCMD,
+                                        a.NEFCMD2,
+                                        a.NEFCME,
+                                        a.NEFCMF,
+                                        a.NEFCMG,
+                                        a.NEFCMH,
+                                        a.NEFCMI,
+                                        a.NEFCMJ,
+                                        a.NEFCMK,
+                                        a.NEFTKA,
+                                        a.NEFTKB,
+                                        a.WRTTM,
+                                        a.WRTDT,
+                                        a.VHINCD,
+                                        a.HINCD,
+                                        a.NEFTKB2,
+                                        a.NEFSEZ,
+                                        a.JANCD,
+                                        a.NEFUDA
+                                    })
+                                    .Select(g => new MaruyoshiData()
+                                    {
+                                        RPTCLTID = g.Key.RPTCLTID,
+                                        VRYOHNCD = g.Key.VRYOHNCD,
+                                        VRCVDT = g.Key.VRCVDT,
+                                        VNOHINDT = g.Key.VNOHINDT,
+                                        VBUNCD = g.Key.VBUNCD,
+                                        NEFCMA = g.Key.NEFCMA,
+                                        NEFCMB = g.Key.NEFCMB,
+                                        NEFCMB2 = TanabanCheck(g.Key.NEFCMC),
+                                        NEFCMC = g.Key.NEFCMC,
+                                        NEFCMD = g.Key.NEFCMD,
+                                        NEFCMD2 = g.Key.NEFCMD2,
+                                        NEFCME = g.Key.NEFCME.TrimEnd(),
+                                        NEFCMF = g.Key.NEFCMF,
+                                        NEFCMG = g.Key.NEFCMG,
+                                        NEFCMH = g.Key.NEFCMH,
+                                        NEFCMI = g.Key.NEFCMI,
+                                        NEFCMJ = g.Key.NEFCMJ,
+                                        NEFCMK = g.Key.NEFCMK,
+                                        NEFTKA = g.Key.NEFTKA,
+                                        NEFTKB = g.Key.NEFTKB,
+                                        NEFSUA = g.Sum(y => y.NEFSUA),
+                                        WRTTM = g.Key.WRTTM,
+                                        WRTDT = g.Key.WRTDT,
+                                        VHINCD = g.Key.VHINCD,
+                                        HINCD = g.Key.HINCD,
+                                        NEFTKB2 = g.Key.NEFTKB2,
+                                        NEFSEZ = g.Key.NEFSEZ,
+                                        JANCD = g.Key.JANCD,
+                                        NEFUDA = g.Key.NEFUDA
+                                    })
+                                    .Where(x => x.VRCVDT.CompareTo(_スマクラforWeb切替日) >= 0 ?
+                                        (this.NefudaBangouText.Value == 3 ? x.NEFUDA.TrimEnd() == "2" : x.NEFUDA.TrimEnd() != "2")
+                                        :
+                                        (this.NefudaBangouText.Value != 0 ?
+                                                    this.NefudaBangouText.Value != 6 ?
+                                                    x.NEFCMK == this.NefudaBangouText.Value.ToString() : x.NEFTKA != 0 : true))
+                                    .OrderBy(x => x.VRYOHNCD)
+                                    .ThenBy(x => x.VRCVDT)
+                                    .ThenBy(x => x.VBUNCD)
+                                    .ThenBy(x => x.VHINCD)
+                                    );
+                        }
+
+                        if (MaruyoshiDatas.Any())
+                        {
+                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>();
+                            var maruyoshiModelList = new MaruyoshiItemList();
+                            var addItems = new ObservableCollection<MaruyoshiItem>(maruyoshiModelList.ConvertMaruyoshiDataToModel(MaruyoshiDatas)).ToList();
+                            // 直接ObservableにAddするとなぜか落ちるためListをかます。
+                            var setItems = new List<MaruyoshiItem>();
+                            addItems.ForEach(item =>
+                            {
+                                Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                                      h => item.PropertyChanged += h,
+                                      h => item.PropertyChanged -= h)
+                                      .Subscribe(e =>
+                                      {
+                                          // 発行枚数に変更があったら合計発行枚数も変更する
+                                          TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
+                                      });
+                                setItems.Add(item);
+                            });
+                            MaruyoshiItems.Value = new ObservableCollection<MaruyoshiItem>(setItems);
+                            TotalMaisu.Value = MaruyoshiItems.Value.Sum(x => x.発行枚数).ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
+
+            //バックグラウンド処理が終わるまで表示して待つ
+            ps.ShowDialog();
+
+            if (ps.complete)
+            {
+                //処理が成功した
+            }
+            else
+            {
+                //処理が失敗した
+            }
+        }
+
+        private string TanabanCheck(string inStr)
+        {
+            string SearchChar;
+            string wk_Char;
+            string out_Char = "";
+
+            int myPos;
+            int svPos1;
+            int svPos2;
+
+            int chk_Cnt;
+
+            if (string.IsNullOrEmpty(inStr))
+            {
+                return string.Empty;
+            }
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            wk_Char = Microsoft.VisualBasic.Strings.StrConv(inStr.TrimEnd(), Microsoft.VisualBasic.VbStrConv.Narrow, 0x411);
+            wk_Char = wk_Char.ToUpper();
+
+            // ◆"-"の位置をチェック
+            SearchChar = "-";
+            svPos1 = 0;
+            if (wk_Char.Contains(SearchChar))
+            {
+                svPos1 = wk_Char.IndexOf(SearchChar) + 1;
+            }
+            else
+            {
+                return "";// ※"-"無しの場合は処理終了
+            }
+
+            // ◆"A-Z"の文字を検索
+            char moji;
+
+            svPos2 = 0;
+            for (moji = 'A'; moji <= 'Z'; ++moji) // ※ASC(65)=A、ASC(90)=Z
+            {
+                SearchChar = moji.ToString();
+
+                myPos = wk_Char.Contains(SearchChar) ? wk_Char.IndexOf(SearchChar) + 1 : 0;
+                if (wk_Char.Contains(SearchChar))
+                {
+                    if (svPos2 == 0)
+                    {
+                        svPos2 = myPos;
+                    }
+                    else if (myPos < svPos2)
+                    {
+                        svPos2 = myPos;
+                    }
+                }
+            }
+
+            // ◆"-"と"A-Z"の両方が含まれており、"-"より前に"A-Z"が存在する場合のみ出力文字をセットする
+            if (svPos1 > 0 & svPos2 > 0)
+            {
+                if (svPos2 < svPos1)
+                {
+                    var sblen = inStr.Length - (svPos2 - 1);
+                    out_Char = (inStr.Substring(svPos2 - 1, sblen)).TrimEnd();
+                }
+            }
+
+            // ◆出力文字の最後に"0-9"以外の文字が含まれている場合は除く
+            if (!string.IsNullOrEmpty(out_Char))
+            {
+                var chk_Str = out_Char.Substring(out_Char.Length - 1);
+                if (System.Text.RegularExpressions.Regex.IsMatch(chk_Str, @"^[0-9]+$"))
+                {
+                }
+                else
+                {
+                    out_Char = (out_Char.Substring(0, out_Char.Length - 1)).TrimEnd();
+                }
+            }
+
+            // ◆出力文字に"A-Z"、"0-9"、"-"以外の文字が含まれていないかチェック
+            if (!string.IsNullOrEmpty(out_Char))
+            {
+                chk_Cnt = 0;
+                var j = out_Char.Length;
+                for (var i = 0; i < j; i++)
+                {
+                    var chk_Str = out_Char.Substring(i, 1);
+                    if (System.Text.RegularExpressions.Regex.IsMatch(chk_Str, @"^[A-Z]+$"))
+                    {
+                        chk_Cnt = chk_Cnt + 1;
+                    }
+                    if (System.Text.RegularExpressions.Regex.IsMatch(chk_Str, @"^[0-9]+$"))
+                    {
+                        chk_Cnt = chk_Cnt + 1;
+                    }
+                    if (chk_Str == "-")
+                    {
+                        chk_Cnt = chk_Cnt + 1;
+                    }
+                }
+                if (chk_Cnt < j)
+                {
+                    out_Char = " ";
+                }
+            }
+            return out_Char;
+        }
+
+        private string GetNefudaBangou(string hinnm, string typenm1, string typenm2)
+        {
+            string SearchChar;
+            string SearchChar2;
+            string wk_Char;
+
+            var wNEFUDA_NO = "15";
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            wk_Char = Microsoft.VisualBasic.Strings.StrConv(hinnm.TrimEnd(), Microsoft.VisualBasic.VbStrConv.Narrow, 0x411);
+            wk_Char = wk_Char.ToUpper();
+
+            SearchChar = typenm1;
+            if (wk_Char.Contains(SearchChar))
+            {
+                wNEFUDA_NO = "13";
+            }
+
+            // ※ご奉仕価格のチェック
+            SearchChar2 = typenm2;
+            if (wk_Char.Contains(SearchChar2))
+            {
+                switch (wNEFUDA_NO)
+                {
+                    case "13":
+                        wNEFUDA_NO = "14";
+                        break;
+                    case "15":
+                        wNEFUDA_NO = "16";
+                        break;
+                }
+            }
+            return wNEFUDA_NO;
+        }
+
+        private DB_0127_HANSOKU_BAIKA_CONV? GetNefudaBaika(decimal baika, string hinnm, string typenm = "3ﾖﾘ", string tokcd = "000127")
+        {
+            DB_0127_HANSOKU_BAIKA_CONV res = null;
+            var wNEFUDA_BAIKA = baika;
+            string SearchChar;
+            string wk_Char;
+
+            wk_Char = Microsoft.VisualBasic.Strings.StrConv(hinnm.TrimEnd(), Microsoft.VisualBasic.VbStrConv.Narrow, 0x411);
+            wk_Char = wk_Char.ToUpper();
+
+            SearchChar = typenm;
+            if (wk_Char.Contains(SearchChar))
+            {
+                res = dB_0127_HANSOKU_LIST.list.FirstOrDefault(x => x.得意先CD == tokcd && x.名称 == typenm && x.売単価 == baika);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷前データ確認
+        /// </summary>
+        /// <returns></returns>
+        public bool PrintCheck()
+        {
+            return MaruyoshiItems.Value != null &&
+                   MaruyoshiItems.Value.Any() &&
+                   MaruyoshiItems.Value.Sum(x => x.発行枚数) > 0;
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 実処理
+        /// </summary>
+        /// <param name="isPreview"></param>
+        public void ExecPrint(bool isPreview)
+        {
+            var fname = Tid.MARUYOSI + "_" +
+                        this.JusinDate.Value.ToString("yyyyMMdd") + "_" +
+                        this.NouhinDate.Value.ToString("yyyyMMdd") + "_" +
+                        this.BunruiCodeText.Value.ToString() + ".csv";
+            var fullName = Path.Combine(CommonStrings.CSV_PATH, fname);
+            CsvExport(fullName);
+            if (!File.Exists(fullName))
+            {
+                MessageBox.Show("CSVファイルのエクスポートに失敗しました。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            NefudaOutput(fullName, isPreview);
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 CSV発行処理
+        /// </summary>
+        /// <param name="fullName"></param>
+        private void CsvExport(string fullName)
+        {
+            var list = MaruyoshiItems.Value.Where(x => x.発行枚数 > 0).ToList();
+            var csvColSort = new string[]
+            {
+                "発行枚数",
+                "カラー",
+                "サイズ",
+                "シーズンコード",
+                "クラスCD",
+                "追加",
+                "税込売価",
+                "品番",
+                "単品",
+                "JANコード"
+            };
+            var datas = DataUtility.ToDataTable(list, csvColSort);
+            // 不要なカラムの削除
+            datas.Columns.Remove("棚番");
+            datas.Columns.Remove("品名");
+            datas.Columns.Remove("組");
+            datas.Columns.Remove("FLG");
+            datas.Columns.Remove("タグ");
+            datas.Columns.Remove("消売価");
+            datas.Columns.Remove("売価");
+            new CsvUtility().Write(datas, fullName, true);
+        }
+
+        /// <summary>
+        /// F10プレビュー・F12印刷 外部アプリ（MLV5）起動
+        /// </summary>
+        /// <param name="fname"></param>
+        /// <param name="isPreview"></param>
+        private void NefudaOutput(string fname, bool isPreview)
+        {
+            // ※振分発行用ＰＧ
+            var grpName = @"0102_マルヨシ\マルヨシセンター(総額対応)_V5 ST308R";
+            var layName = @"通常貼り札.mllayx";
+            var layNo = CommonStrings.MLV5LAYOUT_PATH + @"\" + grpName + @"\" + layName;
+            var dq = "\"";
+            var args = dq + layNo + dq + " /g " + dq + fname + dq + (isPreview ? " /p " : " /o ");
+
+            //Processオブジェクトを作成する
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            //起動する実行ファイルのパスを設定する
+            p.StartInfo.FileName = CommonStrings.MLPRINTEXE_PATH;
+            //コマンドライン引数を指定する
+            p.StartInfo.Arguments = args;
+            //起動する。プロセスが起動した時はTrueを返す。
+            bool result = p.Start();
+        }
+        #endregion
+    }
+
+    public class MaruyoshiItem : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        private decimal _発行枚数;
+        public decimal 発行枚数 //csv
+        {
+            get { return _発行枚数; }
+            set
+            {
+                if (value != this._発行枚数)
+                {
+                    this._発行枚数 = value;
+                    this.OnPropertyChanged("発行枚数");
+                }
+            }
+        }
+        public string カラー { get; set; }     //csv
+        public string サイズ { get; set; }     //csv
+        public string シーズンコード { get; set; } //csv
+        public string クラスCD { get; set; }   //csv
+        public string 追加 { get; set; }  //csv
+        public decimal 税込売価 { get; set; }   //csv
+        public string 品番 { get; set; }  //csv
+        public string 単品 { get; set; }  //csv
+        public string JANコード { get; set; }  //csv        
+
+
+        public string 棚番 { get; set; }
+        public string 品名 { get; set; }
+        public string 組 { get; set; }
+        public string FLG { get; set; }
+        public string タグ { get; set; }
+        public decimal 消売価 { get; set; }
+        public decimal 売価 { get; set; }
+
+        public MaruyoshiItem(decimal 発行枚数, string クラスCD, string 品番, string 棚番,
+                            string 品名, string カラー, string サイズ, string 単品, string 組, string FLG,
+                            string 追加, string タグ, decimal 消売価, decimal 売価, decimal 税込売価, string JANコード,
+                            string シーズンコード)
+        {
+            this.発行枚数 = 発行枚数;
+            this.クラスCD = クラスCD;
+            this.品番 = 品番;
+            this.棚番 = 棚番;
+            this.品名 = 品名;
+            this.カラー = カラー;
+            this.サイズ = サイズ;
+            this.単品 = 単品;
+            this.組 = 組;
+            this.FLG = FLG;
+            this.追加 = 追加;
+            this.タグ = タグ;
+            this.消売価 = 消売価;
+            this.売価 = 売価;
+            this.税込売価 = 税込売価;
+            this.JANコード = JANコード;
+            this.シーズンコード = シーズンコード;
+        }
+    }
+
+    public class MaruyoshiItemList
+    {
+        public IEnumerable<MaruyoshiItem> ConvertMaruyoshiDataToModel(List<MaruyoshiData> datas)
+        {
+            var result = new List<MaruyoshiItem>();
+            var hinban = "";
+            var jancd = "";
+            var siznm = "";
+            datas.ForEach(data =>
+            {
+                hinban = !string.IsNullOrEmpty(data.NEFCMB) ? data.NEFCMB.TrimEnd() : data.NEFCMB2.TrimEnd();
+                jancd = !string.IsNullOrEmpty(data.JANCD) ? data.JANCD : " ";
+                siznm = !string.IsNullOrEmpty(data.NEFCME) ? data.NEFCME + " " + data.NEFCMF : "";
+                result.Add(
+                    new MaruyoshiItem(data.NEFSUA, data.NEFCMA, hinban, data.NEFCMB2, data.NEFCMC, data.NEFCMD,
+                                      siznm, data.NEFCMG, data.NEFCMH, data.NEFCMI, data.NEFCMJ,
+                                      data.NEFCMK, data.NEFTKA, data.NEFTKB, data.NEFTKB2, jancd, data.NEFSEZ));
+            });
+            return result;
+        }
+    }
+}

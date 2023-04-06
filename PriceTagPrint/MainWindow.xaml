@@ -8,7 +8,7 @@
                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                    xmlns:local="clr-namespace:PriceTagPrint"
-                   xmlns:vm="clr-namespace:PriceTagPrint.ViewModels"
+                   xmlns:vm="clr-namespace:PriceTagPrint.ViewModel"
                    xmlns:conv="clr-namespace:PriceTagPrint.Common"
                    mc:Ignorable="d"
                    WindowStartupLocation="CenterScreen"
