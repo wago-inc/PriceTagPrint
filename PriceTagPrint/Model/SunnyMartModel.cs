@@ -16,7 +16,9 @@ namespace PriceTagPrint.Model
         public string VHINCD { get; set; }
         public string HINCD { get; set; }
         public string VHINNM { get; set; }
+        public string NARROWNM { get; set; }
         public string VCYOBI7 { get; set; }
         public decimal VSURYO { get; set; }
+        public string SIZCD { get; set; }
     }
 }

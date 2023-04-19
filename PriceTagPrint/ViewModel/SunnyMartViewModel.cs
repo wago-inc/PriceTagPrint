@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.VisualBasic;
 using Oracle.ManagedDataAccess.Client;
 using PriceTagPrint.Common;
 using PriceTagPrint.MDB;
@@ -79,7 +80,7 @@ namespace PriceTagPrint.ViewModel
         public DatePicker NouhinDatePicker = null;
 
         private EOSJUTRA_LIST eOSJUTRA_LIST;
-        private TOKMTE_LIST tOKMTE_LIST;
+        private TOKMTE_TSURI_LIST tOKMTE_LIST;
 
         #region コマンドの実装
         private RelayCommand<string> funcActionCommand;
@@ -151,7 +152,7 @@ namespace PriceTagPrint.ViewModel
         public SunnyMartViewModel()
         {
             eOSJUTRA_LIST = new EOSJUTRA_LIST();
-            tOKMTE_LIST = new TOKMTE_LIST();
+            tOKMTE_LIST = new TOKMTE_TSURI_LIST();
 
             CreateComboItems();
 
@@ -438,6 +439,8 @@ namespace PriceTagPrint.ViewModel
                 var tokmteList = tOKMTE_LIST.QueryWhereTcode(TidNum.SUNNY_MART);
                 if (eosJutraList.Any() && tokmteList.Any())
                 {
+                    var selectNefuda = NefudaBangouItems.Value.FirstOrDefault(x => x.Id == NefudaBangouText.Value);
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     SunnyMartDatas.Clear();
                     SunnyMartDatas.AddRange(
                         eosJutraList
@@ -465,8 +468,12 @@ namespace PriceTagPrint.ViewModel
                                        VHINCD = eos.VHINCD.TrimEnd(),
                                        HINCD = eos.HINCD.TrimEnd(),
                                        VHINNM = !string.IsNullOrEmpty(eos.VHINNMA.TrimEnd()) ? eos.VHINNMA.TrimEnd() : eos.VHINNMB.TrimEnd(),
+                                       NARROWNM = Strings.StrConv(
+                                                    !string.IsNullOrEmpty(eos.VHINNMA.TrimEnd()) ? eos.VHINNMA.TrimEnd() : eos.VHINNMB.TrimEnd(), 
+                                                    VbStrConv.Narrow, 0x411),
                                        VCYOBI7 = eos.VCYOBI7.TrimEnd(),
                                        VSURYO = eos.VSURYO,
+                                       SIZCD = tok.Any() ? tok.FirstOrDefault().SIZCD.TrimStart(new Char[] { '0' }) : "",
                                    })
                             .GroupBy(a => new
                             {
@@ -478,7 +485,9 @@ namespace PriceTagPrint.ViewModel
                                 a.VHINCD,
                                 a.HINCD,
                                 a.VHINNM,
-                                a.VCYOBI7
+                                a.NARROWNM,
+                                a.VCYOBI7,
+                                a.SIZCD
                             })
                             .Select(g => new SunnyMartData
                             {
@@ -490,9 +499,16 @@ namespace PriceTagPrint.ViewModel
                                 VHINCD = g.Key.VHINCD,  // 相手先品番
                                 HINCD = g.Key.HINCD,    // 和合商品コード
                                 VHINNM = g.Key.VHINNM,
+                                NARROWNM = g.Key.NARROWNM,
                                 VCYOBI7 = g.Key.VCYOBI7,
                                 VSURYO = g.Sum(y => y.VSURYO),  // 数量
+                                SIZCD = g.Key.SIZCD     // 値札区分
                             })
+                            .Where(x => !x.NARROWNM.Contains("KQ") && !x.NARROWNM.Contains("BVD"))  // KQとBVDを除外
+                            .Where(x => selectNefuda.Id != 51 ?
+                                            selectNefuda.Name.Contains("JAN8") ? 
+                                                x.VCYOBI7.Length == 8 : x.VCYOBI7.Length == 13 : true)　// 選択した値札のJAMの長さで絞り込み
+                            .Where(x => this.NefudaBangouText.Value == 46 || this.NefudaBangouText.Value == 47 ? x.SIZCD.TrimEnd() == "2" : x.SIZCD.TrimEnd() != "2") // 吊札or貼札の切り分け
                             .OrderBy(x => x.HINCD)
                     );
 
@@ -521,11 +537,13 @@ namespace PriceTagPrint.ViewModel
                     else
                     {
                         MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                        SunnyMartItems.Value = new ObservableCollection<SunnyMartItem>();
                     }
                 }
                 else
                 {
                     MessageBox.Show("発注データが見つかりません。", "システムエラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                    SunnyMartItems.Value = new ObservableCollection<SunnyMartItem>();
                 }
 
             });
@@ -586,13 +604,13 @@ namespace PriceTagPrint.ViewModel
                     "下",
                     "部門",
                     "JANコード",
-                    "売価",
-                    "発行枚数"
+                    "商品コード",
+                    "売価",                    
+                    "発行枚数",                    
                 };
                 datas = DataUtility.ToDataTable(list, csvColSort);
                 // 不要なカラムの削除
                 datas.Columns.Remove("相手品番");
-                datas.Columns.Remove("商品コード");
                 datas.Columns.Remove("商品名");
                 datas.Columns.Remove("税込売価");
             }
