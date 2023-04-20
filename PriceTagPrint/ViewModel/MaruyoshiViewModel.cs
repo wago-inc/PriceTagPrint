@@ -218,6 +218,10 @@ namespace PriceTagPrint.ViewModel
             item4.Id = 5136;
             item4.Name = "5136：グンゼ";
             list.Add(item4);
+            var item7 = new CommonIdName();
+            item7.Id = 5163;
+            item7.Name = "5163：パジャマ";
+            list.Add(item7);
             var item5 = new CommonIdName();
             item5.Id = 5191;
             item5.Name = "5191：パンスト、ストッキング";
